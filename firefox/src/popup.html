@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>X Ambient</title>
+    <link rel="stylesheet" href="popup.css">
+    <script src="firefox-compat.js" defer></script>
+    <script src="settings.js" defer></script>
+    <script src="popup-fit.js" defer></script>
+    <script src="popup.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo" aria-hidden="true"><span></span></div>
+      <div><h1>X Ambient</h1><p>タイムラインに、やわらかな光。</p></div>
+      <label class="switch" title="アンビエントライトを有効にする">
+        <input id="enabled" type="checkbox" aria-label="アンビエントライトを有効にする" disabled>
+        <span></span>
+      </label>
+    </header>
+    <fieldset id="controls" disabled>
+      <legend class="sr-only">ライトの設定</legend>
+      <div class="setting">
+        <label for="scope">光を広げる場所</label>
+        <select id="scope"><option value="page">ページの背景全体</option><option value="post">投稿の周囲</option></select>
+      </div>
+      <div class="setting slider">
+        <div><label for="intensity">強さ</label><output id="intensity-value" for="intensity">65%</output></div>
+        <input id="intensity" type="range" min="0" max="100" value="65">
+      </div>
+      <div class="setting slider">
+        <div><label for="blur">ぼかし</label><output id="blur-value" for="blur">56px</output></div>
+        <input id="blur" type="range" min="24" max="160" value="56">
+      </div>
+      <div class="setting slider">
+        <div><label for="spread">広がり</label><output id="spread-value" for="spread">75%</output></div>
+        <input id="spread" type="range" min="20" max="100" value="75">
+      </div>
+      <label class="video-setting"><span>動画の色に追従する<small>再生中のフレームに合わせて更新</small></span><input id="animateVideo" type="checkbox" checked></label>
+      <label class="video-setting"><span>カードを画面幅に合わせる<small>ウィンドウに合わせて画像・動画の幅を調整</small></span><input id="fitCards" type="checkbox"></label>
+    </fieldset>
+    <div class="hint"><span class="dot"></span><p id="status" role="status">設定を読み込み中…</p></div>
+    <footer><span>画像・動画のある投稿にホバー</span><button id="reset" type="button" disabled>初期値に戻す</button></footer>
+  </body>
+</html>
