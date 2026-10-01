@@ -33,6 +33,6 @@ While the core functional code is identical to the original repository, the foll
 This project is distributed under the **MIT License**, matching the original repository. 
 
 * **Original Creator:** mmnga
-* **Original Repository:** [mmnga/x-ambient](https://github.com)
+* **Original Repository:** [mmnga/x-ambient](https://github.com/mmnga/x-ambient)
 
 The original `LICENSE` file containing the copyright notice `Copyright (c) 2024 mmnga` is preserved and packaged inside both files.
