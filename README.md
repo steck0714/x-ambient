@@ -1,6 +1,6 @@
 # x-ambient (Unofficial Chrome .crx / Firefox .xpi Port)
 
-This project provides unofficial **Chrome (`.crx`) and Firefox (`.xpi`) pre-built packages** of **[x-ambient](https://github.com)**, originally developed by mmnga. 
+This project provides unofficial **Chrome (`.crx`) and Firefox (`.xpi`) pre-built packages** of **[x-ambient](https://github.com/mmnga/x-ambient)**, originally developed by mmnga. 
 
 The core light-emission and real-time color analysis logic remains entirely unchanged. This fork focuses purely on multi-browser compatibility and easier deployment.
 
