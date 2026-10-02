@@ -1,4 +1,4 @@
-// iOS / iPadOS の拡張ポップアップ用: 表示領域に合わせて UI の大きさを調整する。
+// iOS / iPadOS / Android の拡張ポップアップ用: 表示領域に合わせて UI の大きさを調整する。
 // Orion などでは viewport メタが効かず、ポップアップが約980px幅のレイアウトで描画されて
 // 画面の左上に小さく縮んで表示されることがある。実際のレイアウト幅・高さを測り、
 // body に CSS zoom を掛けて「画面の幅いっぱい・できるだけスクロール不要」に収める。
@@ -6,8 +6,8 @@
 (() => {
   "use strict";
 
-  const isIOS = navigator.maxTouchPoints > 1 && /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
-  if (!isIOS) return;
+  const mobile = navigator.maxTouchPoints > 0 && /Android|iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent);
+  if (!mobile) return;
 
   const root = document.documentElement;
   const body = document.body;

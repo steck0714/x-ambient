@@ -16,9 +16,12 @@
     'img[src*="pbs.twimg.com/amplify_video_thumb/"]',
   ].join(",");
   const FRAME_INTERVAL = 1000 / 12;
+  const TOUCH_FRAME_INTERVAL = 1000 / 6; // スマホは動画追従の更新を控えめにして電池と発熱を抑える
+  const SETTLE_MS = 140; // スクロールが止まったとみなすまでの時間
   const hasStorage = typeof chrome !== "undefined" && Boolean(chrome.storage?.local);
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const colorScheme = matchMedia("(prefers-color-scheme: dark)");
+  const hoverNone = matchMedia("(hover: none)");
   const removers = [];
   const posterCache = new WeakMap();
   let settings = { ...Settings.DEFAULTS };
@@ -36,6 +39,10 @@
   let protectionKey = "";
   let front = 0;
   let disposed = false;
+  // タッチ操作が主の端末ではホバーできないので、画面の中央にある投稿に光を当てる。
+  let touchMode = hoverNone.matches;
+  let scrolling = false;
+  let scrollTimer = 0;
 
   const host = document.createElement("div");
   host.id = "x-ambient-light";
@@ -105,7 +112,7 @@
 
   function applySettings(value) {
     settings = Settings.normalize(value);
-    cards?.setEnabled(settings.fitCards);
+    cards?.setEnabled(settings.fitCards && !touchMode);
     host.style.setProperty("--xa-opacity", String(settings.intensity / 100));
     host.style.setProperty("--xa-blur", `${settings.blur}px`);
     if (!eligible()) deactivate();
@@ -325,7 +332,7 @@
     const next = (time) => {
       frameHandle = null;
       if (!eligible() || !activePost?.isConnected || video.paused || video.ended) return;
-      if (time - lastPaint >= FRAME_INTERVAL) {
+      if (time - lastPaint >= (touchMode ? TOUCH_FRAME_INTERVAL : FRAME_INTERVAL)) {
         paint(front);
         lastPaint = time;
       }
@@ -368,7 +375,7 @@
   }
 
   function activate(post) {
-    if (disposed || !eligible() || !post.isConnected) return;
+    if (disposed || !eligible() || !post.isConnected || (touchMode && scrolling)) return;
     activePost = post;
     pendingPost = null;
     activeObserver.disconnect();
@@ -376,13 +383,23 @@
     refreshMedia(true);
   }
 
+  function postAt(x, y) {
+    return document.elementFromPoint(x, y)?.closest(POST_SELECTOR) || null;
+  }
+
   function reconcile() {
+    if (touchMode && eligible()) {
+      if (scrolling) return; // スクロールが止まってから当て直す
+      const view = viewport();
+      pointer = { x: view.width / 2, y: view.height / 2 };
+    }
     if (!eligible() || !pointer) {
       deactivate();
       return;
     }
-    const element = document.elementFromPoint(pointer.x, pointer.y);
-    const post = element?.closest(POST_SELECTOR) || null;
+    let post = postAt(pointer.x, pointer.y);
+    // 画面中央が投稿どうしの隙間に当たっても、すぐ上下の投稿を拾う
+    if (!post && touchMode) post = postAt(pointer.x, pointer.y - 24) || postAt(pointer.x, pointer.y + 24);
     if (post === activePost && post) {
       refreshMedia();
       return;
@@ -397,7 +414,7 @@
     hoverTimer = window.setTimeout(() => {
       hoverTimer = 0;
       if (pendingPost === post) activate(post);
-    }, 70);
+    }, touchMode ? 0 : 70);
   }
 
   const activeObserver = new MutationObserver(scheduleReconcile);
@@ -411,23 +428,60 @@
   const themeObserver = new MutationObserver(scheduleReconcile);
   themeObserver.observe(document.body, { attributes: true, attributeFilter: ["style", "class"] });
 
+  function setTouchMode(next) {
+    if (touchMode === next) return;
+    touchMode = next;
+    scrolling = false;
+    clearTimeout(scrollTimer);
+    scrollTimer = 0;
+    pointer = null;
+    cards?.setEnabled(settings.fitCards && !touchMode);
+    deactivate();
+    scheduleReconcile();
+  }
+
+  // マウスとタッチの両方がある端末では、最後に使った入力に合わせて切り替える。
+  listen(document, "pointerdown", (event) => setTouchMode(event.pointerType === "touch"), { passive: true, capture: true });
+  listen(hoverNone, "change", () => setTouchMode(hoverNone.matches));
   listen(document, "pointermove", (event) => {
     if (event.pointerType === "touch") return;
+    if (touchMode) setTouchMode(false);
     pointer = { x: event.clientX, y: event.clientY };
     // Within the same post, mouse motion does not need another media repaint.
     if (event.target instanceof Element && event.target.closest(POST_SELECTOR) === activePost && activePost) return;
     scheduleReconcile();
   }, { passive: true });
   listen(document, "pointerout", (event) => {
+    if (touchMode || event.pointerType === "touch") return;
     if (!event.relatedTarget) {
       pointer = null;
       deactivate();
     }
   }, { passive: true });
-  listen(document, "scroll", scheduleReconcile, { passive: true, capture: true });
+  listen(document, "scroll", () => {
+    if (!touchMode) {
+      scheduleReconcile();
+      return;
+    }
+    // スマホ: スクロール中は光を消し、止まってから画面中央の投稿に当て直す。
+    // 動いている最中に追従させるとマスクがずれ、負荷も高くなるため。
+    scrolling = true;
+    light.classList.remove("visible");
+    stopFrames();
+    clearTimeout(scrollTimer);
+    scrollTimer = window.setTimeout(() => {
+      scrollTimer = 0;
+      scrolling = false;
+      scheduleReconcile();
+    }, SETTLE_MS);
+  }, { passive: true, capture: true });
   listen(window, "resize", scheduleReconcile, { passive: true });
   listen(document, "xambient:layout", scheduleReconcile);
-  listen(window, "blur", () => { pointer = null; deactivate(); });
+  listen(window, "blur", () => {
+    if (touchMode) return;
+    pointer = null;
+    deactivate();
+  });
   listen(document, "visibilitychange", scheduleReconcile);
   listen(document, "fullscreenchange", scheduleReconcile);
   for (const event of ["load", "loadeddata", "play", "pause", "ended", "seeked", "emptied", "resize"]) {
@@ -456,6 +510,7 @@
 
   function dispose() {
     disposed = true;
+    clearTimeout(scrollTimer);
     deactivate();
     cancelAnimationFrame(reconcileFrame);
     activeObserver.disconnect();

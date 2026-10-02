@@ -4,6 +4,16 @@
   const ids = ["enabled", "intensity", "blur", "spread", "scope", "animateVideo", "fitCards"];
   const elements = Object.fromEntries(ids.map((id) => [id, document.getElementById(id)]));
   const status = document.getElementById("status");
+  // スマホ・タブレットではホバーできないので、案内文を「画面の中央に来た投稿」に合わせる。
+  const touch = matchMedia("(hover: none)").matches
+    || (navigator.maxTouchPoints > 0 && /Android|iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent));
+  const activeHint = touch
+    ? "Xで画面の中央に来た投稿の画像・動画から光が広がります。"
+    : "Xで投稿にホバーすると光が広がります。";
+  if (touch) {
+    document.querySelector("footer > span").textContent = "画像・動画のある投稿を画面の中央へ";
+    elements.fitCards.closest("label").style.display = "none"; // 画面幅に合わせる機能はPC向け
+  }
   let settings = { ...DEFAULTS };
   let writes = Promise.resolve();
 
@@ -17,7 +27,7 @@
     }
     document.body.dataset.enabled = String(settings.enabled && settings.intensity > 0);
     status.textContent = settings.enabled && settings.intensity > 0
-      ? "Xで投稿にホバーすると光が広がります。"
+      ? activeHint
       : "アンビエントライトはオフです。";
   }
 
