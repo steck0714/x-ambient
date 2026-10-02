@@ -8,7 +8,7 @@
   const touch = matchMedia("(hover: none)").matches
     || (navigator.maxTouchPoints > 0 && /Android|iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent));
   const activeHint = touch
-    ? "Xで画面の中央に来た投稿の画像・動画から光が広がります。"
+    ? "画面の中央に来た投稿から光が広がります。"
     : "Xで投稿にホバーすると光が広がります。";
   if (touch) {
     document.querySelector("footer > span").textContent = "画像・動画のある投稿を画面の中央へ";
