@@ -33,3 +33,17 @@ button { font: inherit; color: #bdb5cf; background: transparent; border: 0; padd
 button:hover { color: #e5dbff; }
 select:focus-visible, input:focus-visible, button:focus-visible { outline: 2px solid #bba0ff; outline-offset: 3px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+/* スマホ・タブレット（popup-fit.js が html.mobile を付ける）: 画面に合わせて拡大しても読めるよう、
+   小さい文字を大きめにし、縦の余白を詰める。 */
+html.mobile body { padding: 16px 18px; }
+html.mobile header { margin-bottom: 16px; }
+html.mobile h1 { font-size: 19px; }
+html.mobile header p { font-size: 12px; }
+html.mobile .setting { margin-bottom: 14px; }
+html.mobile output { font-size: 13px; }
+html.mobile .video-setting { padding: 11px 0; }
+html.mobile .video-setting small { font-size: 12px; }
+html.mobile .hint { margin-top: 4px; }
+html.mobile .hint p { font-size: 12px; }
+html.mobile footer { margin-top: 14px; font-size: 12px; }
