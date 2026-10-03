@@ -4,6 +4,7 @@
   const STORAGE_KEY = "xAmbientSettings";
   const DEFAULTS = Object.freeze({
     enabled: true,
+    mode: "auto", // auto: 端末から判断 / pc: マウスでホバー / mobile: 画面の中央の投稿
     intensity: 65,
     blur: 56,
     spread: 75,
@@ -22,6 +23,7 @@
     const input = value && typeof value === "object" ? value : {};
     return {
       enabled: typeof input.enabled === "boolean" ? input.enabled : DEFAULTS.enabled,
+      mode: ["auto", "pc", "mobile"].includes(input.mode) ? input.mode : DEFAULTS.mode,
       intensity: numberInRange(input.intensity, DEFAULTS.intensity, 0, 100),
       blur: numberInRange(input.blur, DEFAULTS.blur, 24, 160),
       spread: numberInRange(input.spread, DEFAULTS.spread, 20, 100),

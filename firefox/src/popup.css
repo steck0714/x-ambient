@@ -24,6 +24,8 @@ input[type="checkbox"] { accent-color: #b39aff; }
 .video-setting { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 15px 0; border-top: 1px solid #ffffff0d; }
 .video-setting small { display: block; color: #918d9f; font-size: 10px; margin-top: 2px; }
 .video-setting input { width: 16px; height: 16px; }
+.mode-setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 0 6px; border-top: 1px solid #ffffff0d; }
+.mode-setting select { width: auto; min-width: 132px; padding: 7px 10px; }
 .hint { display: flex; align-items: center; gap: 8px; margin-top: 7px; padding: 10px 12px; border-radius: 8px; background: #a78aff0b; }
 .hint p { margin: 0; font-size: 11px; color: #bbb5cd; }
 .dot { width: 5px; height: 5px; border-radius: 50%; background: #aa8ef4; flex-shrink: 0; }
@@ -43,6 +45,7 @@ html.mobile header p { font-size: 12px; }
 html.mobile .setting { margin-bottom: 14px; }
 html.mobile output { font-size: 13px; }
 html.mobile .video-setting { padding: 11px 0; }
+html.mobile .mode-setting { padding: 10px 0 6px; }
 html.mobile .video-setting small { font-size: 12px; }
 html.mobile .hint { margin-top: 4px; }
 html.mobile .hint p { font-size: 12px; }

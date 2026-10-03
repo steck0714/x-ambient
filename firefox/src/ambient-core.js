@@ -82,14 +82,14 @@
     return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
   }
 
-  function buildRayProjection(source, target, frame, reach) {
+  function buildRayProjection(source, target, frame, reach, maxSteps = 96) {
     if (source.width <= 0 || source.height <= 0 || target.width <= 0 || target.height <= 0 || reach <= 0) return [];
     const cx = target.left + target.width / 2;
     const cy = target.top + target.height / 2;
     const halfWidth = target.width / 2;
     const halfHeight = target.height / 2;
     const outerScale = Math.max(1, cx / halfWidth, (frame.width - cx) / halfWidth, cy / halfHeight, (frame.height - cy) / halfHeight);
-    const steps = Math.max(24, Math.min(96, Math.ceil(Math.max(frame.width, frame.height) / 3)));
+    const steps = Math.max(24, Math.min(maxSteps, Math.ceil(Math.max(frame.width, frame.height) / 3)));
     const edgeX = Math.max(1, Math.round(source.width * .04));
     const edgeY = Math.max(1, Math.round(source.height * .04));
     const strips = [];

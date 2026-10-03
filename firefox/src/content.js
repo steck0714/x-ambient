@@ -16,12 +16,18 @@
     'img[src*="pbs.twimg.com/amplify_video_thumb/"]',
   ].join(",");
   const FRAME_INTERVAL = 1000 / 12;
-  const TOUCH_FRAME_INTERVAL = 1000 / 6; // スマホは動画追従の更新を控えめにして電池と発熱を抑える
+  // モバイル: 目標 10fps。描画が重いときだけ 8fps まで落とす（30fps の動画なら 3〜4 フレームに 1 回 = 10〜7.5fps で、7fps を下回らない）。
+  const MOBILE_FPS = 10;
+  const MOBILE_FPS_SLOW = 8;
+  const MOBILE_SLOW_MS = 9; // 1回の描画がこれより重いときは 8fps に落とす
+  const MOBILE_MAX_GAP = 1000 / 7.2; // 描画の間隔の上限（約139ms）。フレームの粗い動画でも 7fps 以上を保つ
+  const LITE_SIZE = 128; // モバイルの光の下絵の大きさ（長辺）。PC は 256
+  const LITE_DEPTH_FACTOR = 2; // ぼかしの大きさ → 縮小段数の換算
   const SETTLE_MS = 140; // スクロールが止まったとみなすまでの時間
   const hasStorage = typeof chrome !== "undefined" && Boolean(chrome.storage?.local);
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const colorScheme = matchMedia("(prefers-color-scheme: dark)");
-  const hoverNone = matchMedia("(hover: none)");
+  const coarsePointer = matchMedia("(hover: none) and (pointer: coarse)");
   const removers = [];
   const posterCache = new WeakMap();
   let settings = { ...Settings.DEFAULTS };
@@ -39,10 +45,14 @@
   let protectionKey = "";
   let front = 0;
   let disposed = false;
-  // タッチ操作が主の端末ではホバーできないので、画面の中央にある投稿に光を当てる。
-  let touchMode = hoverNone.matches;
+  // モバイルモード（タッチ操作が主の端末）ではホバーできないので、画面の中央にある投稿に光を当てる。
+  // 「自動」のときは端末から判断する。タッチ機能がない端末（PC・リモートデスクトップ・VM など）は、
+  // (hover: none) と報告されることがあってもモバイル扱いにしない。
+  let autoTouch = navigator.maxTouchPoints > 0 && coarsePointer.matches;
+  let touchMode = autoTouch;
   let scrolling = false;
   let scrollTimer = 0;
+  let paintCost = 0; // 直近の描画にかかった時間（ms, 指数移動平均）
 
   const host = document.createElement("div");
   host.id = "x-ambient-light";
@@ -57,10 +67,12 @@
     .field { position:absolute; inset:0; pointer-events:none; }
     canvas { position:absolute; inset:0; width:100%; height:100%; opacity:0; transition:opacity 300ms ease; filter:blur(var(--xa-blur)) saturate(1.65); }
     canvas.front { opacity:1; }
+    .light.lite canvas { filter:saturate(1.65); }
     @media (prefers-reduced-motion:reduce) { .light, canvas { transition:none; } }
   `;
   const light = document.createElement("div");
   light.className = "light";
+  if (touchMode) light.classList.add("lite");
   const field = document.createElement("div");
   field.className = "field";
   const canvases = [document.createElement("canvas"), document.createElement("canvas")];
@@ -76,7 +88,10 @@
   const mosaic = document.createElement("canvas");
   mosaic.width = 144;
   const mosaicContext = mosaic.getContext("2d");
-  if (!mosaicContext || contexts.some((context) => !context)) {
+  const raw = document.createElement("canvas"); // モバイル用の下絵（画面には出さない）
+  const rawContext = raw.getContext("2d");
+  const pyramid = new Map();
+  if (!mosaicContext || !rawContext || contexts.some((context) => !context)) {
     host.remove();
     return;
   }
@@ -88,6 +103,60 @@
 
   function viewport() {
     return { width: window.innerWidth, height: window.innerHeight };
+  }
+
+  function stage(key, width, height) {
+    let entry = pyramid.get(key);
+    if (!entry) {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      if (!context) return null;
+      entry = { canvas, context };
+      pyramid.set(key, entry);
+    }
+    if (entry.canvas.width !== width || entry.canvas.height !== height) {
+      entry.canvas.width = width;
+      entry.canvas.height = height;
+      entry.context.globalCompositeOperation = "copy"; // 描くたびに中身を丸ごと置き換える（サイズ変更で状態が戻るので毎回設定）
+    }
+    return entry;
+  }
+
+  // CSS の blur は画面いっぱいの面積に毎回かけると重い（特に iOS）。モバイルでは小さな下絵を
+  // 何段か縮小し、2 倍ずつ拡大して戻すことで「ぼかした見た目」を作る。段ごとにバイリニア補間が
+  // 掛かるので滑らかで、GPU の補間だけで済む。drawImage だけなので、クロスオリジンの画像・動画でも
+  // ピクセルを読まずに済む。
+  function softBlur(source, targetCanvas, targetContext, depth) {
+    if (depth < 2 || !source.width || !source.height) {
+      targetContext.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
+      return;
+    }
+    const down = [source];
+    for (let i = 1; i <= depth; i++) {
+      const previous = down[i - 1];
+      const entry = stage(`down${i}`, Math.max(2, Math.ceil(previous.width / 2)), Math.max(2, Math.ceil(previous.height / 2)));
+      if (!entry) return;
+      entry.context.drawImage(previous, 0, 0, entry.canvas.width, entry.canvas.height);
+      down.push(entry.canvas);
+    }
+    let current = down[depth];
+    for (let i = depth - 1; i >= 1; i--) {
+      const entry = stage(`up${i}`, down[i].width, down[i].height);
+      if (!entry) return;
+      entry.context.drawImage(current, 0, 0, entry.canvas.width, entry.canvas.height);
+      current = entry.canvas;
+    }
+    if (targetCanvas.width !== current.width) targetCanvas.width = current.width;
+    if (targetCanvas.height !== current.height) targetCanvas.height = current.height;
+    targetContext.globalCompositeOperation = "copy";
+    targetContext.drawImage(current, 0, 0);
+    targetContext.globalCompositeOperation = "source-over"; // PC モードの描画で使うので元に戻す
+  }
+
+  function frameInterval() {
+    if (!touchMode) return FRAME_INTERVAL;
+    // 動画のフレーム間隔に合わせて 0.8 倍の余裕を持たせる（12fps の動画でも毎フレーム描画できるように）。
+    return (paintCost > MOBILE_SLOW_MS ? 1000 / MOBILE_FPS_SLOW : 1000 / MOBILE_FPS) * 0.8;
   }
 
   function eligible() {
@@ -112,6 +181,7 @@
 
   function applySettings(value) {
     settings = Settings.normalize(value);
+    syncMode();
     cards?.setEnabled(settings.fitCards && !touchMode);
     host.style.setProperty("--xa-opacity", String(settings.intensity / 100));
     host.style.setProperty("--xa-blur", `${settings.blur}px`);
@@ -252,7 +322,7 @@
         light.style.maskImage = Core.buildMediaMask(protectedRects, view);
         protectionKey = nextKey;
       }
-      const padding = settings.blur * 2;
+      const padding = touchMode ? 24 : settings.blur * 2; // モバイルは blur を使わないので端の余白は小さくてよい
       region = { left: -padding, top: -padding, width: view.width + padding * 2, height: view.height + padding * 2 };
     } else {
       protectionKey = "";
@@ -261,7 +331,7 @@
       region = { left: bounds.left - padding, top: bounds.top - padding, width: bounds.width + padding * 2, height: bounds.height + padding * 2 };
     }
     field.style.cssText = `position:absolute;left:${region.left}px;top:${region.top}px;width:${region.width}px;height:${region.height}px;`;
-    const scale = 256 / Math.max(region.width, region.height);
+    const scale = (touchMode ? LITE_SIZE : 256) / Math.max(region.width, region.height);
     const size = { width: Math.round(region.width * scale), height: Math.round(region.height * scale) };
     const target = {
       left: (bounds.left - region.left) / region.width * size.width,
@@ -270,14 +340,18 @@
       height: bounds.height / region.height * size.height,
     };
     const source = { width: mosaic.width, height: Math.max(48, Math.min(144, Math.round(144 * bounds.height / bounds.width))) };
-    projection = { size, source, target, strips: Core.buildRayProjection(source, target, size, (120 + settings.spread * 12) * scale) };
+    // モバイルは画面が小さく、PC と同じ減衰だと画面全体が一様に色づいてしまう。画面の高さに合わせて減衰させ、
+    // メディアの近くが明るく、離れるほど薄くなるようにする。
+    const reach = (touchMode ? view.height * (0.2 + settings.spread / 100 * 0.5) : 120 + settings.spread * 12) * scale;
+    const depth = touchMode ? Math.max(2, Math.min(6, Math.round(Math.log2(Math.max(2, settings.blur * scale * LITE_DEPTH_FACTOR))))) : 0;
+    projection = { size, source, target, depth, strips: Core.buildRayProjection(source, target, size, reach, touchMode ? 24 : 96) };
     updateTheme();
   }
 
   function paint(index) {
     if (!bounds || !media.length || !projection) return false;
-    const canvas = canvases[index];
-    const context = contexts[index];
+    const canvas = touchMode ? raw : canvases[index];
+    const context = touchMode ? rawContext : contexts[index];
     if (mosaic.height !== projection.source.height) mosaic.height = projection.source.height;
     mosaicContext.clearRect(0, 0, mosaic.width, mosaic.height);
     let drawn = false;
@@ -320,6 +394,7 @@
       }
       context.globalAlpha = 1;
     }
+    if (touchMode) softBlur(raw, canvases[index], contexts[index], drawn ? projection.depth : 0);
     return drawn;
   }
 
@@ -329,12 +404,22 @@
     const video = media.find((item) => item.source.tagName === "VIDEO" && !item.source.paused && !item.source.ended)?.source;
     if (!video) return;
     const type = typeof video.requestVideoFrameCallback === "function" ? "video" : "raf";
+    let lastFrame = 0;
     const next = (time) => {
       frameHandle = null;
       if (!eligible() || !activePost?.isConnected || video.paused || video.ended) return;
-      if (time - lastPaint >= (touchMode ? TOUCH_FRAME_INTERVAL : FRAME_INTERVAL)) {
+      const period = Math.min(time - lastFrame, 200); // 直近の動画フレームの間隔
+      lastFrame = time;
+      const elapsed = time - lastPaint;
+      // モバイルは、次のフレームを待つと間隔が上限を超えるなら今描く（12fps の動画などでも 7fps を下回らない）。
+      if (elapsed >= frameInterval() || (touchMode && elapsed + period > MOBILE_MAX_GAP)) {
+        const started = performance.now();
         paint(front);
         lastPaint = time;
+        if (touchMode) {
+          const cost = performance.now() - started;
+          paintCost = paintCost ? paintCost * 0.8 + cost * 0.2 : cost;
+        }
       }
       queue();
     };
@@ -428,9 +513,16 @@
   const themeObserver = new MutationObserver(scheduleReconcile);
   themeObserver.observe(document.body, { attributes: true, attributeFilter: ["style", "class"] });
 
+  // 表示モード: auto は端末から判断 / pc はマウスでホバー / mobile は画面の中央の投稿。
+  function syncMode() {
+    setTouchMode(settings.mode === "mobile" ? true : settings.mode === "pc" ? false : autoTouch);
+  }
+
   function setTouchMode(next) {
     if (touchMode === next) return;
     touchMode = next;
+    light.classList.toggle("lite", touchMode);
+    paintCost = 0;
     scrolling = false;
     clearTimeout(scrollTimer);
     scrollTimer = 0;
@@ -440,12 +532,19 @@
     scheduleReconcile();
   }
 
-  // マウスとタッチの両方がある端末では、最後に使った入力に合わせて切り替える。
-  listen(document, "pointerdown", (event) => setTouchMode(event.pointerType === "touch"), { passive: true, capture: true });
-  listen(hoverNone, "change", () => setTouchMode(hoverNone.matches));
+  // 「自動」のとき、マウスとタッチの両方がある端末では最後に使った入力に合わせて切り替える。
+  function setAutoTouch(next) {
+    autoTouch = next;
+    syncMode();
+  }
+  listen(document, "pointerdown", (event) => {
+    if (settings.mode === "auto" && event.isTrusted) setAutoTouch(event.pointerType === "touch" && navigator.maxTouchPoints > 0);
+  }, { passive: true, capture: true });
+  listen(coarsePointer, "change", () => setAutoTouch(navigator.maxTouchPoints > 0 && coarsePointer.matches));
   listen(document, "pointermove", (event) => {
     if (event.pointerType === "touch") return;
-    if (touchMode) setTouchMode(false);
+    if (settings.mode === "auto" && autoTouch) setAutoTouch(false);
+    if (touchMode) return; // モバイルモード固定のときはマウスの動きを見ない
     pointer = { x: event.clientX, y: event.clientY };
     // Within the same post, mouse motion does not need another media repaint.
     if (event.target instanceof Element && event.target.closest(POST_SELECTOR) === activePost && activePost) return;
