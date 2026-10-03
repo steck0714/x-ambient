@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "X Ambient",
-  "version": "0.2.2.3",
+  "version": "0.2.2.4",
   "description": "Xの投稿の画像・動画から、周囲にやわらかなアンビエントライトを広げます。PCではホバー、スマホ・タブレットでは画面の中央に来た投稿に反応します。",
   "permissions": [
     "storage"
