@@ -1,19 +1,14 @@
 (() => {
   "use strict";
   const { STORAGE_KEY, DEFAULTS, normalize } = globalThis.XAmbientSettings;
-  const ids = ["enabled", "intensity", "blur", "spread", "scope", "animateVideo", "fitCards"];
+  const ids = ["enabled", "mode", "intensity", "blur", "spread", "scope", "animateVideo", "fitCards"];
   const elements = Object.fromEntries(ids.map((id) => [id, document.getElementById(id)]));
   const status = document.getElementById("status");
-  // スマホ・タブレットではホバーできないので、案内文を「画面の中央に来た投稿」に合わせる。
-  const touch = matchMedia("(hover: none)").matches
-    || (navigator.maxTouchPoints > 0 && /Android|iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent));
-  const activeHint = touch
-    ? "画面の中央に来た投稿から光が広がります。"
-    : "Xで投稿にホバーすると光が広がります。";
-  if (touch) {
-    document.querySelector("footer > span").textContent = "画像・動画のある投稿を画面の中央へ";
-    elements.fitCards.closest("label").style.display = "none"; // 画面幅に合わせる機能はPC向け
-  }
+  // 表示モードが「自動」のときは端末から判断する（content.js と同じ条件。タッチ機能がなければモバイル扱いにしない）。
+  const deviceTouch = navigator.maxTouchPoints > 0
+    && (matchMedia("(hover: none) and (pointer: coarse)").matches || /Android|iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent));
+  const footerHint = document.querySelector("footer > span");
+  const fitCardsRow = elements.fitCards.closest("label");
   let settings = { ...DEFAULTS };
   let writes = Promise.resolve();
 
@@ -26,8 +21,12 @@
       document.getElementById(`${id}-value`).value = `${settings[id]}${id === "blur" ? "px" : "%"}`;
     }
     document.body.dataset.enabled = String(settings.enabled && settings.intensity > 0);
+    // モバイルモードはホバーできないので「画面の中央に来た投稿」に光を当てる。
+    const mobile = settings.mode === "mobile" || (settings.mode === "auto" && deviceTouch);
+    footerHint.textContent = mobile ? "画像・動画のある投稿を画面の中央へ" : "画像・動画のある投稿にホバー";
+    fitCardsRow.style.display = mobile ? "none" : ""; // 画面幅に合わせる機能はPC向け
     status.textContent = settings.enabled && settings.intensity > 0
-      ? activeHint
+      ? (mobile ? "画面の中央に来た投稿から光が広がります。" : "Xで投稿にホバーすると光が広がります。")
       : "アンビエントライトはオフです。";
   }
 
