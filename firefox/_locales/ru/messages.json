@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "Фоновая подсветка для фото и видео в X и Instagram, а также трансляций Twitch и Kick."
+  },
+  "popupSubtitle": {
+    "message": "Фоновая подсветка для X, Instagram, Twitch и Kick."
+  },
+  "languageLabel": {
+    "message": "Язык"
+  },
+  "languageAutomatic": {
+    "message": "Автоматически (язык браузера)"
+  },
+  "enabledLabel": {
+    "message": "Включить фоновую подсветку"
+  },
+  "lightSettings": {
+    "message": "Настройки подсветки"
+  },
+  "scopeLabel": {
+    "message": "Область подсветки"
+  },
+  "scopePage": {
+    "message": "Фон всей страницы"
+  },
+  "scopePost": {
+    "message": "Вокруг поста или плеера"
+  },
+  "intensityLabel": {
+    "message": "Интенсивность"
+  },
+  "blurLabel": {
+    "message": "Размытие"
+  },
+  "spreadLabel": {
+    "message": "Распространение"
+  },
+  "videoTrackingLabel": {
+    "message": "Следовать цветам видео"
+  },
+  "videoTrackingDescription": {
+    "message": "Обновлять подсветку при воспроизведении"
+  },
+  "fitCardsLabel": {
+    "message": "Подгонять карточки X под ширину окна"
+  },
+  "fitCardsDescription": {
+    "message": "Подстраивать ширину фото и видео под окно"
+  },
+  "modeLabel": {
+    "message": "Режим отображения"
+  },
+  "modeAuto": {
+    "message": "Автоматически"
+  },
+  "modePc": {
+    "message": "ПК (наведение)"
+  },
+  "modeMobile": {
+    "message": "Телефон (центр)"
+  },
+  "hoverHint": {
+    "message": "Фото и видео в X и Instagram. Трансляции Twitch и Kick."
+  },
+  "statusLoading": {
+    "message": "Загрузка настроек…"
+  },
+  "statusReady": {
+    "message": "В подробном просмотре пост X подсвечивается автоматически; наведите курсор на посты в ленте или ответы. Instagram следует активному посту или ролику Reels. Twitch и Kick следуют видео."
+  },
+  "statusReadyMobile": {
+    "message": "X подсвечивает пост в центре экрана. Instagram следует активному посту или ролику Reels. Twitch и Kick следуют видео."
+  },
+  "statusDisabled": {
+    "message": "Фоновая подсветка выключена."
+  },
+  "statusLoadError": {
+    "message": "Не удалось загрузить настройки. Откройте расширение заново."
+  },
+  "statusSaveError": {
+    "message": "Не удалось сохранить изменения. Откройте расширение заново."
+  },
+  "resetLabel": {
+    "message": "Сбросить настройки"
+  },
+  "demoTitle": {
+    "message": "X Ambient - Тестовая площадка"
+  },
+  "homeLinkLabel": {
+    "message": "Главная страница X Ambient"
+  },
+  "navHome": {
+    "message": "Главная"
+  },
+  "navSearch": {
+    "message": "Обзор"
+  },
+  "navNotifications": {
+    "message": "Уведомления"
+  },
+  "navMessages": {
+    "message": "Сообщения"
+  },
+  "navBookmarks": {
+    "message": "Закладки"
+  },
+  "navProfile": {
+    "message": "Профиль"
+  },
+  "navCaption": {
+    "message": "ФОНОВАЯ ПОДСВЕТКА ДЛЯ X"
+  },
+  "localPlayground": {
+    "message": "ЛОКАЛЬНАЯ ТЕСТОВАЯ ПЛОЩАДКА"
+  },
+  "youLabel": {
+    "message": "Вы"
+  },
+  "playgroundLabel": {
+    "message": "ТЕСТОВАЯ ПЛОЩАДКА"
+  },
+  "timelineHeading": {
+    "message": "Лента в цвете"
+  },
+  "previewLabel": {
+    "message": "Предпросмотр"
+  },
+  "forYouLabel": {
+    "message": "Для вас"
+  },
+  "followingLabel": {
+    "message": "Подписки"
+  },
+  "demoIntro": {
+    "message": "Наведите курсор на пост с фото или видео."
+  },
+  "demoIntroDetail": {
+    "message": "Цвета распространяются по странице и фону других постов."
+  },
+  "timelineLabel": {
+    "message": "Лента"
+  },
+  "postSunsetLabel": {
+    "message": "Пост с фотографией заката"
+  },
+  "postSunsetText": {
+    "message": "Люблю это время суток, когда небо медленно меняет цвет."
+  },
+  "sunsetImageAlt": {
+    "message": "Фиолетовые горы под оранжевым закатным небом"
+  },
+  "postForestLabel": {
+    "message": "Пост с фотографией освещённого солнцем леса"
+  },
+  "postForestText": {
+    "message": "Цвета освещённого солнцем леса выходят за края фотографии."
+  },
+  "forestImageAlt": {
+    "message": "Лес, наполненный зелёным светом"
+  },
+  "postVideoLabel": {
+    "message": "Видеопост с движущимися цветами"
+  },
+  "postVideoText": {
+    "message": "Цвета и свет постоянно движутся."
+  },
+  "videoLabel": {
+    "message": "Видео с атмосферными цветами"
+  },
+  "postPortraitLabel": {
+    "message": "Пост с вертикальным видео"
+  },
+  "postPortraitText": {
+    "message": "Цвета вертикальных видео тоже распространяются по обе стороны."
+  },
+  "portraitVideoLabel": {
+    "message": "Вертикальное видео"
+  },
+  "postMultipleLabel": {
+    "message": "Пост с несколькими фотографиями"
+  },
+  "postMultipleText": {
+    "message": "Этюд в синих тонах. Цвета обеих фотографий перетекают в окружающее пространство."
+  },
+  "coastImageAlt": {
+    "message": "Бирюзовое побережье"
+  },
+  "nightImageAlt": {
+    "message": "Синее и фиолетовое ночное небо"
+  },
+  "postTextLabel": {
+    "message": "Текстовый пост"
+  },
+  "postTextFirst": {
+    "message": "Текстовые посты дают свету отдохнуть."
+  },
+  "postTextSecond": {
+    "message": "Спокойная пауза перед следующей фотографией."
+  },
+  "caughtUpLabel": {
+    "message": "Вы всё посмотрели."
+  },
+  "caughtUpDetail": {
+    "message": "Подсветка следует только посту под курсором."
+  },
+  "atmosphereLabel": {
+    "message": "ВАША АТМОСФЕРА"
+  },
+  "demoControlsHeading": {
+    "message": "Создайте настроение."
+  },
+  "demoControlsDescription": {
+    "message": "Пусть каждый пост окрашивает страницу."
+  },
+  "themeLabel": {
+    "message": "Тема"
+  },
+  "themeSwitchLight": {
+    "message": "Светлая тема"
+  },
+  "themeSwitchDark": {
+    "message": "Тёмная тема"
+  },
+  "demoNote": {
+    "message": "Наведите курсор. Почувствуйте цвет."
+  },
+  "demoNoteDetail": {
+    "message": "Мягкие цвета фотографии заполняют фон страницы."
+  },
+  "addPostLabel": {
+    "message": "＋ Добавить пост"
+  },
+  "demoFooter": {
+    "message": "Это локальная демонстрация."
+  },
+  "postNewLabel": {
+    "message": "Новый пост с фотографией"
+  },
+  "postNewAuthor": {
+    "message": "Новый пост"
+  },
+  "postNewText": {
+    "message": "Подсветка следует и вновь добавленным постам."
+  },
+  "postNewImageAlt": {
+    "message": "Недавно добавленное бирюзовое побережье"
+  }
+}
