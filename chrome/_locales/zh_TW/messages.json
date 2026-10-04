@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "讓 X 和 Instagram 的照片、影片，以及 Twitch 和 Kick 的直播色彩化為環境光。"
+  },
+  "popupSubtitle": {
+    "message": "為 X、Instagram、Twitch 和 Kick 帶來柔和光線。"
+  },
+  "languageLabel": {
+    "message": "語言"
+  },
+  "languageAutomatic": {
+    "message": "自動（瀏覽器語言）"
+  },
+  "enabledLabel": {
+    "message": "啟用環境光"
+  },
+  "lightSettings": {
+    "message": "光效設定"
+  },
+  "scopeLabel": {
+    "message": "光效範圍"
+  },
+  "scopePage": {
+    "message": "整個頁面背景"
+  },
+  "scopePost": {
+    "message": "貼文或播放器周圍"
+  },
+  "intensityLabel": {
+    "message": "強度"
+  },
+  "blurLabel": {
+    "message": "模糊"
+  },
+  "spreadLabel": {
+    "message": "擴散"
+  },
+  "videoTrackingLabel": {
+    "message": "跟隨影片色彩"
+  },
+  "videoTrackingDescription": {
+    "message": "依照播放中的畫面更新光效"
+  },
+  "fitCardsLabel": {
+    "message": "讓 X 卡片符合視窗寬度"
+  },
+  "fitCardsDescription": {
+    "message": "依照視窗調整照片和影片的寬度"
+  },
+  "modeLabel": {
+    "message": "顯示模式"
+  },
+  "modeAuto": {
+    "message": "自動"
+  },
+  "modePc": {
+    "message": "電腦（游標）"
+  },
+  "modeMobile": {
+    "message": "手機（居中）"
+  },
+  "hoverHint": {
+    "message": "X、Instagram 的照片和影片，Twitch、Kick 的直播"
+  },
+  "statusLoading": {
+    "message": "正在載入設定…"
+  },
+  "statusReady": {
+    "message": "X 的貼文詳細頁面會自動亮起；時間軸貼文和回覆需將游標移至上方。Instagram 跟隨目前的貼文或 Reels，Twitch 和 Kick 跟隨影片。"
+  },
+  "statusReadyMobile": {
+    "message": "X 會點亮位於畫面中央的貼文。Instagram 跟隨目前的貼文或 Reels，Twitch 和 Kick 跟隨影片。"
+  },
+  "statusDisabled": {
+    "message": "環境光已關閉。"
+  },
+  "statusLoadError": {
+    "message": "無法載入設定。請重新開啟擴充功能。"
+  },
+  "statusSaveError": {
+    "message": "無法儲存變更。請重新開啟擴充功能。"
+  },
+  "resetLabel": {
+    "message": "還原預設值"
+  },
+  "demoTitle": {
+    "message": "X Ambient - 體驗區"
+  },
+  "homeLinkLabel": {
+    "message": "X Ambient 首頁"
+  },
+  "navHome": {
+    "message": "首頁"
+  },
+  "navSearch": {
+    "message": "探索"
+  },
+  "navNotifications": {
+    "message": "通知"
+  },
+  "navMessages": {
+    "message": "訊息"
+  },
+  "navBookmarks": {
+    "message": "書籤"
+  },
+  "navProfile": {
+    "message": "個人資料"
+  },
+  "navCaption": {
+    "message": "為 X 帶來環境光"
+  },
+  "localPlayground": {
+    "message": "本機體驗區"
+  },
+  "youLabel": {
+    "message": "你"
+  },
+  "playgroundLabel": {
+    "message": "體驗區"
+  },
+  "timelineHeading": {
+    "message": "色彩中的時間軸"
+  },
+  "previewLabel": {
+    "message": "預覽"
+  },
+  "forYouLabel": {
+    "message": "為你推薦"
+  },
+  "followingLabel": {
+    "message": "正在跟隨"
+  },
+  "demoIntro": {
+    "message": "將游標移到含有照片或影片的貼文上。"
+  },
+  "demoIntroDetail": {
+    "message": "色彩會擴散到整個頁面和其他貼文的背景。"
+  },
+  "timelineLabel": {
+    "message": "時間軸"
+  },
+  "postSunsetLabel": {
+    "message": "日落照片貼文"
+  },
+  "postSunsetText": {
+    "message": "我喜歡天空顏色緩緩變化的這一刻。"
+  },
+  "sunsetImageAlt": {
+    "message": "橙色晚霞下的紫色群山"
+  },
+  "postForestLabel": {
+    "message": "陽光森林照片貼文"
+  },
+  "postForestText": {
+    "message": "陽光下森林的色彩從照片邊緣向外擴散。"
+  },
+  "forestImageAlt": {
+    "message": "充滿綠色光線的森林"
+  },
+  "postVideoLabel": {
+    "message": "色彩變化的影片貼文"
+  },
+  "postVideoText": {
+    "message": "色彩與光線持續流動。"
+  },
+  "videoLabel": {
+    "message": "環境光色彩影片"
+  },
+  "postPortraitLabel": {
+    "message": "直式影片貼文"
+  },
+  "postPortraitText": {
+    "message": "直式影片的色彩也會向兩側擴散。"
+  },
+  "portraitVideoLabel": {
+    "message": "直式影片"
+  },
+  "postMultipleLabel": {
+    "message": "多張照片貼文"
+  },
+  "postMultipleText": {
+    "message": "藍色的記錄。兩張照片的色彩流向周圍。"
+  },
+  "coastImageAlt": {
+    "message": "碧藍的海岸線"
+  },
+  "nightImageAlt": {
+    "message": "藍紫色的夜空"
+  },
+  "postTextLabel": {
+    "message": "純文字貼文"
+  },
+  "postTextFirst": {
+    "message": "純文字貼文，讓光線暫時休息。"
+  },
+  "postTextSecond": {
+    "message": "靜靜等待下一張照片。"
+  },
+  "caughtUpLabel": {
+    "message": "你已看完所有貼文。"
+  },
+  "caughtUpDetail": {
+    "message": "光效只跟隨游標移至上方的貼文。"
+  },
+  "atmosphereLabel": {
+    "message": "你的氛圍"
+  },
+  "demoControlsHeading": {
+    "message": "調整氛圍。"
+  },
+  "demoControlsDescription": {
+    "message": "讓每則貼文為頁面增添色彩。"
+  },
+  "themeLabel": {
+    "message": "主題"
+  },
+  "themeSwitchLight": {
+    "message": "切換為淺色"
+  },
+  "themeSwitchDark": {
+    "message": "切換為深色"
+  },
+  "demoNote": {
+    "message": "移動游標，感受色彩。"
+  },
+  "demoNoteDetail": {
+    "message": "照片中的柔和色彩鋪滿頁面背景。"
+  },
+  "addPostLabel": {
+    "message": "＋ 新增貼文"
+  },
+  "demoFooter": {
+    "message": "這是本機示範頁面。"
+  },
+  "postNewLabel": {
+    "message": "新增照片貼文"
+  },
+  "postNewAuthor": {
+    "message": "新貼文"
+  },
+  "postNewText": {
+    "message": "光效也會跟隨新加入的貼文。"
+  },
+  "postNewImageAlt": {
+    "message": "新加入的碧藍海岸線"
+  }
+}
