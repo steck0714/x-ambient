@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "إضاءة محيطية لصور وفيديوهات \u2066X\u2069 و\u2066Instagram\u2069، وبثوث \u2066Twitch\u2069 و\u2066Kick\u2069."
+  },
+  "popupSubtitle": {
+    "message": "إضاءة محيطية لـ \u2066X\u2069 و\u2066Instagram\u2069 و\u2066Twitch\u2069 و\u2066Kick\u2069."
+  },
+  "languageLabel": {
+    "message": "اللغة"
+  },
+  "languageAutomatic": {
+    "message": "تلقائي (لغة المتصفح)"
+  },
+  "enabledLabel": {
+    "message": "تفعيل الإضاءة المحيطية"
+  },
+  "lightSettings": {
+    "message": "إعدادات الإضاءة"
+  },
+  "scopeLabel": {
+    "message": "نطاق الإضاءة"
+  },
+  "scopePage": {
+    "message": "خلفية الصفحة بالكامل"
+  },
+  "scopePost": {
+    "message": "حول المنشور أو المشغّل"
+  },
+  "intensityLabel": {
+    "message": "الشدة"
+  },
+  "blurLabel": {
+    "message": "التمويه"
+  },
+  "spreadLabel": {
+    "message": "الانتشار"
+  },
+  "videoTrackingLabel": {
+    "message": "تتبّع ألوان الفيديو"
+  },
+  "videoTrackingDescription": {
+    "message": "تحديث الإضاءة أثناء تشغيل الفيديو"
+  },
+  "fitCardsLabel": {
+    "message": "ملاءمة بطاقات \u2066X\u2069 لعرض النافذة"
+  },
+  "fitCardsDescription": {
+    "message": "ضبط عرض الصور والفيديوهات حسب النافذة"
+  },
+  "modeLabel": {
+    "message": "وضع العرض"
+  },
+  "modeAuto": {
+    "message": "تلقائي"
+  },
+  "modePc": {
+    "message": "الكمبيوتر (المؤشر)"
+  },
+  "modeMobile": {
+    "message": "الجوال (المنتصف)"
+  },
+  "hoverHint": {
+    "message": "صور وفيديوهات \u2066X\u2069 و\u2066Instagram\u2069. بثوث \u2066Twitch\u2069 و\u2066Kick\u2069."
+  },
+  "statusLoading": {
+    "message": "جارٍ تحميل الإعدادات…"
+  },
+  "statusReady": {
+    "message": "تضيء صفحة تفاصيل منشور \u2066X\u2069 تلقائيًا؛ مرّر المؤشر فوق منشورات الخط الزمني أو الردود. يتتبّع \u2066Instagram\u2069 المنشور أو مقطع \u2066Reels\u2069 النشط. يتتبّع \u2066Twitch\u2069 و\u2066Kick\u2069 الفيديو."
+  },
+  "statusReadyMobile": {
+    "message": "يضيء \u2066X\u2069 المنشور الواقع في منتصف الشاشة. يتتبّع \u2066Instagram\u2069 المنشور أو مقطع \u2066Reels\u2069 النشط. يتتبّع \u2066Twitch\u2069 و\u2066Kick\u2069 الفيديو."
+  },
+  "statusDisabled": {
+    "message": "الإضاءة المحيطية متوقفة."
+  },
+  "statusLoadError": {
+    "message": "تعذّر تحميل الإعدادات. أعد فتح الإضافة."
+  },
+  "statusSaveError": {
+    "message": "تعذّر حفظ التغييرات. أعد فتح الإضافة."
+  },
+  "resetLabel": {
+    "message": "استعادة الإعدادات الافتراضية"
+  },
+  "demoTitle": {
+    "message": "\u2066X Ambient\u2069 - مساحة التجربة"
+  },
+  "homeLinkLabel": {
+    "message": "الصفحة الرئيسية لـ \u2066X Ambient\u2069"
+  },
+  "navHome": {
+    "message": "الرئيسية"
+  },
+  "navSearch": {
+    "message": "استكشاف"
+  },
+  "navNotifications": {
+    "message": "الإشعارات"
+  },
+  "navMessages": {
+    "message": "الرسائل"
+  },
+  "navBookmarks": {
+    "message": "العلامات المرجعية"
+  },
+  "navProfile": {
+    "message": "الملف الشخصي"
+  },
+  "navCaption": {
+    "message": "إضاءة محيطية لـ \u2066X\u2069"
+  },
+  "localPlayground": {
+    "message": "مساحة تجربة محلية"
+  },
+  "youLabel": {
+    "message": "أنت"
+  },
+  "playgroundLabel": {
+    "message": "مساحة التجربة"
+  },
+  "timelineHeading": {
+    "message": "خط زمني بالألوان"
+  },
+  "previewLabel": {
+    "message": "معاينة"
+  },
+  "forYouLabel": {
+    "message": "لك"
+  },
+  "followingLabel": {
+    "message": "المتابَعون"
+  },
+  "demoIntro": {
+    "message": "مرّر المؤشر فوق منشور يحتوي على صورة أو فيديو."
+  },
+  "demoIntroDetail": {
+    "message": "تنتشر الألوان عبر الصفحة وخلفيات المنشورات الأخرى."
+  },
+  "timelineLabel": {
+    "message": "الخط الزمني"
+  },
+  "postSunsetLabel": {
+    "message": "منشور بصورة غروب الشمس"
+  },
+  "postSunsetText": {
+    "message": "أحب هذا الوقت من اليوم، حين تتغيّر ألوان السماء ببطء."
+  },
+  "sunsetImageAlt": {
+    "message": "جبال بنفسجية تحت سماء غروب برتقالية"
+  },
+  "postForestLabel": {
+    "message": "منشور بصورة غابة مضاءة بالشمس"
+  },
+  "postForestText": {
+    "message": "تنتشر ألوان الغابة المضاءة بالشمس خارج حدود الصورة."
+  },
+  "forestImageAlt": {
+    "message": "غابة يملؤها الضوء الأخضر"
+  },
+  "postVideoLabel": {
+    "message": "منشور بفيديو لألوان متحركة"
+  },
+  "postVideoText": {
+    "message": "تستمر الألوان والإضاءة في الحركة."
+  },
+  "videoLabel": {
+    "message": "فيديو لألوان الإضاءة المحيطية"
+  },
+  "postPortraitLabel": {
+    "message": "منشور بفيديو عمودي"
+  },
+  "postPortraitText": {
+    "message": "تنتشر ألوان الفيديوهات العمودية على الجانبين أيضًا."
+  },
+  "portraitVideoLabel": {
+    "message": "فيديو عمودي"
+  },
+  "postMultipleLabel": {
+    "message": "منشور بصور متعددة"
+  },
+  "postMultipleText": {
+    "message": "تجربة بدرجات الأزرق. تنساب ألوان الصورتين إلى ما حولهما."
+  },
+  "coastImageAlt": {
+    "message": "ساحل فيروزي"
+  },
+  "nightImageAlt": {
+    "message": "سماء ليلية زرقاء وبنفسجية"
+  },
+  "postTextLabel": {
+    "message": "منشور نصّي فقط"
+  },
+  "postTextFirst": {
+    "message": "تمنح المنشورات النصّية الإضاءة استراحة."
+  },
+  "postTextSecond": {
+    "message": "لحظة هادئة قبل الصورة التالية."
+  },
+  "caughtUpLabel": {
+    "message": "لقد شاهدت كل شيء."
+  },
+  "caughtUpDetail": {
+    "message": "تتتبّع الإضاءة المنشور الذي تمرّر المؤشر فوقه فقط."
+  },
+  "atmosphereLabel": {
+    "message": "أجواؤك"
+  },
+  "demoControlsHeading": {
+    "message": "اصنع الأجواء."
+  },
+  "demoControlsDescription": {
+    "message": "دع كل منشور يلوّن الصفحة."
+  },
+  "themeLabel": {
+    "message": "المظهر"
+  },
+  "themeSwitchLight": {
+    "message": "التبديل إلى المظهر الفاتح"
+  },
+  "themeSwitchDark": {
+    "message": "التبديل إلى المظهر الداكن"
+  },
+  "demoNote": {
+    "message": "مرّر المؤشر. استشعر اللون."
+  },
+  "demoNoteDetail": {
+    "message": "تملأ ألوان الصورة الناعمة خلفية الصفحة."
+  },
+  "addPostLabel": {
+    "message": "＋ إضافة منشور"
+  },
+  "demoFooter": {
+    "message": "هذا عرض تجريبي محلي."
+  },
+  "postNewLabel": {
+    "message": "منشور جديد بصورة"
+  },
+  "postNewAuthor": {
+    "message": "منشور جديد"
+  },
+  "postNewText": {
+    "message": "تتتبّع الإضاءة المنشورات المضافة حديثًا أيضًا."
+  },
+  "postNewImageAlt": {
+    "message": "ساحل فيروزي أُضيف حديثًا"
+  }
+}
