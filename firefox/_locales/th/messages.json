@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "แสงบรรยากาศจากภาพและวิดีโอบน X และ Instagram รวมถึงสตรีมบน Twitch และ Kick"
+  },
+  "popupSubtitle": {
+    "message": "แสงบรรยากาศสำหรับ X, Instagram, Twitch และ Kick"
+  },
+  "languageLabel": {
+    "message": "ภาษา"
+  },
+  "languageAutomatic": {
+    "message": "อัตโนมัติ (ตามภาษาของเบราว์เซอร์)"
+  },
+  "enabledLabel": {
+    "message": "เปิดแสงบรรยากาศ"
+  },
+  "lightSettings": {
+    "message": "การตั้งค่าแสง"
+  },
+  "scopeLabel": {
+    "message": "พื้นที่แสง"
+  },
+  "scopePage": {
+    "message": "พื้นหลังทั้งหน้า"
+  },
+  "scopePost": {
+    "message": "รอบโพสต์หรือเครื่องเล่น"
+  },
+  "intensityLabel": {
+    "message": "ความเข้ม"
+  },
+  "blurLabel": {
+    "message": "ความเบลอ"
+  },
+  "spreadLabel": {
+    "message": "การกระจาย"
+  },
+  "videoTrackingLabel": {
+    "message": "ติดตามสีของวิดีโอ"
+  },
+  "videoTrackingDescription": {
+    "message": "ปรับแสงตามวิดีโอที่กำลังเล่น"
+  },
+  "fitCardsLabel": {
+    "message": "ปรับการ์ด X ให้พอดีกับความกว้างหน้าต่าง"
+  },
+  "fitCardsDescription": {
+    "message": "ปรับความกว้างภาพและวิดีโอให้พอดีกับหน้าต่าง"
+  },
+  "modeLabel": {
+    "message": "โหมดการแสดงผล"
+  },
+  "modeAuto": {
+    "message": "อัตโนมัติ"
+  },
+  "modePc": {
+    "message": "พีซี (เมาส์)"
+  },
+  "modeMobile": {
+    "message": "มือถือ (กลางจอ)"
+  },
+  "hoverHint": {
+    "message": "ภาพและวิดีโอบน X และ Instagram สตรีมบน Twitch และ Kick"
+  },
+  "statusLoading": {
+    "message": "กำลังโหลดการตั้งค่า…"
+  },
+  "statusReady": {
+    "message": "หน้ารายละเอียดโพสต์ X เปิดแสงอัตโนมัติ ส่วนไทม์ไลน์และการตอบกลับให้วางเมาส์เหนือโพสต์ Instagram ติดตามโพสต์หรือรีลที่กำลังดู Twitch และ Kick ติดตามวิดีโอ"
+  },
+  "statusReadyMobile": {
+    "message": "X จะเปิดแสงที่โพสต์ซึ่งอยู่กลางหน้าจอ Instagram ติดตามโพสต์หรือรีลที่กำลังดู Twitch และ Kick ติดตามวิดีโอ"
+  },
+  "statusDisabled": {
+    "message": "ปิดแสงบรรยากาศอยู่"
+  },
+  "statusLoadError": {
+    "message": "โหลดการตั้งค่าไม่ได้ โปรดเปิดส่วนขยายอีกครั้ง"
+  },
+  "statusSaveError": {
+    "message": "บันทึกการเปลี่ยนแปลงไม่ได้ โปรดเปิดส่วนขยายอีกครั้ง"
+  },
+  "resetLabel": {
+    "message": "คืนค่าเริ่มต้น"
+  },
+  "demoTitle": {
+    "message": "X Ambient - หน้าทดลอง"
+  },
+  "homeLinkLabel": {
+    "message": "หน้าแรก X Ambient"
+  },
+  "navHome": {
+    "message": "หน้าแรก"
+  },
+  "navSearch": {
+    "message": "สำรวจ"
+  },
+  "navNotifications": {
+    "message": "การแจ้งเตือน"
+  },
+  "navMessages": {
+    "message": "ข้อความ"
+  },
+  "navBookmarks": {
+    "message": "บุ๊กมาร์ก"
+  },
+  "navProfile": {
+    "message": "โปรไฟล์"
+  },
+  "navCaption": {
+    "message": "แสงบรรยากาศสำหรับ X"
+  },
+  "localPlayground": {
+    "message": "หน้าทดลองในเครื่อง"
+  },
+  "youLabel": {
+    "message": "คุณ"
+  },
+  "playgroundLabel": {
+    "message": "หน้าทดลอง"
+  },
+  "timelineHeading": {
+    "message": "ไทม์ไลน์ที่เต็มไปด้วยสีสัน"
+  },
+  "previewLabel": {
+    "message": "ตัวอย่าง"
+  },
+  "forYouLabel": {
+    "message": "สำหรับคุณ"
+  },
+  "followingLabel": {
+    "message": "กำลังติดตาม"
+  },
+  "demoIntro": {
+    "message": "วางเมาส์เหนือโพสต์ที่มีภาพหรือวิดีโอ"
+  },
+  "demoIntroDetail": {
+    "message": "สีจะแผ่ไปทั่วหน้าและพื้นหลังของโพสต์อื่น"
+  },
+  "timelineLabel": {
+    "message": "ไทม์ไลน์"
+  },
+  "postSunsetLabel": {
+    "message": "โพสต์ภาพพระอาทิตย์ตก"
+  },
+  "postSunsetText": {
+    "message": "ชอบช่วงเวลานี้ของวัน เมื่อท้องฟ้าค่อย ๆ เปลี่ยนสี"
+  },
+  "sunsetImageAlt": {
+    "message": "ภูเขาสีม่วงใต้ท้องฟ้ายามพระอาทิตย์ตกสีส้ม"
+  },
+  "postForestLabel": {
+    "message": "โพสต์ภาพป่าที่มีแสงแดดส่อง"
+  },
+  "postForestText": {
+    "message": "สีของป่าที่มีแสงแดดส่องแผ่ออกไปนอกขอบภาพ"
+  },
+  "forestImageAlt": {
+    "message": "ป่าที่เต็มไปด้วยแสงสีเขียว"
+  },
+  "postVideoLabel": {
+    "message": "โพสต์วิดีโอสีที่เคลื่อนไหว"
+  },
+  "postVideoText": {
+    "message": "สีและแสงเคลื่อนไหวอย่างต่อเนื่อง"
+  },
+  "videoLabel": {
+    "message": "วิดีโอสีบรรยากาศ"
+  },
+  "postPortraitLabel": {
+    "message": "โพสต์วิดีโอแนวตั้ง"
+  },
+  "postPortraitText": {
+    "message": "สีจากวิดีโอแนวตั้งแผ่ออกไปทั้งสองด้านด้วย"
+  },
+  "portraitVideoLabel": {
+    "message": "วิดีโอแนวตั้ง"
+  },
+  "postMultipleLabel": {
+    "message": "โพสต์หลายภาพ"
+  },
+  "postMultipleText": {
+    "message": "ศึกษาเฉดสีฟ้า สีจากทั้งสองภาพไหลออกสู่บริเวณรอบ ๆ"
+  },
+  "coastImageAlt": {
+    "message": "ชายฝั่งสีฟ้าเทอร์ควอยซ์"
+  },
+  "nightImageAlt": {
+    "message": "ท้องฟ้ายามค่ำคืนสีฟ้าและม่วง"
+  },
+  "postTextLabel": {
+    "message": "โพสต์ที่มีแต่ข้อความ"
+  },
+  "postTextFirst": {
+    "message": "โพสต์ที่มีแต่ข้อความให้แสงได้พัก"
+  },
+  "postTextSecond": {
+    "message": "ช่วงพักเงียบ ๆ ก่อนภาพถัดไป"
+  },
+  "caughtUpLabel": {
+    "message": "คุณดูครบแล้ว"
+  },
+  "caughtUpDetail": {
+    "message": "แสงจะติดตามเฉพาะโพสต์ที่คุณวางเมาส์อยู่"
+  },
+  "atmosphereLabel": {
+    "message": "บรรยากาศของคุณ"
+  },
+  "demoControlsHeading": {
+    "message": "สร้างบรรยากาศ"
+  },
+  "demoControlsDescription": {
+    "message": "ให้แต่ละโพสต์แต่งแต้มสีให้หน้าเว็บ"
+  },
+  "themeLabel": {
+    "message": "ธีม"
+  },
+  "themeSwitchLight": {
+    "message": "ใช้ธีมสว่าง"
+  },
+  "themeSwitchDark": {
+    "message": "ใช้ธีมมืด"
+  },
+  "demoNote": {
+    "message": "วางเมาส์ สัมผัสสีสัน"
+  },
+  "demoNoteDetail": {
+    "message": "สีอ่อน ๆ จากภาพเติมเต็มพื้นหลังของหน้า"
+  },
+  "addPostLabel": {
+    "message": "＋ เพิ่มโพสต์"
+  },
+  "demoFooter": {
+    "message": "นี่คือหน้าสาธิตในเครื่อง"
+  },
+  "postNewLabel": {
+    "message": "โพสต์ภาพใหม่"
+  },
+  "postNewAuthor": {
+    "message": "โพสต์ใหม่"
+  },
+  "postNewText": {
+    "message": "แสงติดตามโพสต์ที่เพิ่งเพิ่มด้วย"
+  },
+  "postNewImageAlt": {
+    "message": "ภาพชายฝั่งสีฟ้าเทอร์ควอยซ์ที่เพิ่งเพิ่ม"
+  }
+}
