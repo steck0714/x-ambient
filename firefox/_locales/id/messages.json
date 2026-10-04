@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "Cahaya ambien untuk foto dan video X dan Instagram, serta siaran Twitch dan Kick."
+  },
+  "popupSubtitle": {
+    "message": "Cahaya ambien untuk X, Instagram, Twitch, dan Kick."
+  },
+  "languageLabel": {
+    "message": "Bahasa"
+  },
+  "languageAutomatic": {
+    "message": "Otomatis (bahasa browser)"
+  },
+  "enabledLabel": {
+    "message": "Aktifkan cahaya ambien"
+  },
+  "lightSettings": {
+    "message": "Pengaturan cahaya"
+  },
+  "scopeLabel": {
+    "message": "Area pencahayaan"
+  },
+  "scopePage": {
+    "message": "Seluruh latar halaman"
+  },
+  "scopePost": {
+    "message": "Di sekitar postingan atau pemutar"
+  },
+  "intensityLabel": {
+    "message": "Intensitas"
+  },
+  "blurLabel": {
+    "message": "Keburaman"
+  },
+  "spreadLabel": {
+    "message": "Penyebaran"
+  },
+  "videoTrackingLabel": {
+    "message": "Ikuti warna video"
+  },
+  "videoTrackingDescription": {
+    "message": "Perbarui cahaya saat video diputar"
+  },
+  "fitCardsLabel": {
+    "message": "Sesuaikan kartu X dengan lebar jendela"
+  },
+  "fitCardsDescription": {
+    "message": "Sesuaikan lebar foto dan video dengan jendela"
+  },
+  "modeLabel": {
+    "message": "Mode tampilan"
+  },
+  "modeAuto": {
+    "message": "Otomatis"
+  },
+  "modePc": {
+    "message": "PC (kursor)"
+  },
+  "modeMobile": {
+    "message": "Ponsel (tengah)"
+  },
+  "hoverHint": {
+    "message": "Foto dan video X dan Instagram. Siaran Twitch dan Kick."
+  },
+  "statusLoading": {
+    "message": "Memuat pengaturan…"
+  },
+  "statusReady": {
+    "message": "Detail postingan X menyala otomatis; arahkan kursor ke postingan linimasa atau balasan. Instagram mengikuti postingan atau Reel yang aktif. Twitch dan Kick mengikuti video."
+  },
+  "statusReadyMobile": {
+    "message": "X menyalakan postingan yang berada di tengah layar. Instagram mengikuti postingan atau Reel yang aktif. Twitch dan Kick mengikuti video."
+  },
+  "statusDisabled": {
+    "message": "Cahaya ambien dimatikan."
+  },
+  "statusLoadError": {
+    "message": "Tidak dapat memuat pengaturan. Buka kembali ekstensi."
+  },
+  "statusSaveError": {
+    "message": "Tidak dapat menyimpan perubahan. Buka kembali ekstensi."
+  },
+  "resetLabel": {
+    "message": "Pulihkan pengaturan awal"
+  },
+  "demoTitle": {
+    "message": "X Ambient - Ruang uji coba"
+  },
+  "homeLinkLabel": {
+    "message": "Beranda X Ambient"
+  },
+  "navHome": {
+    "message": "Beranda"
+  },
+  "navSearch": {
+    "message": "Jelajahi"
+  },
+  "navNotifications": {
+    "message": "Notifikasi"
+  },
+  "navMessages": {
+    "message": "Pesan"
+  },
+  "navBookmarks": {
+    "message": "Markah"
+  },
+  "navProfile": {
+    "message": "Profil"
+  },
+  "navCaption": {
+    "message": "CAHAYA AMBIEN UNTUK X"
+  },
+  "localPlayground": {
+    "message": "RUANG UJI COBA LOKAL"
+  },
+  "youLabel": {
+    "message": "Anda"
+  },
+  "playgroundLabel": {
+    "message": "UJI COBA"
+  },
+  "timelineHeading": {
+    "message": "Linimasa penuh warna"
+  },
+  "previewLabel": {
+    "message": "Pratinjau"
+  },
+  "forYouLabel": {
+    "message": "Untuk Anda"
+  },
+  "followingLabel": {
+    "message": "Mengikuti"
+  },
+  "demoIntro": {
+    "message": "Arahkan kursor ke postingan berisi foto atau video."
+  },
+  "demoIntroDetail": {
+    "message": "Warna menyebar ke seluruh halaman dan latar postingan lain."
+  },
+  "timelineLabel": {
+    "message": "Linimasa"
+  },
+  "postSunsetLabel": {
+    "message": "Postingan foto matahari terbenam"
+  },
+  "postSunsetText": {
+    "message": "Saya suka waktu ini, saat langit perlahan berganti warna."
+  },
+  "sunsetImageAlt": {
+    "message": "Pegunungan ungu di bawah langit senja jingga"
+  },
+  "postForestLabel": {
+    "message": "Postingan foto hutan diterangi matahari"
+  },
+  "postForestText": {
+    "message": "Warna hutan yang diterangi matahari menyebar melewati tepi foto."
+  },
+  "forestImageAlt": {
+    "message": "Hutan yang dipenuhi cahaya hijau"
+  },
+  "postVideoLabel": {
+    "message": "Postingan video warna bergerak"
+  },
+  "postVideoText": {
+    "message": "Warna dan cahaya terus bergerak."
+  },
+  "videoLabel": {
+    "message": "Video warna ambien"
+  },
+  "postPortraitLabel": {
+    "message": "Postingan video vertikal"
+  },
+  "postPortraitText": {
+    "message": "Warna dari video vertikal juga menyebar ke kedua sisi."
+  },
+  "portraitVideoLabel": {
+    "message": "Video vertikal"
+  },
+  "postMultipleLabel": {
+    "message": "Postingan beberapa foto"
+  },
+  "postMultipleText": {
+    "message": "Eksplorasi warna biru. Warna kedua foto mengalir ke sekitarnya."
+  },
+  "coastImageAlt": {
+    "message": "Garis pantai berwarna toska"
+  },
+  "nightImageAlt": {
+    "message": "Langit malam biru dan ungu"
+  },
+  "postTextLabel": {
+    "message": "Postingan teks saja"
+  },
+  "postTextFirst": {
+    "message": "Postingan teks memberi cahaya waktu beristirahat."
+  },
+  "postTextSecond": {
+    "message": "Jeda tenang sebelum foto berikutnya."
+  },
+  "caughtUpLabel": {
+    "message": "Anda sudah melihat semuanya."
+  },
+  "caughtUpDetail": {
+    "message": "Cahaya hanya mengikuti postingan yang disorot kursor."
+  },
+  "atmosphereLabel": {
+    "message": "SUASANA ANDA"
+  },
+  "demoControlsHeading": {
+    "message": "Atur suasana."
+  },
+  "demoControlsDescription": {
+    "message": "Biarkan setiap postingan mewarnai halaman."
+  },
+  "themeLabel": {
+    "message": "Tema"
+  },
+  "themeSwitchLight": {
+    "message": "Gunakan tema terang"
+  },
+  "themeSwitchDark": {
+    "message": "Gunakan tema gelap"
+  },
+  "demoNote": {
+    "message": "Arahkan kursor. Rasakan warnanya."
+  },
+  "demoNoteDetail": {
+    "message": "Warna lembut dari foto memenuhi latar halaman."
+  },
+  "addPostLabel": {
+    "message": "＋ Tambah postingan"
+  },
+  "demoFooter": {
+    "message": "Ini adalah demo lokal."
+  },
+  "postNewLabel": {
+    "message": "Postingan foto baru"
+  },
+  "postNewAuthor": {
+    "message": "Postingan baru"
+  },
+  "postNewText": {
+    "message": "Cahaya juga mengikuti postingan yang baru ditambahkan."
+  },
+  "postNewImageAlt": {
+    "message": "Garis pantai toska yang baru ditambahkan"
+  }
+}
