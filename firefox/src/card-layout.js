@@ -36,7 +36,17 @@
     function refresh() {
       frame = 0;
       if (!enabled) return;
-      for (const element of marked) element.classList.remove("xa-card-hidden");
+      // React may replace our classes/styles. Observe those changes without observing our own writes.
+      observer.disconnect();
+      try { updateColumns(); }
+      finally { observe(); }
+      document.dispatchEvent(new Event("xambient:layout"));
+    }
+    function updateColumns() {
+      for (const element of marked) {
+        if (!element.isConnected) marked.delete(element);
+        else element.classList.remove("xa-card-hidden");
+      }
       for (const column of document.querySelectorAll('[data-testid="primaryColumn"]')) {
         if (!column.querySelector('article[data-testid="tweet"], article[role="article"]')) continue;
         let state = columns.get(column);
@@ -89,16 +99,19 @@
         }
       }
       for (const [column] of columns) if (!column.isConnected) columns.delete(column);
-      document.dispatchEvent(new Event("xambient:layout"));
     }
     function schedule() {
       if (enabled && !frame) frame = requestAnimationFrame(refresh);
     }
     const observer = new MutationObserver(records => {
-      if (records.some(record => [...record.addedNodes].some(node => node.nodeType === Node.ELEMENT_NODE
-        && (node.matches('[data-testid="primaryColumn"], article') || node.querySelector('[data-testid="primaryColumn"], article'))))) schedule();
+      if (records.some(record => (record.type === "attributes" && marked.has(record.target))
+        || [...record.addedNodes].some(node => node.nodeType === Node.ELEMENT_NODE
+          && (node.matches('[data-testid="primaryColumn"], article') || node.querySelector('[data-testid="primaryColumn"], article'))))) schedule();
     });
-    observer.observe(document.body, { childList: true, subtree: true });
+    function observe() {
+      observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["class", "style"] });
+    }
+    observe();
     window.addEventListener("resize", schedule, { passive: true });
     return {
       setEnabled(value) {
