@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "Ánh sáng nền cho ảnh và video trên X, Instagram và các buổi phát trực tiếp trên Twitch, Kick."
+  },
+  "popupSubtitle": {
+    "message": "Ánh sáng nền cho X, Instagram, Twitch và Kick."
+  },
+  "languageLabel": {
+    "message": "Ngôn ngữ"
+  },
+  "languageAutomatic": {
+    "message": "Tự động (ngôn ngữ trình duyệt)"
+  },
+  "enabledLabel": {
+    "message": "Bật ánh sáng nền"
+  },
+  "lightSettings": {
+    "message": "Cài đặt ánh sáng"
+  },
+  "scopeLabel": {
+    "message": "Vùng chiếu sáng"
+  },
+  "scopePage": {
+    "message": "Toàn bộ nền trang"
+  },
+  "scopePost": {
+    "message": "Quanh bài đăng hoặc trình phát"
+  },
+  "intensityLabel": {
+    "message": "Cường độ"
+  },
+  "blurLabel": {
+    "message": "Độ mờ"
+  },
+  "spreadLabel": {
+    "message": "Độ lan tỏa"
+  },
+  "videoTrackingLabel": {
+    "message": "Theo màu sắc video"
+  },
+  "videoTrackingDescription": {
+    "message": "Cập nhật ánh sáng khi video phát"
+  },
+  "fitCardsLabel": {
+    "message": "Khớp thẻ X với chiều rộng cửa sổ"
+  },
+  "fitCardsDescription": {
+    "message": "Điều chỉnh chiều rộng ảnh và video theo cửa sổ"
+  },
+  "modeLabel": {
+    "message": "Chế độ hiển thị"
+  },
+  "modeAuto": {
+    "message": "Tự động"
+  },
+  "modePc": {
+    "message": "Máy tính (di chuột)"
+  },
+  "modeMobile": {
+    "message": "Di động (ở giữa)"
+  },
+  "hoverHint": {
+    "message": "Ảnh, video trên X và Instagram. Phát trực tiếp trên Twitch và Kick."
+  },
+  "statusLoading": {
+    "message": "Đang tải cài đặt…"
+  },
+  "statusReady": {
+    "message": "Trang chi tiết bài đăng X tự bật ánh sáng; hãy di chuột lên bài đăng hoặc phản hồi trên dòng thời gian. Instagram theo bài đăng hoặc Reel đang xem. Twitch và Kick theo video."
+  },
+  "statusReadyMobile": {
+    "message": "X bật ánh sáng cho bài đăng ở giữa màn hình. Instagram theo bài đăng hoặc Reel đang xem. Twitch và Kick theo video."
+  },
+  "statusDisabled": {
+    "message": "Ánh sáng nền đang tắt."
+  },
+  "statusLoadError": {
+    "message": "Không thể tải cài đặt. Hãy mở lại tiện ích."
+  },
+  "statusSaveError": {
+    "message": "Không thể lưu thay đổi. Hãy mở lại tiện ích."
+  },
+  "resetLabel": {
+    "message": "Khôi phục mặc định"
+  },
+  "demoTitle": {
+    "message": "X Ambient - Khu trải nghiệm"
+  },
+  "homeLinkLabel": {
+    "message": "Trang chủ X Ambient"
+  },
+  "navHome": {
+    "message": "Trang chủ"
+  },
+  "navSearch": {
+    "message": "Khám phá"
+  },
+  "navNotifications": {
+    "message": "Thông báo"
+  },
+  "navMessages": {
+    "message": "Tin nhắn"
+  },
+  "navBookmarks": {
+    "message": "Dấu trang"
+  },
+  "navProfile": {
+    "message": "Hồ sơ"
+  },
+  "navCaption": {
+    "message": "ÁNH SÁNG NỀN CHO X"
+  },
+  "localPlayground": {
+    "message": "KHU TRẢI NGHIỆM CỤC BỘ"
+  },
+  "youLabel": {
+    "message": "Bạn"
+  },
+  "playgroundLabel": {
+    "message": "TRẢI NGHIỆM"
+  },
+  "timelineHeading": {
+    "message": "Dòng thời gian đầy màu sắc"
+  },
+  "previewLabel": {
+    "message": "Xem trước"
+  },
+  "forYouLabel": {
+    "message": "Dành cho bạn"
+  },
+  "followingLabel": {
+    "message": "Đang theo dõi"
+  },
+  "demoIntro": {
+    "message": "Di chuột lên bài đăng có ảnh hoặc video."
+  },
+  "demoIntroDetail": {
+    "message": "Màu sắc lan khắp trang và nền các bài đăng khác."
+  },
+  "timelineLabel": {
+    "message": "Dòng thời gian"
+  },
+  "postSunsetLabel": {
+    "message": "Bài đăng ảnh hoàng hôn"
+  },
+  "postSunsetText": {
+    "message": "Tôi yêu khoảnh khắc này trong ngày, khi bầu trời chậm rãi đổi màu."
+  },
+  "sunsetImageAlt": {
+    "message": "Núi tím dưới bầu trời hoàng hôn màu cam"
+  },
+  "postForestLabel": {
+    "message": "Bài đăng ảnh rừng ngập nắng"
+  },
+  "postForestText": {
+    "message": "Màu sắc của khu rừng ngập nắng lan ra ngoài khung ảnh."
+  },
+  "forestImageAlt": {
+    "message": "Khu rừng tràn ngập ánh sáng xanh"
+  },
+  "postVideoLabel": {
+    "message": "Bài đăng video màu sắc chuyển động"
+  },
+  "postVideoText": {
+    "message": "Màu sắc và ánh sáng không ngừng chuyển động."
+  },
+  "videoLabel": {
+    "message": "Video màu sắc tạo ánh sáng nền"
+  },
+  "postPortraitLabel": {
+    "message": "Bài đăng video dọc"
+  },
+  "postPortraitText": {
+    "message": "Màu sắc từ video dọc cũng lan sang hai bên."
+  },
+  "portraitVideoLabel": {
+    "message": "Video dọc"
+  },
+  "postMultipleLabel": {
+    "message": "Bài đăng nhiều ảnh"
+  },
+  "postMultipleText": {
+    "message": "Khám phá sắc xanh. Màu của cả hai ảnh hòa vào không gian xung quanh."
+  },
+  "coastImageAlt": {
+    "message": "Bờ biển xanh ngọc"
+  },
+  "nightImageAlt": {
+    "message": "Bầu trời đêm xanh và tím"
+  },
+  "postTextLabel": {
+    "message": "Bài đăng chỉ có văn bản"
+  },
+  "postTextFirst": {
+    "message": "Bài đăng chỉ có văn bản cho ánh sáng nghỉ ngơi."
+  },
+  "postTextSecond": {
+    "message": "Một khoảng lặng trước bức ảnh tiếp theo."
+  },
+  "caughtUpLabel": {
+    "message": "Bạn đã xem hết rồi."
+  },
+  "caughtUpDetail": {
+    "message": "Ánh sáng chỉ theo bài đăng bạn đang di chuột lên."
+  },
+  "atmosphereLabel": {
+    "message": "KHÔNG GIAN CỦA BẠN"
+  },
+  "demoControlsHeading": {
+    "message": "Tạo không gian."
+  },
+  "demoControlsDescription": {
+    "message": "Để mỗi bài đăng tô màu cho trang."
+  },
+  "themeLabel": {
+    "message": "Giao diện"
+  },
+  "themeSwitchLight": {
+    "message": "Chuyển sang sáng"
+  },
+  "themeSwitchDark": {
+    "message": "Chuyển sang tối"
+  },
+  "demoNote": {
+    "message": "Di chuột. Cảm nhận màu sắc."
+  },
+  "demoNoteDetail": {
+    "message": "Màu sắc dịu nhẹ từ ảnh phủ lên nền trang."
+  },
+  "addPostLabel": {
+    "message": "＋ Thêm bài đăng"
+  },
+  "demoFooter": {
+    "message": "Đây là bản demo cục bộ."
+  },
+  "postNewLabel": {
+    "message": "Bài đăng ảnh mới"
+  },
+  "postNewAuthor": {
+    "message": "Bài đăng mới"
+  },
+  "postNewText": {
+    "message": "Ánh sáng cũng theo các bài đăng mới thêm."
+  },
+  "postNewImageAlt": {
+    "message": "Ảnh bờ biển xanh ngọc vừa thêm"
+  }
+}
