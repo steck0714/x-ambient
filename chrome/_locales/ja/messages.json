@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "XとInstagramの画像・動画、TwitchとKickの配信から広がるアンビエントライト。Xは、PCではホバー、スマホ・タブレットでは画面の中央の投稿に反応します。"
+  },
+  "popupSubtitle": {
+    "message": "X、Instagram、Twitch、Kickに、やわらかな光。"
+  },
+  "languageLabel": {
+    "message": "言語"
+  },
+  "languageAutomatic": {
+    "message": "自動（ブラウザの言語）"
+  },
+  "enabledLabel": {
+    "message": "アンビエントライトを有効にする"
+  },
+  "lightSettings": {
+    "message": "ライトの設定"
+  },
+  "scopeLabel": {
+    "message": "光を広げる場所"
+  },
+  "scopePage": {
+    "message": "ページの背景全体"
+  },
+  "scopePost": {
+    "message": "投稿・プレーヤーの周囲"
+  },
+  "intensityLabel": {
+    "message": "強さ"
+  },
+  "blurLabel": {
+    "message": "ぼかし"
+  },
+  "spreadLabel": {
+    "message": "広がり"
+  },
+  "videoTrackingLabel": {
+    "message": "動画の色に追従する"
+  },
+  "videoTrackingDescription": {
+    "message": "再生中のフレームに合わせて更新"
+  },
+  "fitCardsLabel": {
+    "message": "Xのカードを画面幅に合わせる"
+  },
+  "fitCardsDescription": {
+    "message": "ウィンドウに合わせて画像・動画の幅を調整"
+  },
+  "modeLabel": {
+    "message": "表示モード"
+  },
+  "modeAuto": {
+    "message": "自動"
+  },
+  "modePc": {
+    "message": "PC（ホバー）"
+  },
+  "modeMobile": {
+    "message": "モバイル（中央）"
+  },
+  "hoverHint": {
+    "message": "X・Instagramの画像・動画とTwitch・Kickの配信"
+  },
+  "statusLoading": {
+    "message": "設定を読み込み中…"
+  },
+  "statusReady": {
+    "message": "Xの詳細は自動、タイムライン・返信はホバーで点灯します。Instagramはアクティブな投稿・リール、Twitch・Kickは動画に追従します。"
+  },
+  "statusReadyMobile": {
+    "message": "Xは画面の中央に来た投稿が点灯します。Instagramはアクティブな投稿・リール、Twitch・Kickは動画に追従します。"
+  },
+  "statusDisabled": {
+    "message": "アンビエントライトはオフです。"
+  },
+  "statusLoadError": {
+    "message": "設定を読み込めませんでした。拡張を開き直してください。"
+  },
+  "statusSaveError": {
+    "message": "保存できませんでした。拡張を開き直してください。"
+  },
+  "resetLabel": {
+    "message": "初期値に戻す"
+  },
+  "demoTitle": {
+    "message": "X Ambient - Playground"
+  },
+  "homeLinkLabel": {
+    "message": "X Ambient ホーム"
+  },
+  "navHome": {
+    "message": "ホーム"
+  },
+  "navSearch": {
+    "message": "話題を検索"
+  },
+  "navNotifications": {
+    "message": "通知"
+  },
+  "navMessages": {
+    "message": "メッセージ"
+  },
+  "navBookmarks": {
+    "message": "ブックマーク"
+  },
+  "navProfile": {
+    "message": "プロフィール"
+  },
+  "navCaption": {
+    "message": "AMBIENT LIGHT FOR X"
+  },
+  "localPlayground": {
+    "message": "LOCAL PLAYGROUND"
+  },
+  "youLabel": {
+    "message": "あなた"
+  },
+  "playgroundLabel": {
+    "message": "PLAYGROUND"
+  },
+  "timelineHeading": {
+    "message": "光のあるタイムライン"
+  },
+  "previewLabel": {
+    "message": "Preview"
+  },
+  "forYouLabel": {
+    "message": "おすすめ"
+  },
+  "followingLabel": {
+    "message": "フォロー中"
+  },
+  "demoIntro": {
+    "message": "画像・動画のある投稿にカーソルを重ねてみてください。"
+  },
+  "demoIntroDetail": {
+    "message": "投稿カードの背景まで、ページ全体に色が広がります。"
+  },
+  "timelineLabel": {
+    "message": "タイムライン"
+  },
+  "postSunsetLabel": {
+    "message": "夕暮れの画像投稿"
+  },
+  "postSunsetText": {
+    "message": "空の色がゆっくり変わる、この時間が好き。"
+  },
+  "sunsetImageAlt": {
+    "message": "紫の山々とオレンジ色の夕焼け"
+  },
+  "postForestLabel": {
+    "message": "木漏れ日の画像投稿"
+  },
+  "postForestText": {
+    "message": "木漏れ日の色が、画像の縁から外へ伸びていく。"
+  },
+  "forestImageAlt": {
+    "message": "緑の光が差し込む森"
+  },
+  "postVideoLabel": {
+    "message": "色が動く動画投稿"
+  },
+  "postVideoText": {
+    "message": "色も、光も、動き続ける。"
+  },
+  "videoLabel": {
+    "message": "アンビエントカラーの動画"
+  },
+  "postPortraitLabel": {
+    "message": "縦長の動画投稿"
+  },
+  "postPortraitText": {
+    "message": "縦長の動画の色も、左右へ広がる。"
+  },
+  "portraitVideoLabel": {
+    "message": "縦長の動画"
+  },
+  "postMultipleLabel": {
+    "message": "複数画像の投稿"
+  },
+  "postMultipleText": {
+    "message": "青の記録。2枚の色が、そのまま周囲に広がる。"
+  },
+  "coastImageAlt": {
+    "message": "ターコイズ色の海岸"
+  },
+  "nightImageAlt": {
+    "message": "青と紫の夜空"
+  },
+  "postTextLabel": {
+    "message": "テキストだけの投稿"
+  },
+  "postTextFirst": {
+    "message": "文字だけの投稿ではライトはお休み。"
+  },
+  "postTextSecond": {
+    "message": "次の写真を待つ、静かな余白。"
+  },
+  "caughtUpLabel": {
+    "message": "すべての投稿を確認しました。"
+  },
+  "caughtUpDetail": {
+    "message": "光は、ホバーした投稿だけに追従します。"
+  },
+  "atmosphereLabel": {
+    "message": "YOUR ATMOSPHERE"
+  },
+  "demoControlsHeading": {
+    "message": "光を、ととのえる。"
+  },
+  "demoControlsDescription": {
+    "message": "投稿の色が、ページの空気になる。"
+  },
+  "themeLabel": {
+    "message": "表示モード"
+  },
+  "themeSwitchLight": {
+    "message": "ライトに切替"
+  },
+  "themeSwitchDark": {
+    "message": "ダークに切替"
+  },
+  "demoNote": {
+    "message": "Hover. Feel the color."
+  },
+  "demoNoteDetail": {
+    "message": "画像をぼかした色の広がりを、ページの背景全体へ。"
+  },
+  "addPostLabel": {
+    "message": "＋ 投稿を追加して試す"
+  },
+  "demoFooter": {
+    "message": "このページはローカルの動作デモです。"
+  },
+  "postNewLabel": {
+    "message": "追加した画像投稿"
+  },
+  "postNewAuthor": {
+    "message": "新しい投稿"
+  },
+  "postNewText": {
+    "message": "あとから追加された投稿にも、光が追従します。"
+  },
+  "postNewImageAlt": {
+    "message": "追加したターコイズ色の海岸"
+  }
+}
