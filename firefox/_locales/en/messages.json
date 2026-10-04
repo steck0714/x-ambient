@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "Ambient light for X and Instagram photos and videos, and Twitch and Kick streams. On phones, X follows the post at screen center."
+  },
+  "popupSubtitle": {
+    "message": "Ambient light for X, Instagram, Twitch and Kick."
+  },
+  "languageLabel": {
+    "message": "Language"
+  },
+  "languageAutomatic": {
+    "message": "Automatic (browser language)"
+  },
+  "enabledLabel": {
+    "message": "Enable ambient light"
+  },
+  "lightSettings": {
+    "message": "Lighting settings"
+  },
+  "scopeLabel": {
+    "message": "Lighting area"
+  },
+  "scopePage": {
+    "message": "Whole page background"
+  },
+  "scopePost": {
+    "message": "Around the post or player"
+  },
+  "intensityLabel": {
+    "message": "Intensity"
+  },
+  "blurLabel": {
+    "message": "Blur"
+  },
+  "spreadLabel": {
+    "message": "Spread"
+  },
+  "videoTrackingLabel": {
+    "message": "Follow video colors"
+  },
+  "videoTrackingDescription": {
+    "message": "Update the light as the video plays"
+  },
+  "fitCardsLabel": {
+    "message": "Fit X cards to window width"
+  },
+  "fitCardsDescription": {
+    "message": "Adjust photo and video width to the window"
+  },
+  "modeLabel": {
+    "message": "Display mode"
+  },
+  "modeAuto": {
+    "message": "Automatic"
+  },
+  "modePc": {
+    "message": "PC (hover)"
+  },
+  "modeMobile": {
+    "message": "Mobile (center)"
+  },
+  "hoverHint": {
+    "message": "X and Instagram media. Twitch and Kick streams."
+  },
+  "statusLoading": {
+    "message": "Loading settings…"
+  },
+  "statusReady": {
+    "message": "X details light up automatically; hover over timeline posts or replies. Instagram follows the active post or reel. Twitch and Kick follow the video."
+  },
+  "statusReadyMobile": {
+    "message": "X lights up the post at the center of the screen. Instagram follows the active post or reel. Twitch and Kick follow the video."
+  },
+  "statusDisabled": {
+    "message": "Ambient light is off."
+  },
+  "statusLoadError": {
+    "message": "Unable to load settings. Reopen the extension."
+  },
+  "statusSaveError": {
+    "message": "Unable to save changes. Reopen the extension."
+  },
+  "resetLabel": {
+    "message": "Reset to defaults"
+  },
+  "demoTitle": {
+    "message": "X Ambient - Playground"
+  },
+  "homeLinkLabel": {
+    "message": "X Ambient home"
+  },
+  "navHome": {
+    "message": "Home"
+  },
+  "navSearch": {
+    "message": "Explore"
+  },
+  "navNotifications": {
+    "message": "Notifications"
+  },
+  "navMessages": {
+    "message": "Messages"
+  },
+  "navBookmarks": {
+    "message": "Bookmarks"
+  },
+  "navProfile": {
+    "message": "Profile"
+  },
+  "navCaption": {
+    "message": "AMBIENT LIGHT FOR X"
+  },
+  "localPlayground": {
+    "message": "LOCAL PLAYGROUND"
+  },
+  "youLabel": {
+    "message": "You"
+  },
+  "playgroundLabel": {
+    "message": "PLAYGROUND"
+  },
+  "timelineHeading": {
+    "message": "A timeline in color"
+  },
+  "previewLabel": {
+    "message": "Preview"
+  },
+  "forYouLabel": {
+    "message": "For you"
+  },
+  "followingLabel": {
+    "message": "Following"
+  },
+  "demoIntro": {
+    "message": "Hover over a post with a photo or video."
+  },
+  "demoIntroDetail": {
+    "message": "Colors spread across the page and the backgrounds of other posts."
+  },
+  "timelineLabel": {
+    "message": "Timeline"
+  },
+  "postSunsetLabel": {
+    "message": "Sunset photo post"
+  },
+  "postSunsetText": {
+    "message": "I love this time of day, when the sky slowly changes color."
+  },
+  "sunsetImageAlt": {
+    "message": "Purple mountains under an orange sunset"
+  },
+  "postForestLabel": {
+    "message": "Sunlit forest photo post"
+  },
+  "postForestText": {
+    "message": "The colors of the sunlit forest spread beyond the edges of the photo."
+  },
+  "forestImageAlt": {
+    "message": "A forest filled with green light"
+  },
+  "postVideoLabel": {
+    "message": "Moving colors video post"
+  },
+  "postVideoText": {
+    "message": "The colors and light keep moving."
+  },
+  "videoLabel": {
+    "message": "Ambient color video"
+  },
+  "postPortraitLabel": {
+    "message": "Portrait video post"
+  },
+  "postPortraitText": {
+    "message": "Colors from portrait videos spread to both sides, too."
+  },
+  "portraitVideoLabel": {
+    "message": "Portrait video"
+  },
+  "postMultipleLabel": {
+    "message": "Multiple photos post"
+  },
+  "postMultipleText": {
+    "message": "A study in blue. The colors of both photos flow into their surroundings."
+  },
+  "coastImageAlt": {
+    "message": "A turquoise coastline"
+  },
+  "nightImageAlt": {
+    "message": "A blue and purple night sky"
+  },
+  "postTextLabel": {
+    "message": "Text-only post"
+  },
+  "postTextFirst": {
+    "message": "Text-only posts give the light a rest."
+  },
+  "postTextSecond": {
+    "message": "A quiet pause until the next photo."
+  },
+  "caughtUpLabel": {
+    "message": "You're all caught up."
+  },
+  "caughtUpDetail": {
+    "message": "The light follows only the post you hover over."
+  },
+  "atmosphereLabel": {
+    "message": "YOUR ATMOSPHERE"
+  },
+  "demoControlsHeading": {
+    "message": "Set the mood."
+  },
+  "demoControlsDescription": {
+    "message": "Let each post color the page."
+  },
+  "themeLabel": {
+    "message": "Theme"
+  },
+  "themeSwitchLight": {
+    "message": "Switch to light"
+  },
+  "themeSwitchDark": {
+    "message": "Switch to dark"
+  },
+  "demoNote": {
+    "message": "Hover. Feel the color."
+  },
+  "demoNoteDetail": {
+    "message": "Soft colors from the photo fill the page background."
+  },
+  "addPostLabel": {
+    "message": "＋ Add a post"
+  },
+  "demoFooter": {
+    "message": "This is a local demo."
+  },
+  "postNewLabel": {
+    "message": "New photo post"
+  },
+  "postNewAuthor": {
+    "message": "New post"
+  },
+  "postNewText": {
+    "message": "The light follows newly added posts, too."
+  },
+  "postNewImageAlt": {
+    "message": "A newly added turquoise coastline"
+  }
+}
