@@ -1,14 +1,46 @@
 (() => {
   "use strict";
 
+  const POST_SELECTOR = 'article[data-testid="tweet"], article[role="article"]';
+  const BACKGROUND_PROTECTED_SELECTOR = 'button, input, select, textarea, [role="button"], [role="dialog"], [role="menu"], [role="listbox"], [role="tooltip"], [aria-modal="true"], [data-testid="Dropdown"], [data-testid="tweetPhoto"], [data-testid="videoPlayer"], [data-testid^="UserAvatar"]';
+
+  function statusId(pathname) {
+    return String(pathname).match(/^\/(?:[^/]+\/status|i\/web\/status)\/(\d+)(?:\/|$)/)?.[1] || null;
+  }
+
+  function findDetailPost(root, pathname) {
+    const id = statusId(pathname);
+    if (!id) return null;
+    // Match the post's own timestamp, rather than a quoted post or a link in its text.
+    for (const time of root.querySelectorAll("time")) {
+      const post = time.closest(POST_SELECTOR);
+      const link = time.closest("a[href]");
+      if (post && link && link.closest(POST_SELECTOR) === post
+        && !time.closest('[data-testid="quoteTweet"]') && statusId(link.pathname) === id) return post;
+    }
+    return null;
+  }
+
+  // Keep the browser entry self-contained: already loaded manifests may have an older script list.
+  const Posts = Object.freeze({ POST_SELECTOR, statusId, findDetailPost });
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = Posts;
+    return;
+  }
+
   const Core = globalThis.XAmbientCore;
   const Settings = globalThis.XAmbientSettings;
+  const Streaming = globalThis.XAmbientStreaming;
+  const Instagram = globalThis.XAmbientInstagram;
   if (!Core || !Settings) return;
   globalThis.__xAmbientDispose?.();
-  const cards = globalThis.XAmbientCardLayout?.create();
+  const platform = Streaming?.platformForHostname(location.hostname) || "x";
+  const instagram = platform === "instagram";
+  const streaming = platform === "twitch" || platform === "kick";
+  const automatic = streaming || instagram;
+  const cards = platform === "x" ? globalThis.XAmbientCardLayout?.create() : null;
 
-  const POST_SELECTOR = 'article[data-testid="tweet"], article[role="article"]';
-  const IMAGE_SELECTOR = [
+  const IMAGE_SELECTOR = instagram ? "img" : [
     '[data-testid="tweetPhoto"] img',
     'img[src*="pbs.twimg.com/media/"]',
     'img[src*="pbs.twimg.com/tweet_video_thumb/"]',
@@ -31,8 +63,10 @@
   const removers = [];
   const posterCache = new WeakMap();
   let settings = { ...Settings.DEFAULTS };
+  let pathname = location.pathname;
   let pointer = null;
   let activePost = null;
+  let previewPost = null;
   let pendingPost = null;
   let hoverTimer = 0;
   let reconcileFrame = 0;
@@ -43,12 +77,20 @@
   let bounds = null;
   let projection = null;
   let protectionKey = "";
+  let backgroundActive = false;
+  let backgroundDirty = true;
+  let backgroundRestoreTimer = 0;
+  const clearedBackgrounds = new Set();
   let front = 0;
   let disposed = false;
   // モバイルモード（タッチ操作が主の端末）ではホバーできないので、画面の中央にある投稿に光を当てる。
   // 「自動」のときは端末から判断する。タッチ機能がない端末（PC・リモートデスクトップ・VM など）は、
   // (hover: none) と報告されることがあってもモバイル扱いにしない。
-  let autoTouch = navigator.maxTouchPoints > 0 && coarsePointer.matches;
+  // モバイルモード（画面の中央の投稿に光を当てる・軽い描画・スクロール中は消灯）の対象は X だけ。
+  // Instagram・Twitch・Kick はもともとホバーなしで自動追従するので、モードに関係なく従来どおりに動く
+  // （Twitch・Kick はチャット欄のスクロールで消灯してしまうため、スクロール連動は X 以外に入れない）。
+  const touchCapable = platform === "x";
+  let autoTouch = touchCapable && navigator.maxTouchPoints > 0 && coarsePointer.matches;
   let touchMode = autoTouch;
   let scrolling = false;
   let scrollTimer = 0;
@@ -56,8 +98,9 @@
 
   const host = document.createElement("div");
   host.id = "x-ambient-light";
+  host.dataset.platform = platform;
   host.setAttribute("aria-hidden", "true");
-  host.style.cssText = "all:initial;position:fixed;inset:0;z-index:2147483600;pointer-events:none;display:block;overflow:hidden;contain:strict;";
+  host.style.cssText = `all:initial;position:fixed;inset:0;z-index:${platform === "x" ? -1 : 2147483600};pointer-events:none;display:block;overflow:hidden;contain:strict;`;
   const shadow = host.attachShadow({ mode: "open" });
   const style = document.createElement("style");
   style.textContent = `
@@ -67,7 +110,6 @@
     .field { position:absolute; inset:0; pointer-events:none; }
     canvas { position:absolute; inset:0; width:100%; height:100%; opacity:0; transition:opacity 300ms ease; filter:blur(var(--xa-blur)) saturate(1.65); }
     canvas.front { opacity:1; }
-    .light.lite canvas { filter:saturate(1.65); }
     @media (prefers-reduced-motion:reduce) { .light, canvas { transition:none; } }
   `;
   const light = document.createElement("div");
@@ -83,6 +125,14 @@
   }
   light.append(field);
   shadow.append(style, light);
+  const backgroundStyle = document.createElement("style");
+  backgroundStyle.textContent = ".xa-background-clear { background-color:transparent !important; }";
+  backgroundStyle.disabled = true;
+  if (platform === "x") {
+    document.documentElement.append(backgroundStyle);
+    // X は元の色のまま（彩度を上げない）。モバイルの軽い描画（.lite）は CSS の blur も掛けない。
+    style.textContent += "canvas { filter:blur(var(--xa-blur)); } .light.lite canvas { filter:none; }";
+  }
   document.documentElement.append(host);
   const contexts = canvases.map((canvas) => canvas.getContext("2d"));
   const mosaic = document.createElement("canvas");
@@ -172,15 +222,73 @@
   }
 
   function updateTheme() {
+    if (platform === "x") return;
+    const backgrounds = [document.documentElement, document.body].filter(Boolean)
+      .map(element => getComputedStyle(element).backgroundColor);
     let dark = colorScheme.matches;
-    for (const element of [document.documentElement, document.body]) {
-      if (element) dark = Core.isDarkColor(getComputedStyle(element).backgroundColor, dark);
-    }
+    for (const color of backgrounds) dark = Core.isDarkColor(color, dark);
     host.style.mixBlendMode = dark ? "screen" : "multiply";
   }
 
+  function observeBackgrounds() {
+    if (platform !== "x" || !backgroundActive) return;
+    backgroundObserver.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["class", "style", "role", "aria-modal"] });
+    backgroundObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class", "style"] });
+  }
+
+  function syncBackgrounds() {
+    if (platform !== "x") return;
+    clearTimeout(backgroundRestoreTimer);
+    backgroundRestoreTimer = 0;
+    if (backgroundActive && !backgroundDirty) return;
+    backgroundActive = true;
+    backgroundDirty = false;
+    backgroundObserver.disconnect();
+    // Temporarily reveal native styles for theme detection, then expose only plain page surfaces.
+    // Normal compositing behind the UI lets intensity mix the theme with unmodified media colors.
+    backgroundStyle.disabled = true;
+    const nativeColors = [document.documentElement, document.body].map(element => getComputedStyle(element).backgroundColor);
+    host.style.backgroundColor = Core.resolveBackgroundColor(nativeColors, colorScheme.matches);
+    const next = new Set();
+    for (const element of document.querySelectorAll("body, body :is(div, main, article, section, aside, header, footer, nav)")) {
+      if (element.closest(BACKGROUND_PROTECTED_SELECTOR)) continue;
+      if (settings.scope === "post" && activePost?.contains(element)) continue;
+      const computed = getComputedStyle(element);
+      if (computed.backgroundColor === "rgba(0, 0, 0, 0)" || computed.backgroundImage !== "none"
+        || Number(computed.zIndex) > 10) continue;
+      const rect = element.getBoundingClientRect();
+      if (element !== document.body && (rect.width < 150 || rect.height < 32)) continue;
+      if (!element.classList.contains("xa-background-clear")) element.classList.add("xa-background-clear");
+      next.add(element);
+    }
+    for (const element of clearedBackgrounds) if (!next.has(element)) element.classList.remove("xa-background-clear");
+    clearedBackgrounds.clear();
+    for (const element of next) clearedBackgrounds.add(element);
+    backgroundStyle.disabled = false;
+    observeBackgrounds();
+  }
+
+  function restoreBackgrounds() {
+    clearTimeout(backgroundRestoreTimer);
+    backgroundRestoreTimer = 0;
+    backgroundActive = false;
+    backgroundDirty = true;
+    backgroundObserver.disconnect();
+    backgroundStyle.disabled = true;
+    for (const element of clearedBackgrounds) element.classList.remove("xa-background-clear");
+    clearedBackgrounds.clear();
+    host.style.removeProperty("background-color");
+  }
+
+  function releaseBackgrounds() {
+    if (platform !== "x" || !backgroundActive || backgroundRestoreTimer) return;
+    backgroundRestoreTimer = window.setTimeout(restoreBackgrounds, reducedMotion.matches ? 0 : 320);
+  }
+
   function applySettings(value) {
+    const scope = settings.scope;
     settings = Settings.normalize(value);
+    if (settings.scope !== scope) backgroundDirty = true;
     syncMode();
     cards?.setEnabled(settings.fitCards && !touchMode);
     host.style.setProperty("--xa-opacity", String(settings.intensity / 100));
@@ -205,9 +313,12 @@
     signature = "";
     bounds = null;
     projection = null;
+    host.dataset.mediaCount = "0";
     activeObserver.disconnect();
+    activeResizeObserver?.disconnect();
     stopFrames();
     light.classList.remove("visible");
+    releaseBackgrounds();
   }
 
   function visibleRect(element, fullRect, minSize = 48, minIntersection = 16) {
@@ -218,11 +329,14 @@
     let rect = Core.intersectRect(fullRect, { left: 0, top: 0, right: view.width, bottom: view.height });
     for (let parent = element.parentElement; rect && parent; parent = parent.parentElement) {
       const style = getComputedStyle(parent);
-      if (style.opacity === "0") return null;
+      if (style.opacity === "0" || (instagram && (parent.hidden || parent.getAttribute("aria-hidden") === "true"))) return null;
       const clipX = ["hidden", "clip", "auto", "scroll"].includes(style.overflowX);
       const clipY = ["hidden", "clip", "auto", "scroll"].includes(style.overflowY);
-      if (clipX || clipY) rect = Core.intersectRect(rect, parent.getBoundingClientRect(), clipX, clipY);
-      if (parent === activePost) break;
+      // Root overflow clips to the viewport, already applied above, not its scrolled DOM box.
+      if ((clipX || clipY) && parent !== document.documentElement && style.display !== "contents") {
+        rect = Core.intersectRect(rect, parent.getBoundingClientRect(), clipX, clipY);
+      }
+      if (!instagram && parent === activePost) break;
     }
     return rect && rect.width >= minIntersection && rect.height >= minIntersection ? rect : null;
   }
@@ -262,9 +376,40 @@
     return entry.image.complete && entry.image.naturalWidth ? entry.image : null;
   }
 
+  function instagramPoster(video) {
+    const box = video.getBoundingClientRect();
+    for (let parent = video.parentElement; parent && !parent.matches('main, [role="main"]'); parent = parent.parentElement) {
+      if (parent.querySelectorAll("video").length > 1) break;
+      const image = [...parent.querySelectorAll("img")].find(image => image.complete && image.naturalWidth
+        && Core.overlapFraction(box, image.getBoundingClientRect()) > 0.8);
+      if (image) return image;
+      if (parent.matches("article")) break;
+    }
+    return null;
+  }
+
+  function instagramCandidate(post) {
+    const items = [];
+    let playing = false;
+    for (const element of post.matches("video") ? [post] : post.querySelectorAll("img, video")) {
+      if (element.tagName === "IMG" && !Instagram.isPostImage(element)) continue;
+      const fullRect = element.getBoundingClientRect();
+      if (fullRect.width < 160 || fullRect.height < 90) continue;
+      const rect = visibleRect(element, fullRect, 90, 24);
+      if (!rect) continue;
+      items.push({ rect, fullRect });
+      if (element.tagName === "VIDEO" && !element.paused && !element.ended) playing = true;
+    }
+    return {
+      post, playing, dialog: Boolean(post.closest('[role="dialog"]')),
+      rect: Core.unionRects(items.map(item => item.rect)),
+      fullRect: Core.unionRects(items.map(item => item.fullRect)),
+    };
+  }
+
   function findMedia(post) {
     const videos = [];
-    for (const video of post.querySelectorAll("video")) {
+    for (const video of post.matches("video") ? [post] : post.querySelectorAll("video")) {
       const fullRect = video.getBoundingClientRect();
       const rect = visibleRect(video, fullRect);
       if (!rect) continue;
@@ -274,22 +419,29 @@
       }
       else {
         const poster = posterFor(video);
-        const descriptor = poster && imageDescriptor(poster, video, rect, fullRect);
+        const sibling = !poster && instagram && instagramPoster(video);
+        const descriptor = poster ? imageDescriptor(poster, video, rect, fullRect)
+          : sibling && imageDescriptor(sibling, sibling, rect, sibling.getBoundingClientRect());
         if (descriptor) videos.push(descriptor);
       }
     }
     const images = [];
     for (const image of post.querySelectorAll(IMAGE_SELECTOR)) {
       if (image.closest('[data-testid^="UserAvatar"]') || !image.complete || !image.naturalWidth) continue;
+      if (instagram && !Instagram.isPostImage(image)) continue;
       const presenter = imagePresenter(image);
       const fullRect = presenter.getBoundingClientRect();
+      if (instagram && (fullRect.width < 160 || fullRect.height < 90)) continue;
       const rect = visibleRect(presenter, fullRect);
       if (!rect || videos.some((video) => Core.overlapFraction(rect, video.rect) > 0.8)) continue;
       if (images.some((other) => Core.overlapFraction(rect, other.rect) > 0.9)) continue;
       const descriptor = imageDescriptor(image, presenter, rect, fullRect);
       if (descriptor) images.push(descriptor);
     }
-    return [...videos, ...images].slice(0, 4);
+    const found = [...videos, ...images];
+    // A carousel contributes its current slide, not hidden/preloaded neighbors.
+    if (instagram) return found.sort((a, b) => b.rect.width * b.rect.height - a.rect.width * a.rect.height).slice(0, 1);
+    return found.slice(0, 4);
   }
 
   function sourceKey(item) {
@@ -306,6 +458,8 @@
     if (scope === "page") {
       const protectedRects = [];
       for (const element of document.querySelectorAll("img, video, canvas")) {
+        // Instagram's decorative Reel backdrop must remain part of the lit background.
+        if (instagram && element.tagName === "IMG" && element.getAttribute("aria-hidden") === "true") continue;
         const presenter = element.tagName === "IMG" ? imagePresenter(element) : element;
         const box = presenter.getBoundingClientRect();
         const picture = imageDescriptor(element, presenter, box, box)?.fullRect || box;
@@ -344,7 +498,10 @@
     // メディアの近くが明るく、離れるほど薄くなるようにする。
     const reach = (touchMode ? view.height * (0.2 + settings.spread / 100 * 0.5) : 120 + settings.spread * 12) * scale;
     const depth = touchMode ? Math.max(2, Math.min(6, Math.round(Math.log2(Math.max(2, settings.blur * scale * LITE_DEPTH_FACTOR))))) : 0;
-    projection = { size, source, target, depth, strips: Core.buildRayProjection(source, target, size, reach, touchMode ? 24 : 96) };
+    // 本家 0.3.0 の edgeStrength（X の端の色を下限として保つ）は PC のみ。モバイルは上の減衰を優先し、
+    // 0.2.2.4 と同じく「メディアの近くが明るく、離れるほど薄い」見た目を保つ。
+    const edgeStrength = platform === "x" && !touchMode ? settings.intensity / 100 : 0;
+    projection = { size, source, target, depth, strips: Core.buildRayProjection(source, target, size, reach, edgeStrength, touchMode ? 24 : 96) };
     updateTheme();
   }
 
@@ -376,7 +533,7 @@
         mosaicContext.drawImage(source, crop.sx, crop.sy, crop.sw, crop.sh, crop.dx, crop.dy, crop.dw, crop.dh);
         drawn = true;
       } catch {
-        // X may replace a video source while React reuses its element.
+        // The site may replace a video source while React reuses its element.
         scheduleReconcile();
       } finally {
         mosaicContext.restore();
@@ -443,6 +600,7 @@
     host.dataset.mediaCount = String(media.length);
     if (!media.length || !bounds?.width || !bounds.height) {
       light.classList.remove("visible");
+      releaseBackgrounds();
       stopFrames();
       return;
     }
@@ -450,21 +608,30 @@
     if (changed) {
       const back = 1 - front;
       if (paint(back)) {
+        syncBackgrounds();
         canvases[front].classList.remove("front");
         canvases[back].classList.add("front");
         front = back;
         light.classList.add("visible");
       }
-    } else if (paint(front)) light.classList.add("visible");
+    } else if (paint(front)) {
+      syncBackgrounds();
+      light.classList.add("visible");
+    }
     startFrames();
   }
 
   function activate(post) {
     if (disposed || !eligible() || !post.isConnected || (touchMode && scrolling)) return;
+    clearTimeout(hoverTimer);
+    hoverTimer = 0;
+    if (activePost !== post) backgroundDirty = true;
     activePost = post;
     pendingPost = null;
     activeObserver.disconnect();
     activeObserver.observe(post, { childList: true, subtree: true, attributes: true, attributeFilter: ["src", "poster"] });
+    activeResizeObserver?.disconnect();
+    activeResizeObserver?.observe(post);
     refreshMedia(true);
   }
 
@@ -473,24 +640,55 @@
   }
 
   function reconcile() {
-    if (touchMode && eligible()) {
-      if (scrolling) return; // スクロールが止まってから当て直す
-      const view = viewport();
-      pointer = { x: view.width / 2, y: view.height / 2 };
+    if (pathname !== location.pathname) {
+      pathname = location.pathname;
+      // Coordinates from the previous page must not select a reply on arrival.
+      pointer = null;
+      deactivate();
     }
-    if (!eligible() || !pointer) {
+    if (!eligible()) {
       deactivate();
       return;
     }
-    let post = postAt(pointer.x, pointer.y);
+    if (instagram) {
+      const candidates = Instagram?.findPosts(document, pathname).map(instagramCandidate) || [];
+      const post = Instagram?.pickActive(candidates, viewport(), activePost);
+      if (!post) deactivate();
+      else if (post === activePost) refreshMedia();
+      else activate(post);
+      return;
+    }
+    if (streaming) {
+      const candidates = [...document.querySelectorAll("video")].map(video => ({
+        video, rect: visibleRect(video, video.getBoundingClientRect(), 160, 48),
+      }));
+      const video = Streaming.pickVideo(candidates);
+      if (!video) deactivate();
+      else if (video === activePost) refreshMedia();
+      else activate(video);
+      return;
+    }
+    // モバイルモード: ホバーの代わりに画面の中央を「ポインタ」として扱う。スクロールが止まってから当て直す。
+    if (touchMode) {
+      if (scrolling) return;
+      const view = viewport();
+      pointer = { x: view.width / 2, y: view.height / 2 };
+    }
+    const detailPost = Posts.findDetailPost(document, pathname) || (previewPost?.isConnected ? previewPost : null);
+    let post = pointer ? postAt(pointer.x, pointer.y) : null;
     // 画面中央が投稿どうしの隙間に当たっても、すぐ上下の投稿を拾う
     if (!post && touchMode) post = postAt(pointer.x, pointer.y - 24) || postAt(pointer.x, pointer.y + 24);
+    post = post || detailPost;
     if (post === activePost && post) {
       refreshMedia();
       return;
     }
     if (!post) {
       deactivate();
+      return;
+    }
+    if (post === detailPost) {
+      activate(post);
       return;
     }
     if (post === pendingPost) return;
@@ -503,19 +701,46 @@
   }
 
   const activeObserver = new MutationObserver(scheduleReconcile);
+  const backgroundObserver = new MutationObserver(records => {
+    const changed = records.some(record => {
+      const target = record.target;
+      if (!(target instanceof Element)) return false;
+      if (clearedBackgrounds.has(target)) return true;
+      if (target.closest(BACKGROUND_PROTECTED_SELECTOR)) return Boolean(target.querySelector(".xa-background-clear"));
+      if (record.type === "childList") return [...record.addedNodes, ...record.removedNodes].some(node => node.nodeType === Node.ELEMENT_NODE);
+      return target === document.documentElement || target === document.body || clearedBackgrounds.has(target)
+        || getComputedStyle(target).backgroundColor !== "rgba(0, 0, 0, 0)";
+    });
+    if (changed) {
+      backgroundDirty = true;
+      scheduleReconcile();
+    }
+  });
+  const activeResizeObserver = automatic ? new ResizeObserver(scheduleReconcile) : null;
   const pageObserver = new MutationObserver((records) => {
-    if (!pointer || !eligible()) return;
+    if (pathname !== location.pathname) scheduleReconcile();
+    if ((!automatic && !pointer && !Posts.statusId(location.pathname)) || !eligible()) return;
+    if (!automatic && records.some(record => record.type === "attributes" && record.target.matches('a[href*="/status/"]'))) scheduleReconcile();
+    if (instagram && records.some(record => record.type === "attributes"
+      && (record.target.matches('article, img, video, [role="dialog"]') || record.target.querySelector("article, img, video")))) scheduleReconcile();
+    if (streaming && records.some(record => record.type === "attributes"
+      && (record.target.matches("video") || record.target.querySelector("video")))) scheduleReconcile();
     if (activePost && !activePost.isConnected) scheduleReconcile();
     else if (records.some((record) => [...record.addedNodes, ...record.removedNodes].some((node) =>
-      node.nodeType === Node.ELEMENT_NODE && (node.matches(`${POST_SELECTOR}, img, video`) || node.querySelector(`${POST_SELECTOR}, img, video`))))) scheduleReconcile();
+      node.nodeType === Node.ELEMENT_NODE && (node.matches("article, img, video") || node.querySelector("article, img, video"))))) scheduleReconcile();
   });
-  pageObserver.observe(document.body, { childList: true, subtree: true });
+  pageObserver.observe(document.body, {
+    childList: true, subtree: true,
+    attributes: true,
+    attributeFilter: automatic ? ["style", "class", "hidden", "aria-hidden", "src", "srcset", "poster"] : ["href"],
+  });
   const themeObserver = new MutationObserver(scheduleReconcile);
   themeObserver.observe(document.body, { attributes: true, attributeFilter: ["style", "class"] });
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["style", "class"] });
 
   // 表示モード: auto は端末から判断 / pc はマウスでホバー / mobile は画面の中央の投稿。
   function syncMode() {
-    setTouchMode(settings.mode === "mobile" ? true : settings.mode === "pc" ? false : autoTouch);
+    setTouchMode(touchCapable && (settings.mode === "mobile" ? true : settings.mode === "pc" ? false : autoTouch));
   }
 
   function setTouchMode(next) {
@@ -537,11 +762,14 @@
     autoTouch = next;
     syncMode();
   }
-  listen(document, "pointerdown", (event) => {
-    if (settings.mode === "auto" && event.isTrusted) setAutoTouch(event.pointerType === "touch" && navigator.maxTouchPoints > 0);
-  }, { passive: true, capture: true });
-  listen(coarsePointer, "change", () => setAutoTouch(navigator.maxTouchPoints > 0 && coarsePointer.matches));
+  if (touchCapable) {
+    listen(document, "pointerdown", (event) => {
+      if (settings.mode === "auto" && event.isTrusted) setAutoTouch(event.pointerType === "touch" && navigator.maxTouchPoints > 0);
+    }, { passive: true, capture: true });
+    listen(coarsePointer, "change", () => setAutoTouch(navigator.maxTouchPoints > 0 && coarsePointer.matches));
+  }
   listen(document, "pointermove", (event) => {
+    if (automatic) return;
     if (event.pointerType === "touch") return;
     if (settings.mode === "auto" && autoTouch) setAutoTouch(false);
     if (touchMode) return; // モバイルモード固定のときはマウスの動きを見ない
@@ -551,10 +779,10 @@
     scheduleReconcile();
   }, { passive: true });
   listen(document, "pointerout", (event) => {
-    if (touchMode || event.pointerType === "touch") return;
+    if (automatic || touchMode || event.pointerType === "touch") return;
     if (!event.relatedTarget) {
       pointer = null;
-      deactivate();
+      scheduleReconcile();
     }
   }, { passive: true });
   listen(document, "scroll", () => {
@@ -574,23 +802,28 @@
       scheduleReconcile();
     }, SETTLE_MS);
   }, { passive: true, capture: true });
-  listen(window, "resize", scheduleReconcile, { passive: true });
+  for (const type of ["transitionend", "transitioncancel", "animationend"]) {
+    listen(document, type, event => {
+      if (instagram && event.target instanceof Element
+        && (event.target.matches("img, video") || event.target.querySelector("img, video"))) scheduleReconcile();
+    }, true);
+  }
+  listen(window, "resize", () => { backgroundDirty = true; scheduleReconcile(); }, { passive: true });
   listen(document, "xambient:layout", scheduleReconcile);
-  listen(window, "blur", () => {
-    if (touchMode) return;
-    pointer = null;
-    deactivate();
-  });
+  listen(window, "blur", () => { if (!automatic && !touchMode) { pointer = null; scheduleReconcile(); } });
+  listen(window, "focus", scheduleReconcile);
+  listen(window, "popstate", scheduleReconcile);
+  if (window.navigation) listen(window.navigation, "currententrychange", scheduleReconcile);
   listen(document, "visibilitychange", scheduleReconcile);
   listen(document, "fullscreenchange", scheduleReconcile);
   for (const event of ["load", "loadeddata", "play", "pause", "ended", "seeked", "emptied", "resize"]) {
     listen(document, event, (event) => {
-      if (event.target instanceof Element && activePost
-        && (activePost.contains(event.target) || event.type === "load")) scheduleReconcile();
+      if (event.target instanceof Element && ((automatic && event.target.matches("img, video"))
+        || (activePost && (activePost.contains(event.target) || event.type === "load")))) scheduleReconcile();
     }, true);
   }
   listen(reducedMotion, "change", scheduleReconcile);
-  listen(colorScheme, "change", scheduleReconcile);
+  listen(colorScheme, "change", () => { backgroundDirty = true; scheduleReconcile(); });
 
   if (hasStorage) {
     chrome.storage.local.get(Settings.STORAGE_KEY).then((result) => {
@@ -604,6 +837,11 @@
   } else {
     // The local demo uses the same renderer without an installed extension.
     listen(document, "xambient:settings", (event) => applySettings(event.detail));
+    listen(document, "xambient:preview", (event) => {
+      const post = event.detail;
+      previewPost = post instanceof Element && post.matches(POST_SELECTOR) ? post : null;
+      scheduleReconcile();
+    });
   }
   applySettings(settings);
 
@@ -616,6 +854,8 @@
     pageObserver.disconnect();
     themeObserver.disconnect();
     cards?.dispose();
+    restoreBackgrounds();
+    backgroundStyle.remove();
     for (const remove of removers) remove();
     host.remove();
   }

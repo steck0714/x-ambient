@@ -1,46 +1,51 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>X Ambient</title>
     <link rel="stylesheet" href="popup.css">
     <script src="settings.js" defer></script>
+    <script src="i18n.js" defer></script>
     <script src="popup.js" defer></script>
     <script src="popup-fit.js" defer></script>
   </head>
   <body>
     <header>
       <div class="logo" aria-hidden="true"><span></span></div>
-      <div><h1>X Ambient</h1><p>タイムラインに、やわらかな光。</p></div>
-      <label class="switch" title="アンビエントライトを有効にする">
-        <input id="enabled" type="checkbox" aria-label="アンビエントライトを有効にする" disabled>
+      <div><h1><bdi>X Ambient</bdi></h1><p data-i18n="popupSubtitle">Ambient light for X, Instagram, Twitch and Kick.</p></div>
+      <label class="switch" title="Enable ambient light" data-i18n-title="enabledLabel">
+        <input id="enabled" type="checkbox" aria-label="Enable ambient light" data-i18n-aria-label="enabledLabel" disabled>
         <span></span>
       </label>
     </header>
+    <div class="setting language-setting">
+      <label for="language" data-i18n="languageLabel">Language</label>
+      <select id="language" disabled><option value="auto" data-i18n="languageAutomatic">Automatic (browser language)</option></select>
+    </div>
     <fieldset id="controls" disabled>
-      <legend class="sr-only">ライトの設定</legend>
+      <legend class="sr-only" data-i18n="lightSettings">Lighting settings</legend>
       <div class="setting">
-        <label for="scope">光を広げる場所</label>
-        <select id="scope"><option value="page">ページの背景全体</option><option value="post">投稿の周囲</option></select>
+        <label for="scope" data-i18n="scopeLabel">Lighting area</label>
+        <select id="scope"><option value="page" data-i18n="scopePage">Whole page background</option><option value="post" data-i18n="scopePost">Around the post or player</option></select>
       </div>
       <div class="setting slider">
-        <div><label for="intensity">強さ</label><output id="intensity-value" for="intensity">65%</output></div>
+        <div><label for="intensity" data-i18n="intensityLabel">Intensity</label><output id="intensity-value" for="intensity">65%</output></div>
         <input id="intensity" type="range" min="0" max="100" value="65">
       </div>
       <div class="setting slider">
-        <div><label for="blur">ぼかし</label><output id="blur-value" for="blur">56px</output></div>
+        <div><label for="blur" data-i18n="blurLabel">Blur</label><output id="blur-value" for="blur">56 px</output></div>
         <input id="blur" type="range" min="24" max="160" value="56">
       </div>
       <div class="setting slider">
-        <div><label for="spread">広がり</label><output id="spread-value" for="spread">75%</output></div>
+        <div><label for="spread" data-i18n="spreadLabel">Spread</label><output id="spread-value" for="spread">75%</output></div>
         <input id="spread" type="range" min="20" max="100" value="75">
       </div>
-      <label class="video-setting"><span>動画の色に追従する<small>再生中のフレームに合わせて更新</small></span><input id="animateVideo" type="checkbox" checked></label>
-      <label class="video-setting"><span>カードを画面幅に合わせる<small>ウィンドウに合わせて画像・動画の幅を調整</small></span><input id="fitCards" type="checkbox"></label>
-      <label class="mode-setting"><span>表示モード</span><select id="mode"><option value="auto">自動</option><option value="pc">PC（ホバー）</option><option value="mobile">モバイル（中央）</option></select></label>
+      <label class="video-setting" for="animateVideo"><span><span data-i18n="videoTrackingLabel">Follow video colors</span><small data-i18n="videoTrackingDescription">Update the light as the video plays</small></span><input id="animateVideo" type="checkbox" checked></label>
+      <label class="video-setting" for="fitCards"><span><span data-i18n="fitCardsLabel">Fit X cards to window width</span><small data-i18n="fitCardsDescription">Adjust photo and video width to the window</small></span><input id="fitCards" type="checkbox"></label>
+      <label class="mode-setting" for="mode"><span data-i18n="modeLabel">Display mode</span><select id="mode"><option value="auto" data-i18n="modeAuto">Automatic</option><option value="pc" data-i18n="modePc">PC (hover)</option><option value="mobile" data-i18n="modeMobile">Mobile (center)</option></select></label>
     </fieldset>
-    <div class="hint"><span class="dot"></span><p id="status" role="status">設定を読み込み中…</p></div>
-    <footer><span>画像・動画のある投稿にホバー</span><button id="reset" type="button" disabled>初期値に戻す</button></footer>
+    <div class="hint"><span class="dot"></span><p id="status" role="status" data-i18n="statusLoading">Loading settings…</p></div>
+    <footer><span data-i18n="hoverHint">X and Instagram media. Twitch and Kick streams.</span><button id="reset" type="button" data-i18n="resetLabel" disabled>Reset to defaults</button></footer>
   </body>
 </html>
