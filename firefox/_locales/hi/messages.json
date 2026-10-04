@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "X और Instagram की तस्वीरों और वीडियो तथा Twitch और Kick की स्ट्रीम के लिए परिवेशी रोशनी।"
+  },
+  "popupSubtitle": {
+    "message": "X, Instagram, Twitch और Kick के लिए परिवेशी रोशनी।"
+  },
+  "languageLabel": {
+    "message": "भाषा"
+  },
+  "languageAutomatic": {
+    "message": "अपने आप (ब्राउज़र की भाषा)"
+  },
+  "enabledLabel": {
+    "message": "परिवेशी रोशनी चालू करें"
+  },
+  "lightSettings": {
+    "message": "रोशनी की सेटिंग"
+  },
+  "scopeLabel": {
+    "message": "रोशनी का क्षेत्र"
+  },
+  "scopePage": {
+    "message": "पूरे पेज की पृष्ठभूमि"
+  },
+  "scopePost": {
+    "message": "पोस्ट या प्लेयर के आसपास"
+  },
+  "intensityLabel": {
+    "message": "तीव्रता"
+  },
+  "blurLabel": {
+    "message": "धुंधलापन"
+  },
+  "spreadLabel": {
+    "message": "फैलाव"
+  },
+  "videoTrackingLabel": {
+    "message": "वीडियो के रंगों का अनुसरण करें"
+  },
+  "videoTrackingDescription": {
+    "message": "वीडियो चलते समय रोशनी बदलें"
+  },
+  "fitCardsLabel": {
+    "message": "X के कार्ड को विंडो की चौड़ाई में फ़िट करें"
+  },
+  "fitCardsDescription": {
+    "message": "तस्वीरों और वीडियो की चौड़ाई विंडो के अनुसार बदलें"
+  },
+  "modeLabel": {
+    "message": "डिस्प्ले मोड"
+  },
+  "modeAuto": {
+    "message": "अपने आप"
+  },
+  "modePc": {
+    "message": "पीसी (कर्सर)"
+  },
+  "modeMobile": {
+    "message": "मोबाइल (बीच में)"
+  },
+  "hoverHint": {
+    "message": "X और Instagram की तस्वीरें और वीडियो। Twitch और Kick की स्ट्रीम।"
+  },
+  "statusLoading": {
+    "message": "सेटिंग लोड हो रही हैं…"
+  },
+  "statusReady": {
+    "message": "X पर पोस्ट का विवरण खोलने पर रोशनी अपने आप चालू होती है; टाइमलाइन के पोस्ट या जवाब पर कर्सर रखें। Instagram सक्रिय पोस्ट या रील का अनुसरण करता है। Twitch और Kick वीडियो का अनुसरण करते हैं।"
+  },
+  "statusReadyMobile": {
+    "message": "X स्क्रीन के बीच वाले पोस्ट पर रोशनी चालू करता है। Instagram सक्रिय पोस्ट या रील का अनुसरण करता है। Twitch और Kick वीडियो का अनुसरण करते हैं।"
+  },
+  "statusDisabled": {
+    "message": "परिवेशी रोशनी बंद है।"
+  },
+  "statusLoadError": {
+    "message": "सेटिंग लोड नहीं हो सकीं। एक्सटेंशन दोबारा खोलें।"
+  },
+  "statusSaveError": {
+    "message": "बदलाव सेव नहीं हो सके। एक्सटेंशन दोबारा खोलें।"
+  },
+  "resetLabel": {
+    "message": "डिफ़ॉल्ट पर रीसेट करें"
+  },
+  "demoTitle": {
+    "message": "X Ambient - प्रयोग क्षेत्र"
+  },
+  "homeLinkLabel": {
+    "message": "X Ambient का होम पेज"
+  },
+  "navHome": {
+    "message": "होम"
+  },
+  "navSearch": {
+    "message": "खोजें"
+  },
+  "navNotifications": {
+    "message": "सूचनाएँ"
+  },
+  "navMessages": {
+    "message": "संदेश"
+  },
+  "navBookmarks": {
+    "message": "बुकमार्क"
+  },
+  "navProfile": {
+    "message": "प्रोफ़ाइल"
+  },
+  "navCaption": {
+    "message": "X के लिए परिवेशी रोशनी"
+  },
+  "localPlayground": {
+    "message": "स्थानीय प्रयोग क्षेत्र"
+  },
+  "youLabel": {
+    "message": "आप"
+  },
+  "playgroundLabel": {
+    "message": "प्रयोग क्षेत्र"
+  },
+  "timelineHeading": {
+    "message": "रंगों से भरी टाइमलाइन"
+  },
+  "previewLabel": {
+    "message": "प्रीव्यू"
+  },
+  "forYouLabel": {
+    "message": "आपके लिए"
+  },
+  "followingLabel": {
+    "message": "फ़ॉलो कर रहे हैं"
+  },
+  "demoIntro": {
+    "message": "तस्वीर या वीडियो वाली पोस्ट पर कर्सर रखें।"
+  },
+  "demoIntroDetail": {
+    "message": "रंग पूरे पेज और दूसरी पोस्ट की पृष्ठभूमि में फैलते हैं।"
+  },
+  "timelineLabel": {
+    "message": "टाइमलाइन"
+  },
+  "postSunsetLabel": {
+    "message": "सूर्यास्त की तस्वीर वाली पोस्ट"
+  },
+  "postSunsetText": {
+    "message": "मुझे दिन का यह समय पसंद है, जब आसमान धीरे-धीरे रंग बदलता है।"
+  },
+  "sunsetImageAlt": {
+    "message": "नारंगी सूर्यास्त के नीचे बैंगनी पहाड़"
+  },
+  "postForestLabel": {
+    "message": "धूप से रोशन जंगल की तस्वीर वाली पोस्ट"
+  },
+  "postForestText": {
+    "message": "धूप से रोशन जंगल के रंग तस्वीर के किनारों से बाहर फैलते हैं।"
+  },
+  "forestImageAlt": {
+    "message": "हरी रोशनी से भरा जंगल"
+  },
+  "postVideoLabel": {
+    "message": "बदलते रंगों के वीडियो वाली पोस्ट"
+  },
+  "postVideoText": {
+    "message": "रंग और रोशनी लगातार बदलते रहते हैं।"
+  },
+  "videoLabel": {
+    "message": "परिवेशी रंगों का वीडियो"
+  },
+  "postPortraitLabel": {
+    "message": "लंबवत वीडियो वाली पोस्ट"
+  },
+  "postPortraitText": {
+    "message": "लंबवत वीडियो के रंग भी दोनों तरफ़ फैलते हैं।"
+  },
+  "portraitVideoLabel": {
+    "message": "लंबवत वीडियो"
+  },
+  "postMultipleLabel": {
+    "message": "कई तस्वीरों वाली पोस्ट"
+  },
+  "postMultipleText": {
+    "message": "नीले रंगों का प्रयोग। दोनों तस्वीरों के रंग आसपास के हिस्सों में फैलते हैं।"
+  },
+  "coastImageAlt": {
+    "message": "फ़िरोज़ी समुद्र तट"
+  },
+  "nightImageAlt": {
+    "message": "नीला और बैंगनी रात का आसमान"
+  },
+  "postTextLabel": {
+    "message": "सिर्फ़ टेक्स्ट वाली पोस्ट"
+  },
+  "postTextFirst": {
+    "message": "सिर्फ़ टेक्स्ट वाली पोस्ट रोशनी को आराम देती हैं।"
+  },
+  "postTextSecond": {
+    "message": "अगली तस्वीर से पहले एक शांत विराम।"
+  },
+  "caughtUpLabel": {
+    "message": "आपने सब देख लिया।"
+  },
+  "caughtUpDetail": {
+    "message": "रोशनी सिर्फ़ उस पोस्ट का अनुसरण करती है जिस पर कर्सर है।"
+  },
+  "atmosphereLabel": {
+    "message": "आपका माहौल"
+  },
+  "demoControlsHeading": {
+    "message": "माहौल बनाएँ।"
+  },
+  "demoControlsDescription": {
+    "message": "हर पोस्ट से पेज को रंग दें।"
+  },
+  "themeLabel": {
+    "message": "थीम"
+  },
+  "themeSwitchLight": {
+    "message": "हल्की थीम चुनें"
+  },
+  "themeSwitchDark": {
+    "message": "गहरी थीम चुनें"
+  },
+  "demoNote": {
+    "message": "कर्सर रखें। रंग महसूस करें।"
+  },
+  "demoNoteDetail": {
+    "message": "तस्वीर के हल्के रंग पेज की पृष्ठभूमि भर देते हैं।"
+  },
+  "addPostLabel": {
+    "message": "＋ पोस्ट जोड़ें"
+  },
+  "demoFooter": {
+    "message": "यह एक स्थानीय डेमो है।"
+  },
+  "postNewLabel": {
+    "message": "तस्वीर वाली नई पोस्ट"
+  },
+  "postNewAuthor": {
+    "message": "नई पोस्ट"
+  },
+  "postNewText": {
+    "message": "रोशनी नई जोड़ी गई पोस्ट का भी अनुसरण करती है।"
+  },
+  "postNewImageAlt": {
+    "message": "नया जोड़ा गया फ़िरोज़ी समुद्र तट"
+  }
+}
