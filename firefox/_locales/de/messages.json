@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "Umgebungslicht für Fotos und Videos auf X und Instagram sowie Streams auf Twitch und Kick."
+  },
+  "popupSubtitle": {
+    "message": "Umgebungslicht für X, Instagram, Twitch und Kick."
+  },
+  "languageLabel": {
+    "message": "Sprache"
+  },
+  "languageAutomatic": {
+    "message": "Automatisch (Browsersprache)"
+  },
+  "enabledLabel": {
+    "message": "Umgebungslicht aktivieren"
+  },
+  "lightSettings": {
+    "message": "Lichteinstellungen"
+  },
+  "scopeLabel": {
+    "message": "Beleuchtungsbereich"
+  },
+  "scopePage": {
+    "message": "Hintergrund der gesamten Seite"
+  },
+  "scopePost": {
+    "message": "Um den Beitrag oder Player"
+  },
+  "intensityLabel": {
+    "message": "Intensität"
+  },
+  "blurLabel": {
+    "message": "Weichzeichnung"
+  },
+  "spreadLabel": {
+    "message": "Ausbreitung"
+  },
+  "videoTrackingLabel": {
+    "message": "Videofarben folgen"
+  },
+  "videoTrackingDescription": {
+    "message": "Licht während der Wiedergabe aktualisieren"
+  },
+  "fitCardsLabel": {
+    "message": "X-Karten an die Fensterbreite anpassen"
+  },
+  "fitCardsDescription": {
+    "message": "Breite von Fotos und Videos an das Fenster anpassen"
+  },
+  "modeLabel": {
+    "message": "Anzeigemodus"
+  },
+  "modeAuto": {
+    "message": "Automatisch"
+  },
+  "modePc": {
+    "message": "PC (Hover)"
+  },
+  "modeMobile": {
+    "message": "Mobil (Mitte)"
+  },
+  "hoverHint": {
+    "message": "Fotos und Videos auf X und Instagram. Streams auf Twitch und Kick."
+  },
+  "statusLoading": {
+    "message": "Einstellungen werden geladen…"
+  },
+  "statusReady": {
+    "message": "Die Detailansicht eines X-Beitrags wird automatisch beleuchtet; bewege den Mauszeiger über Beiträge in der Timeline oder Antworten. Instagram folgt dem aktiven Beitrag oder Reel. Twitch und Kick folgen dem Video."
+  },
+  "statusReadyMobile": {
+    "message": "X beleuchtet den Beitrag in der Bildschirmmitte. Instagram folgt dem aktiven Beitrag oder Reel. Twitch und Kick folgen dem Video."
+  },
+  "statusDisabled": {
+    "message": "Umgebungslicht ist ausgeschaltet."
+  },
+  "statusLoadError": {
+    "message": "Einstellungen konnten nicht geladen werden. Öffne die Erweiterung erneut."
+  },
+  "statusSaveError": {
+    "message": "Änderungen konnten nicht gespeichert werden. Öffne die Erweiterung erneut."
+  },
+  "resetLabel": {
+    "message": "Standardeinstellungen"
+  },
+  "demoTitle": {
+    "message": "X Ambient - Testbereich"
+  },
+  "homeLinkLabel": {
+    "message": "X Ambient Startseite"
+  },
+  "navHome": {
+    "message": "Startseite"
+  },
+  "navSearch": {
+    "message": "Entdecken"
+  },
+  "navNotifications": {
+    "message": "Mitteilungen"
+  },
+  "navMessages": {
+    "message": "Nachrichten"
+  },
+  "navBookmarks": {
+    "message": "Lesezeichen"
+  },
+  "navProfile": {
+    "message": "Profil"
+  },
+  "navCaption": {
+    "message": "UMGEBUNGSLICHT FÜR X"
+  },
+  "localPlayground": {
+    "message": "LOKALER TESTBEREICH"
+  },
+  "youLabel": {
+    "message": "Du"
+  },
+  "playgroundLabel": {
+    "message": "TESTBEREICH"
+  },
+  "timelineHeading": {
+    "message": "Eine Timeline voller Farbe"
+  },
+  "previewLabel": {
+    "message": "Vorschau"
+  },
+  "forYouLabel": {
+    "message": "Für dich"
+  },
+  "followingLabel": {
+    "message": "Folge ich"
+  },
+  "demoIntro": {
+    "message": "Bewege den Mauszeiger über einen Beitrag mit Foto oder Video."
+  },
+  "demoIntroDetail": {
+    "message": "Die Farben breiten sich über die Seite und die Hintergründe anderer Beiträge aus."
+  },
+  "timelineLabel": {
+    "message": "Timeline"
+  },
+  "postSunsetLabel": {
+    "message": "Beitrag mit Sonnenuntergangsfoto"
+  },
+  "postSunsetText": {
+    "message": "Ich liebe diese Tageszeit, wenn der Himmel langsam seine Farbe verändert."
+  },
+  "sunsetImageAlt": {
+    "message": "Violette Berge unter einem orangefarbenen Sonnenuntergang"
+  },
+  "postForestLabel": {
+    "message": "Beitrag mit Foto eines sonnigen Waldes"
+  },
+  "postForestText": {
+    "message": "Die Farben des sonnigen Waldes breiten sich über die Ränder des Fotos hinaus aus."
+  },
+  "forestImageAlt": {
+    "message": "Ein Wald voller grünem Licht"
+  },
+  "postVideoLabel": {
+    "message": "Videobeitrag mit bewegten Farben"
+  },
+  "postVideoText": {
+    "message": "Farben und Licht bleiben in Bewegung."
+  },
+  "videoLabel": {
+    "message": "Video mit stimmungsvollen Farben"
+  },
+  "postPortraitLabel": {
+    "message": "Beitrag mit Hochformatvideo"
+  },
+  "postPortraitText": {
+    "message": "Auch die Farben von Hochformatvideos breiten sich zu beiden Seiten aus."
+  },
+  "portraitVideoLabel": {
+    "message": "Hochformatvideo"
+  },
+  "postMultipleLabel": {
+    "message": "Beitrag mit mehreren Fotos"
+  },
+  "postMultipleText": {
+    "message": "Eine Studie in Blau. Die Farben beider Fotos fließen in ihre Umgebung."
+  },
+  "coastImageAlt": {
+    "message": "Eine türkisfarbene Küste"
+  },
+  "nightImageAlt": {
+    "message": "Ein blauer und violetter Nachthimmel"
+  },
+  "postTextLabel": {
+    "message": "Reiner Textbeitrag"
+  },
+  "postTextFirst": {
+    "message": "Reine Textbeiträge gönnen dem Licht eine Pause."
+  },
+  "postTextSecond": {
+    "message": "Ein ruhiger Moment vor dem nächsten Foto."
+  },
+  "caughtUpLabel": {
+    "message": "Du hast alles gesehen."
+  },
+  "caughtUpDetail": {
+    "message": "Das Licht folgt nur dem Beitrag unter deinem Mauszeiger."
+  },
+  "atmosphereLabel": {
+    "message": "DEINE ATMOSPHÄRE"
+  },
+  "demoControlsHeading": {
+    "message": "Schaffe Stimmung."
+  },
+  "demoControlsDescription": {
+    "message": "Lass jeden Beitrag die Seite einfärben."
+  },
+  "themeLabel": {
+    "message": "Design"
+  },
+  "themeSwitchLight": {
+    "message": "Zum hellen Design"
+  },
+  "themeSwitchDark": {
+    "message": "Zum dunklen Design"
+  },
+  "demoNote": {
+    "message": "Maus darüber. Farbe spüren."
+  },
+  "demoNoteDetail": {
+    "message": "Sanfte Farben aus dem Foto füllen den Seitenhintergrund."
+  },
+  "addPostLabel": {
+    "message": "＋ Beitrag hinzufügen"
+  },
+  "demoFooter": {
+    "message": "Dies ist eine lokale Demo."
+  },
+  "postNewLabel": {
+    "message": "Neuer Fotobeitrag"
+  },
+  "postNewAuthor": {
+    "message": "Neuer Beitrag"
+  },
+  "postNewText": {
+    "message": "Das Licht folgt auch neu hinzugefügten Beiträgen."
+  },
+  "postNewImageAlt": {
+    "message": "Eine neu hinzugefügte türkisfarbene Küste"
+  }
+}
