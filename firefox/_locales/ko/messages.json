@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "X와 Instagram의 사진·동영상, Twitch와 Kick 방송의 색으로 펼쳐지는 앰비언트 조명."
+  },
+  "popupSubtitle": {
+    "message": "X, Instagram, Twitch, Kick을 위한 부드러운 조명."
+  },
+  "languageLabel": {
+    "message": "언어"
+  },
+  "languageAutomatic": {
+    "message": "자동(브라우저 언어)"
+  },
+  "enabledLabel": {
+    "message": "앰비언트 조명 사용"
+  },
+  "lightSettings": {
+    "message": "조명 설정"
+  },
+  "scopeLabel": {
+    "message": "조명 범위"
+  },
+  "scopePage": {
+    "message": "페이지 배경 전체"
+  },
+  "scopePost": {
+    "message": "게시물·플레이어 주변"
+  },
+  "intensityLabel": {
+    "message": "강도"
+  },
+  "blurLabel": {
+    "message": "흐림 효과"
+  },
+  "spreadLabel": {
+    "message": "확산"
+  },
+  "videoTrackingLabel": {
+    "message": "동영상 색상 따라가기"
+  },
+  "videoTrackingDescription": {
+    "message": "재생 중인 프레임에 맞춰 조명 업데이트"
+  },
+  "fitCardsLabel": {
+    "message": "X 카드를 창 너비에 맞추기"
+  },
+  "fitCardsDescription": {
+    "message": "창에 맞춰 사진과 동영상의 너비 조절"
+  },
+  "modeLabel": {
+    "message": "표시 모드"
+  },
+  "modeAuto": {
+    "message": "자동"
+  },
+  "modePc": {
+    "message": "PC(커서)"
+  },
+  "modeMobile": {
+    "message": "모바일(중앙)"
+  },
+  "hoverHint": {
+    "message": "X·Instagram의 사진·동영상, Twitch·Kick 방송"
+  },
+  "statusLoading": {
+    "message": "설정을 불러오는 중…"
+  },
+  "statusReady": {
+    "message": "X 게시물 상세 화면은 자동으로, 타임라인과 답글은 커서를 올리면 켜집니다. Instagram은 현재 게시물·릴스, Twitch와 Kick은 동영상을 따라갑니다."
+  },
+  "statusReadyMobile": {
+    "message": "X는 화면 중앙에 온 게시물이 켜집니다. Instagram은 현재 게시물·릴스, Twitch와 Kick은 동영상을 따라갑니다."
+  },
+  "statusDisabled": {
+    "message": "앰비언트 조명이 꺼져 있습니다."
+  },
+  "statusLoadError": {
+    "message": "설정을 불러올 수 없습니다. 확장 프로그램을 다시 열어 주세요."
+  },
+  "statusSaveError": {
+    "message": "변경 사항을 저장할 수 없습니다. 확장 프로그램을 다시 열어 주세요."
+  },
+  "resetLabel": {
+    "message": "기본값으로 초기화"
+  },
+  "demoTitle": {
+    "message": "X Ambient - 체험"
+  },
+  "homeLinkLabel": {
+    "message": "X Ambient 홈"
+  },
+  "navHome": {
+    "message": "홈"
+  },
+  "navSearch": {
+    "message": "탐색"
+  },
+  "navNotifications": {
+    "message": "알림"
+  },
+  "navMessages": {
+    "message": "메시지"
+  },
+  "navBookmarks": {
+    "message": "북마크"
+  },
+  "navProfile": {
+    "message": "프로필"
+  },
+  "navCaption": {
+    "message": "X를 위한 앰비언트 조명"
+  },
+  "localPlayground": {
+    "message": "로컬 체험"
+  },
+  "youLabel": {
+    "message": "나"
+  },
+  "playgroundLabel": {
+    "message": "체험"
+  },
+  "timelineHeading": {
+    "message": "색으로 물드는 타임라인"
+  },
+  "previewLabel": {
+    "message": "미리 보기"
+  },
+  "forYouLabel": {
+    "message": "추천"
+  },
+  "followingLabel": {
+    "message": "팔로잉"
+  },
+  "demoIntro": {
+    "message": "사진이나 동영상이 있는 게시물에 커서를 올려 보세요."
+  },
+  "demoIntroDetail": {
+    "message": "페이지와 다른 게시물의 배경까지 색이 퍼집니다."
+  },
+  "timelineLabel": {
+    "message": "타임라인"
+  },
+  "postSunsetLabel": {
+    "message": "노을 사진 게시물"
+  },
+  "postSunsetText": {
+    "message": "하늘빛이 천천히 변하는 이 시간이 좋아요."
+  },
+  "sunsetImageAlt": {
+    "message": "주황빛 노을 아래 보랏빛 산들"
+  },
+  "postForestLabel": {
+    "message": "햇살이 비치는 숲 사진 게시물"
+  },
+  "postForestText": {
+    "message": "햇살이 비치는 숲의 색이 사진 가장자리 밖으로 퍼집니다."
+  },
+  "forestImageAlt": {
+    "message": "초록빛으로 가득한 숲"
+  },
+  "postVideoLabel": {
+    "message": "색이 움직이는 동영상 게시물"
+  },
+  "postVideoText": {
+    "message": "색과 빛이 계속 움직입니다."
+  },
+  "videoLabel": {
+    "message": "앰비언트 색상 동영상"
+  },
+  "postPortraitLabel": {
+    "message": "세로 동영상 게시물"
+  },
+  "postPortraitText": {
+    "message": "세로 동영상의 색도 양옆으로 퍼집니다."
+  },
+  "portraitVideoLabel": {
+    "message": "세로 동영상"
+  },
+  "postMultipleLabel": {
+    "message": "여러 사진이 있는 게시물"
+  },
+  "postMultipleText": {
+    "message": "푸른색의 기록. 두 사진의 색이 주변으로 흐릅니다."
+  },
+  "coastImageAlt": {
+    "message": "청록빛 해안"
+  },
+  "nightImageAlt": {
+    "message": "파란색과 보라색의 밤하늘"
+  },
+  "postTextLabel": {
+    "message": "텍스트만 있는 게시물"
+  },
+  "postTextFirst": {
+    "message": "텍스트만 있는 게시물에서는 빛도 쉬어 갑니다."
+  },
+  "postTextSecond": {
+    "message": "다음 사진을 기다리는 고요한 여백."
+  },
+  "caughtUpLabel": {
+    "message": "모든 게시물을 확인했습니다."
+  },
+  "caughtUpDetail": {
+    "message": "커서를 올린 게시물만 빛에 반영됩니다."
+  },
+  "atmosphereLabel": {
+    "message": "나만의 분위기"
+  },
+  "demoControlsHeading": {
+    "message": "분위기를 조절하세요."
+  },
+  "demoControlsDescription": {
+    "message": "각 게시물의 색으로 페이지를 물들여 보세요."
+  },
+  "themeLabel": {
+    "message": "테마"
+  },
+  "themeSwitchLight": {
+    "message": "라이트 모드로 전환"
+  },
+  "themeSwitchDark": {
+    "message": "다크 모드로 전환"
+  },
+  "demoNote": {
+    "message": "커서를 올리고 색을 느껴 보세요."
+  },
+  "demoNoteDetail": {
+    "message": "사진의 부드러운 색이 페이지 배경 전체로 퍼집니다."
+  },
+  "addPostLabel": {
+    "message": "＋ 게시물 추가"
+  },
+  "demoFooter": {
+    "message": "로컬에서 실행되는 데모입니다."
+  },
+  "postNewLabel": {
+    "message": "새 사진 게시물"
+  },
+  "postNewAuthor": {
+    "message": "새 게시물"
+  },
+  "postNewText": {
+    "message": "새로 추가한 게시물도 빛에 반영됩니다."
+  },
+  "postNewImageAlt": {
+    "message": "새로 추가한 청록빛 해안"
+  }
+}
