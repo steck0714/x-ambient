@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "X Ambient",
-  "version": "0.2.2.4",
-  "description": "Xの投稿の画像・動画から、周囲にやわらかなアンビエントライトを広げます。PCではホバー、スマホ・タブレットでは画面の中央に来た投稿に反応します。",
+  "name": "__MSG_extensionName__",
+  "version": "0.3.0",
+  "description": "__MSG_extensionDescription__",
   "permissions": [
     "storage"
   ],
@@ -13,7 +13,7 @@
     "128": "icons/icon-128.png"
   },
   "action": {
-    "default_title": "X Ambient",
+    "default_title": "__MSG_extensionName__",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png",
@@ -27,18 +27,28 @@
         "https://x.com/*",
         "https://www.x.com/*",
         "https://twitter.com/*",
-        "https://www.twitter.com/*"
+        "https://www.twitter.com/*",
+        "https://www.twitch.tv/*",
+        "https://twitch.tv/*",
+        "https://kick.com/*",
+        "https://www.kick.com/*",
+        "https://instagram.com/*",
+        "https://www.instagram.com/*"
       ],
       "js": [
         "src/firefox-compat.js",
         "src/settings.js",
         "src/ambient-core.js",
         "src/card-layout.js",
+        "src/streaming.js",
+        "src/instagram.js",
+        "src/x-posts.js",
         "src/content.js"
       ],
       "run_at": "document_idle"
     }
   ],
+  "default_locale": "en",
   "browser_specific_settings": {
     "gecko": {
       "id": "{f1b13d1d-60bd-4c15-8785-4bd2c1a51319}",
@@ -57,6 +67,12 @@
     "https://x.com/*",
     "https://www.x.com/*",
     "https://twitter.com/*",
-    "https://www.twitter.com/*"
+    "https://www.twitter.com/*",
+    "https://www.twitch.tv/*",
+    "https://twitch.tv/*",
+    "https://kick.com/*",
+    "https://www.kick.com/*",
+    "https://instagram.com/*",
+    "https://www.instagram.com/*"
   ]
 }
