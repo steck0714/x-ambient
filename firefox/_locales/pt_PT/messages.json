@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "Iluminação ambiente para fotografias e vídeos do X e Instagram e transmissões do Twitch e Kick."
+  },
+  "popupSubtitle": {
+    "message": "Iluminação ambiente para X, Instagram, Twitch e Kick."
+  },
+  "languageLabel": {
+    "message": "Idioma"
+  },
+  "languageAutomatic": {
+    "message": "Automático (idioma do navegador)"
+  },
+  "enabledLabel": {
+    "message": "Ativar iluminação ambiente"
+  },
+  "lightSettings": {
+    "message": "Definições de iluminação"
+  },
+  "scopeLabel": {
+    "message": "Área de iluminação"
+  },
+  "scopePage": {
+    "message": "Fundo de toda a página"
+  },
+  "scopePost": {
+    "message": "À volta da publicação ou do leitor"
+  },
+  "intensityLabel": {
+    "message": "Intensidade"
+  },
+  "blurLabel": {
+    "message": "Desfoque"
+  },
+  "spreadLabel": {
+    "message": "Propagação"
+  },
+  "videoTrackingLabel": {
+    "message": "Seguir as cores do vídeo"
+  },
+  "videoTrackingDescription": {
+    "message": "Atualizar a luz durante a reprodução"
+  },
+  "fitCardsLabel": {
+    "message": "Ajustar os cartões do X à largura da janela"
+  },
+  "fitCardsDescription": {
+    "message": "Ajustar a largura das fotografias e vídeos à janela"
+  },
+  "modeLabel": {
+    "message": "Modo de apresentação"
+  },
+  "modeAuto": {
+    "message": "Automático"
+  },
+  "modePc": {
+    "message": "PC (cursor)"
+  },
+  "modeMobile": {
+    "message": "Telemóvel (centro)"
+  },
+  "hoverHint": {
+    "message": "Fotografias e vídeos do X e Instagram. Transmissões do Twitch e Kick."
+  },
+  "statusLoading": {
+    "message": "A carregar definições…"
+  },
+  "statusReady": {
+    "message": "Os detalhes de uma publicação do X iluminam-se automaticamente; passe o cursor sobre publicações da cronologia ou respostas. O Instagram segue a publicação ou o Reel ativo. Twitch e Kick seguem o vídeo."
+  },
+  "statusReadyMobile": {
+    "message": "O X ilumina a publicação ao centro do ecrã. O Instagram segue a publicação ou o Reel ativo. Twitch e Kick seguem o vídeo."
+  },
+  "statusDisabled": {
+    "message": "A iluminação ambiente está desativada."
+  },
+  "statusLoadError": {
+    "message": "Não foi possível carregar as definições. Reabra a extensão."
+  },
+  "statusSaveError": {
+    "message": "Não foi possível guardar as alterações. Reabra a extensão."
+  },
+  "resetLabel": {
+    "message": "Repor predefinições"
+  },
+  "demoTitle": {
+    "message": "X Ambient - Área de teste"
+  },
+  "homeLinkLabel": {
+    "message": "Página inicial do X Ambient"
+  },
+  "navHome": {
+    "message": "Início"
+  },
+  "navSearch": {
+    "message": "Explorar"
+  },
+  "navNotifications": {
+    "message": "Notificações"
+  },
+  "navMessages": {
+    "message": "Mensagens"
+  },
+  "navBookmarks": {
+    "message": "Itens guardados"
+  },
+  "navProfile": {
+    "message": "Perfil"
+  },
+  "navCaption": {
+    "message": "ILUMINAÇÃO AMBIENTE PARA X"
+  },
+  "localPlayground": {
+    "message": "ÁREA DE TESTE LOCAL"
+  },
+  "youLabel": {
+    "message": "Utilizador"
+  },
+  "playgroundLabel": {
+    "message": "ÁREA DE TESTE"
+  },
+  "timelineHeading": {
+    "message": "Uma cronologia cheia de cores"
+  },
+  "previewLabel": {
+    "message": "Pré-visualização"
+  },
+  "forYouLabel": {
+    "message": "Para si"
+  },
+  "followingLabel": {
+    "message": "A seguir"
+  },
+  "demoIntro": {
+    "message": "Passe o cursor sobre uma publicação com fotografia ou vídeo."
+  },
+  "demoIntroDetail": {
+    "message": "As cores espalham-se pela página e pelo fundo de outras publicações."
+  },
+  "timelineLabel": {
+    "message": "Cronologia"
+  },
+  "postSunsetLabel": {
+    "message": "Publicação com fotografia do pôr do sol"
+  },
+  "postSunsetText": {
+    "message": "Adoro esta hora do dia, quando o céu muda de cor aos poucos."
+  },
+  "sunsetImageAlt": {
+    "message": "Montanhas roxas sob um pôr do sol laranja"
+  },
+  "postForestLabel": {
+    "message": "Publicação com fotografia de floresta iluminada pelo sol"
+  },
+  "postForestText": {
+    "message": "As cores da floresta iluminada pelo sol espalham-se para lá das margens da fotografia."
+  },
+  "forestImageAlt": {
+    "message": "Uma floresta cheia de luz verde"
+  },
+  "postVideoLabel": {
+    "message": "Publicação com vídeo de cores em movimento"
+  },
+  "postVideoText": {
+    "message": "As cores e a luz continuam em movimento."
+  },
+  "videoLabel": {
+    "message": "Vídeo de cores ambientes"
+  },
+  "postPortraitLabel": {
+    "message": "Publicação com vídeo vertical"
+  },
+  "postPortraitText": {
+    "message": "As cores dos vídeos verticais também se espalham para ambos os lados."
+  },
+  "portraitVideoLabel": {
+    "message": "Vídeo vertical"
+  },
+  "postMultipleLabel": {
+    "message": "Publicação com várias fotografias"
+  },
+  "postMultipleText": {
+    "message": "Um estudo em azul. As cores das duas fotografias fluem para o ambiente à sua volta."
+  },
+  "coastImageAlt": {
+    "message": "Uma costa turquesa"
+  },
+  "nightImageAlt": {
+    "message": "Um céu noturno azul e roxo"
+  },
+  "postTextLabel": {
+    "message": "Publicação apenas de texto"
+  },
+  "postTextFirst": {
+    "message": "As publicações apenas de texto dão uma pausa à luz."
+  },
+  "postTextSecond": {
+    "message": "Um momento de calma antes da próxima fotografia."
+  },
+  "caughtUpLabel": {
+    "message": "Já viu tudo."
+  },
+  "caughtUpDetail": {
+    "message": "A luz segue apenas a publicação sob o cursor."
+  },
+  "atmosphereLabel": {
+    "message": "O SEU AMBIENTE"
+  },
+  "demoControlsHeading": {
+    "message": "Crie o clima."
+  },
+  "demoControlsDescription": {
+    "message": "Deixe cada publicação colorir a página."
+  },
+  "themeLabel": {
+    "message": "Tema"
+  },
+  "themeSwitchLight": {
+    "message": "Usar tema claro"
+  },
+  "themeSwitchDark": {
+    "message": "Usar tema escuro"
+  },
+  "demoNote": {
+    "message": "Passe o cursor. Sinta a cor."
+  },
+  "demoNoteDetail": {
+    "message": "As cores suaves da fotografia preenchem o fundo da página."
+  },
+  "addPostLabel": {
+    "message": "＋ Adicionar publicação"
+  },
+  "demoFooter": {
+    "message": "Esta é uma demonstração local."
+  },
+  "postNewLabel": {
+    "message": "Nova publicação com fotografia"
+  },
+  "postNewAuthor": {
+    "message": "Nova publicação"
+  },
+  "postNewText": {
+    "message": "A luz também segue as publicações acabadas de adicionar."
+  },
+  "postNewImageAlt": {
+    "message": "Uma costa turquesa acabada de adicionar"
+  }
+}
