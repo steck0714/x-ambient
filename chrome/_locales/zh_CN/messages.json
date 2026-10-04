@@ -1,0 +1,251 @@
+{
+  "extensionName": {
+    "message": "X Ambient"
+  },
+  "extensionDescription": {
+    "message": "让 X 和 Instagram 的照片、视频，以及 Twitch 和 Kick 的直播色彩化为环境光。"
+  },
+  "popupSubtitle": {
+    "message": "为 X、Instagram、Twitch 和 Kick 带来柔和光线。"
+  },
+  "languageLabel": {
+    "message": "语言"
+  },
+  "languageAutomatic": {
+    "message": "自动（浏览器语言）"
+  },
+  "enabledLabel": {
+    "message": "启用环境光"
+  },
+  "lightSettings": {
+    "message": "光效设置"
+  },
+  "scopeLabel": {
+    "message": "光效范围"
+  },
+  "scopePage": {
+    "message": "整个页面背景"
+  },
+  "scopePost": {
+    "message": "帖子或播放器周围"
+  },
+  "intensityLabel": {
+    "message": "强度"
+  },
+  "blurLabel": {
+    "message": "模糊"
+  },
+  "spreadLabel": {
+    "message": "扩散"
+  },
+  "videoTrackingLabel": {
+    "message": "跟随视频色彩"
+  },
+  "videoTrackingDescription": {
+    "message": "根据播放中的画面更新光效"
+  },
+  "fitCardsLabel": {
+    "message": "让 X 卡片适应窗口宽度"
+  },
+  "fitCardsDescription": {
+    "message": "根据窗口调整照片和视频的宽度"
+  },
+  "modeLabel": {
+    "message": "显示模式"
+  },
+  "modeAuto": {
+    "message": "自动"
+  },
+  "modePc": {
+    "message": "电脑（悬停）"
+  },
+  "modeMobile": {
+    "message": "手机（居中）"
+  },
+  "hoverHint": {
+    "message": "X、Instagram 的照片和视频，Twitch、Kick 的直播"
+  },
+  "statusLoading": {
+    "message": "正在加载设置…"
+  },
+  "statusReady": {
+    "message": "X 的帖子详情会自动点亮；时间线帖子和回复需悬停。Instagram 跟随当前帖子或 Reels，Twitch 和 Kick 跟随视频。"
+  },
+  "statusReadyMobile": {
+    "message": "X 会点亮位于屏幕中央的帖子。Instagram 跟随当前帖子或 Reels，Twitch 和 Kick 跟随视频。"
+  },
+  "statusDisabled": {
+    "message": "环境光已关闭。"
+  },
+  "statusLoadError": {
+    "message": "无法加载设置。请重新打开扩展程序。"
+  },
+  "statusSaveError": {
+    "message": "无法保存更改。请重新打开扩展程序。"
+  },
+  "resetLabel": {
+    "message": "恢复默认设置"
+  },
+  "demoTitle": {
+    "message": "X Ambient - 体验区"
+  },
+  "homeLinkLabel": {
+    "message": "X Ambient 首页"
+  },
+  "navHome": {
+    "message": "首页"
+  },
+  "navSearch": {
+    "message": "探索"
+  },
+  "navNotifications": {
+    "message": "通知"
+  },
+  "navMessages": {
+    "message": "私信"
+  },
+  "navBookmarks": {
+    "message": "书签"
+  },
+  "navProfile": {
+    "message": "个人资料"
+  },
+  "navCaption": {
+    "message": "为 X 带来环境光"
+  },
+  "localPlayground": {
+    "message": "本地体验区"
+  },
+  "youLabel": {
+    "message": "你"
+  },
+  "playgroundLabel": {
+    "message": "体验区"
+  },
+  "timelineHeading": {
+    "message": "色彩中的时间线"
+  },
+  "previewLabel": {
+    "message": "预览"
+  },
+  "forYouLabel": {
+    "message": "推荐"
+  },
+  "followingLabel": {
+    "message": "正在关注"
+  },
+  "demoIntro": {
+    "message": "将鼠标悬停在含有照片或视频的帖子上。"
+  },
+  "demoIntroDetail": {
+    "message": "色彩会扩散到整个页面和其他帖子的背景。"
+  },
+  "timelineLabel": {
+    "message": "时间线"
+  },
+  "postSunsetLabel": {
+    "message": "日落照片帖子"
+  },
+  "postSunsetText": {
+    "message": "我喜欢天空颜色缓缓变化的这一刻。"
+  },
+  "sunsetImageAlt": {
+    "message": "橙色晚霞下的紫色群山"
+  },
+  "postForestLabel": {
+    "message": "阳光森林照片帖子"
+  },
+  "postForestText": {
+    "message": "阳光下森林的色彩从照片边缘向外扩散。"
+  },
+  "forestImageAlt": {
+    "message": "充满绿色光线的森林"
+  },
+  "postVideoLabel": {
+    "message": "色彩变化的视频帖子"
+  },
+  "postVideoText": {
+    "message": "色彩与光线持续流动。"
+  },
+  "videoLabel": {
+    "message": "环境光色彩视频"
+  },
+  "postPortraitLabel": {
+    "message": "竖屏视频帖子"
+  },
+  "postPortraitText": {
+    "message": "竖屏视频的色彩也会向两侧扩散。"
+  },
+  "portraitVideoLabel": {
+    "message": "竖屏视频"
+  },
+  "postMultipleLabel": {
+    "message": "多张照片帖子"
+  },
+  "postMultipleText": {
+    "message": "蓝色的记录。两张照片的色彩流向周围。"
+  },
+  "coastImageAlt": {
+    "message": "碧蓝的海岸线"
+  },
+  "nightImageAlt": {
+    "message": "蓝紫色的夜空"
+  },
+  "postTextLabel": {
+    "message": "纯文字帖子"
+  },
+  "postTextFirst": {
+    "message": "纯文字帖子，让光线暂时休息。"
+  },
+  "postTextSecond": {
+    "message": "静静等待下一张照片。"
+  },
+  "caughtUpLabel": {
+    "message": "你已看完所有帖子。"
+  },
+  "caughtUpDetail": {
+    "message": "光效只跟随鼠标悬停的帖子。"
+  },
+  "atmosphereLabel": {
+    "message": "你的氛围"
+  },
+  "demoControlsHeading": {
+    "message": "调整氛围。"
+  },
+  "demoControlsDescription": {
+    "message": "让每条帖子为页面增添色彩。"
+  },
+  "themeLabel": {
+    "message": "主题"
+  },
+  "themeSwitchLight": {
+    "message": "切换为浅色"
+  },
+  "themeSwitchDark": {
+    "message": "切换为深色"
+  },
+  "demoNote": {
+    "message": "悬停，感受色彩。"
+  },
+  "demoNoteDetail": {
+    "message": "照片中的柔和色彩铺满页面背景。"
+  },
+  "addPostLabel": {
+    "message": "＋ 添加帖子"
+  },
+  "demoFooter": {
+    "message": "这是本地演示页面。"
+  },
+  "postNewLabel": {
+    "message": "新增照片帖子"
+  },
+  "postNewAuthor": {
+    "message": "新帖子"
+  },
+  "postNewText": {
+    "message": "光效也会跟随新添加的帖子。"
+  },
+  "postNewImageAlt": {
+    "message": "新添加的碧蓝海岸线"
+  }
+}
