@@ -47,14 +47,17 @@
     'img[src*="pbs.twimg.com/ext_tw_video_thumb/"]',
     'img[src*="pbs.twimg.com/amplify_video_thumb/"]',
   ].join(",");
-  const FRAME_INTERVAL = 1000 / 12;
-  // モバイル: 目標 10fps。描画が重いときだけ 8fps まで落とす（30fps の動画なら 3〜4 フレームに 1 回 = 10〜7.5fps で、7fps を下回らない）。
-  const MOBILE_FPS = 10;
-  const MOBILE_FPS_SLOW = 8;
-  const MOBILE_SLOW_MS = 9; // 1回の描画がこれより重いときは 8fps に落とす
-  const MOBILE_MAX_GAP = 1000 / 7.2; // 描画の間隔の上限（約139ms）。フレームの粗い動画でも 7fps 以上を保つ
-  const LITE_SIZE = 128; // モバイルの光の下絵の大きさ（長辺）。PC は 256
-  const LITE_DEPTH_FACTOR = 2; // ぼかしの大きさ → 縮小段数の換算
+  // 描画は動画のフレーム単位で間引く（stride）。目標は 15fps 以上で、余裕があれば 30fps まで上げ、
+  // どんなに重くても 10fps（間隔 100ms）を下回らない。重いときは先に画質（tier）を落とす。
+  const FLOOR_GAP_MS = 100;
+  const PRESSURE_WINDOW_MS = 1000; // 落ちた動画フレームの割合を見る間隔
+  const PRESSURE_DROP_RATIO = 0.1; // この割合を超えて落ちていたら、負荷が高いとみなす
+  const PRESSURE_MIN_DROPS = 4; // ...ただし窓の中で最低でもこの数のフレームが落ちていること
+  const SATURATION = "saturate(1.65)"; // X 以外（ページの上に重ねるサイト）は彩度を上げる
+  // 彩度の強調は、画面いっぱいの CSS レイヤーに毎フレーム掛けると重く、ページ全体（動画やスクロールまで）が遅くなる。
+  // 線形変換なので、小さな canvas に描くときに掛けても結果はほぼ同じ。canvas の filter が使えないブラウザだけ CSS に戻す。
+  const bakeSaturation = platform !== "x" && typeof CanvasRenderingContext2D !== "undefined" && "filter" in CanvasRenderingContext2D.prototype;
+  const EDGE_MARGIN = 16; // ページ全体に光を広げるときの、画面の外側の余白(px)
   const SETTLE_MS = 140; // スクロールが止まったとみなすまでの時間
   const hasStorage = typeof chrome !== "undefined" && Boolean(chrome.storage?.local);
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -86,15 +89,27 @@
   // モバイルモード（タッチ操作が主の端末）ではホバーできないので、画面の中央にある投稿に光を当てる。
   // 「自動」のときは端末から判断する。タッチ機能がない端末（PC・リモートデスクトップ・VM など）は、
   // (hover: none) と報告されることがあってもモバイル扱いにしない。
-  // モバイルモード（画面の中央の投稿に光を当てる・軽い描画・スクロール中は消灯）の対象は X だけ。
+  // モバイルモード（画面の中央の投稿に光を当てる・スクロール中は消灯）の対象は X だけ。
   // Instagram・Twitch・Kick はもともとホバーなしで自動追従するので、モードに関係なく従来どおりに動く
   // （Twitch・Kick はチャット欄のスクロールで消灯してしまうため、スクロール連動は X 以外に入れない）。
+  // 軽い描画と画質の自動調整は、モードに関係なくすべてのサイトで働く。
   const touchCapable = platform === "x";
   let autoTouch = touchCapable && navigator.maxTouchPoints > 0 && coarsePointer.matches;
   let touchMode = autoTouch;
   let scrolling = false;
   let scrollTimer = 0;
-  let paintCost = 0; // 直近の描画にかかった時間（ms, 指数移動平均）
+  // 画質と描画間隔は、実測した描画コストで自動調整する。タッチ端末は軽い段から始め、余裕があれば上げる。
+  const touchDevice = navigator.maxTouchPoints > 0 && coarsePointer.matches;
+  const weakCpu = (navigator.hardwareConcurrency || 4) <= 2;
+  const startTier = () => Math.min(Core.QUALITY_TIERS.length - 1, (touchMode || touchDevice ? 3 : 1) + (weakCpu ? 1 : 0));
+  const governor = Core.createGovernor({ startTier: startTier(), bestTier: 0, goodFps: 15, topFps: 30, floorGap: FLOOR_GAP_MS });
+  let projectionTier = -1;
+  let fieldCss = "";
+  let themeDirty = true;
+  let lastRecover = 0;
+  let protectScanKey = "";
+  let paintedKey = ""; // 最後に描いた配置（projection.key）
+  let protectScanAt = 0;
 
   const host = document.createElement("div");
   host.id = "x-ambient-light";
@@ -108,13 +123,13 @@
     .light { position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity 320ms ease; mask-repeat:no-repeat; mask-composite:add; -webkit-mask-composite:source-over; }
     .light.visible { opacity:var(--xa-opacity); }
     .field { position:absolute; inset:0; pointer-events:none; }
-    canvas { position:absolute; inset:0; width:100%; height:100%; opacity:0; transition:opacity 300ms ease; filter:blur(var(--xa-blur)) saturate(1.65); }
+    canvas { position:absolute; inset:0; width:100%; height:100%; opacity:0; transition:opacity 300ms ease; }
     canvas.front { opacity:1; }
     @media (prefers-reduced-motion:reduce) { .light, canvas { transition:none; } }
   `;
   const light = document.createElement("div");
   light.className = "light";
-  if (touchMode) light.classList.add("lite");
+  host.dataset.interaction = touchMode ? "center" : "hover";
   const field = document.createElement("div");
   field.className = "field";
   const canvases = [document.createElement("canvas"), document.createElement("canvas")];
@@ -129,18 +144,22 @@
   backgroundStyle.textContent = ".xa-background-clear { background-color:transparent !important; }";
   backgroundStyle.disabled = true;
   if (platform === "x") {
-    document.documentElement.append(backgroundStyle);
-    // X は元の色のまま（彩度を上げない）。モバイルの軽い描画（.lite）は CSS の blur も掛けない。
-    style.textContent += "canvas { filter:blur(var(--xa-blur)); } .light.lite canvas { filter:none; }";
+    document.documentElement.append(backgroundStyle); // X は元の色のまま（彩度を上げない）
+  } else if (!bakeSaturation) {
+    style.textContent += `canvas { filter:${SATURATION}; }`;
   }
   document.documentElement.append(host);
   const contexts = canvases.map((canvas) => canvas.getContext("2d"));
   const mosaic = document.createElement("canvas");
   mosaic.width = 144;
   const mosaicContext = mosaic.getContext("2d");
-  const raw = document.createElement("canvas"); // モバイル用の下絵（画面には出さない）
-  const rawContext = raw.getContext("2d");
+  const raw = document.createElement("canvas"); // 光線を描く下絵（画面には出さない）。ぼかしてから画面用の canvas に写す
+  // 作業用の canvas（下絵とピラミッドの各段）は CPU 側に固定する。GPU 加速される大きさだと、小さな canvas へ
+  // drawImage するたびに GPU からの読み戻しで待たされる。小さいので CPU で十分速い。
+  const SCRATCH = { willReadFrequently: true };
+  const rawContext = raw.getContext("2d", SCRATCH);
   const pyramid = new Map();
+  const fade = { key: "", canvas: document.createElement("canvas") };
   if (!mosaicContext || !rawContext || contexts.some((context) => !context)) {
     host.remove();
     return;
@@ -159,7 +178,7 @@
     let entry = pyramid.get(key);
     if (!entry) {
       const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
+      const context = canvas.getContext("2d", SCRATCH);
       if (!context) return null;
       entry = { canvas, context };
       pyramid.set(key, entry);
@@ -172,41 +191,53 @@
     return entry;
   }
 
-  // CSS の blur は画面いっぱいの面積に毎回かけると重い（特に iOS）。モバイルでは小さな下絵を
-  // 何段か縮小し、2 倍ずつ拡大して戻すことで「ぼかした見た目」を作る。段ごとにバイリニア補間が
-  // 掛かるので滑らかで、GPU の補間だけで済む。drawImage だけなので、クロスオリジンの画像・動画でも
-  // ピクセルを読まずに済む。
+  // CSS の blur は画面いっぱいの面積に毎回かけると重く、コンポジタ全体（動画やスクロールまで）を遅くする。
+  // 代わりに、小さな下絵を何段か縮小し、2 倍ずつ拡大して戻すことで「ぼかした見た目」を作る。段ごとにバイリニア補間が
+  // 掛かるので滑らかで、CSS の Gaussian blur との差は RMSE で 2〜3% ほど（段数は Core.blurDepth で換算）。
+  // 段数は小数にも対応し、隣り合う 2 つの段数の結果を重ねてスライダーの値に連続的に合わせる。drawImage だけなので、
+  // クロスオリジンの画像・動画でもピクセルを読まずに済む。
+  function pyramidUp(down, depth, tag) {
+    let current = down[depth];
+    for (let i = depth - 1; i >= 1; i--) {
+      const entry = stage(`${tag}${i}`, down[i].width, down[i].height);
+      if (!entry) return null;
+      entry.context.drawImage(current, 0, 0, entry.canvas.width, entry.canvas.height);
+      current = entry.canvas;
+    }
+    return current;
+  }
+
   function softBlur(source, targetCanvas, targetContext, depth) {
-    if (depth < 2 || !source.width || !source.height) {
+    if (!(depth > 0) || !source.width || !source.height) {
       targetContext.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
       return;
     }
+    const lower = Math.max(1, Math.floor(depth));
+    const mix = Math.min(1, Math.max(0, depth - lower)); // 次の段数の結果をどれだけ重ねるか
+    const deepest = mix > 0.02 ? lower + 1 : lower;
     const down = [source];
-    for (let i = 1; i <= depth; i++) {
+    for (let i = 1; i <= deepest; i++) {
       const previous = down[i - 1];
       const entry = stage(`down${i}`, Math.max(2, Math.ceil(previous.width / 2)), Math.max(2, Math.ceil(previous.height / 2)));
       if (!entry) return;
       entry.context.drawImage(previous, 0, 0, entry.canvas.width, entry.canvas.height);
       down.push(entry.canvas);
     }
-    let current = down[depth];
-    for (let i = depth - 1; i >= 1; i--) {
-      const entry = stage(`up${i}`, down[i].width, down[i].height);
-      if (!entry) return;
-      entry.context.drawImage(current, 0, 0, entry.canvas.width, entry.canvas.height);
-      current = entry.canvas;
-    }
-    if (targetCanvas.width !== current.width) targetCanvas.width = current.width;
-    if (targetCanvas.height !== current.height) targetCanvas.height = current.height;
+    const first = pyramidUp(down, lower, "a");
+    const second = deepest > lower ? pyramidUp(down, deepest, "b") : null;
+    if (!first) return;
+    if (targetCanvas.width !== first.width) targetCanvas.width = first.width;
+    if (targetCanvas.height !== first.height) targetCanvas.height = first.height;
+    if (bakeSaturation) targetContext.filter = SATURATION;
     targetContext.globalCompositeOperation = "copy";
-    targetContext.drawImage(current, 0, 0);
-    targetContext.globalCompositeOperation = "source-over"; // PC モードの描画で使うので元に戻す
-  }
-
-  function frameInterval() {
-    if (!touchMode) return FRAME_INTERVAL;
-    // 動画のフレーム間隔に合わせて 0.8 倍の余裕を持たせる（12fps の動画でも毎フレーム描画できるように）。
-    return (paintCost > MOBILE_SLOW_MS ? 1000 / MOBILE_FPS_SLOW : 1000 / MOBILE_FPS) * 0.8;
+    targetContext.drawImage(first, 0, 0);
+    targetContext.globalCompositeOperation = "source-over";
+    if (second) {
+      targetContext.globalAlpha = mix;
+      targetContext.drawImage(second, 0, 0);
+      targetContext.globalAlpha = 1;
+    }
+    if (bakeSaturation) targetContext.filter = "none";
   }
 
   function eligible() {
@@ -222,7 +253,8 @@
   }
 
   function updateTheme() {
-    if (platform === "x") return;
+    if (platform === "x" || !themeDirty) return;
+    themeDirty = false;
     const backgrounds = [document.documentElement, document.body].filter(Boolean)
       .map(element => getComputedStyle(element).backgroundColor);
     let dark = colorScheme.matches;
@@ -321,21 +353,35 @@
     releaseBackgrounds();
   }
 
-  function visibleRect(element, fullRect, minSize = 48, minIntersection = 16) {
+  // 祖先ごとのスタイル（透明・はみ出しのクリップ）は 1 回の走査の間は変わらないので、memo に覚えておく。
+  // チャット欄の絵文字のように同じ祖先を共有する画像が何百とあっても、祖先の getComputedStyle は 1 回で済む。
+  function ancestorInfo(parent, memo) {
+    let info = memo?.get(parent);
+    if (info) return info;
+    const style = getComputedStyle(parent);
+    const clipX = ["hidden", "clip", "auto", "scroll"].includes(style.overflowX);
+    const clipY = ["hidden", "clip", "auto", "scroll"].includes(style.overflowY);
+    info = {
+      hidden: style.opacity === "0" || (instagram && (parent.hidden || parent.getAttribute("aria-hidden") === "true")),
+      clipX,
+      clipY,
+      // Root overflow clips to the viewport, already applied by the caller, not its scrolled DOM box.
+      box: (clipX || clipY) && parent !== document.documentElement && style.display !== "contents" ? parent.getBoundingClientRect() : null,
+    };
+    memo?.set(parent, info);
+    return info;
+  }
+
+  function visibleRect(element, fullRect, minSize = 48, minIntersection = 16, memo = null) {
     const view = viewport();
     if (!Core.isVisibleRect(fullRect, view, minSize, minIntersection)) return null;
     const computed = getComputedStyle(element);
     if (computed.visibility === "hidden" || computed.visibility === "collapse" || computed.opacity === "0") return null;
     let rect = Core.intersectRect(fullRect, { left: 0, top: 0, right: view.width, bottom: view.height });
     for (let parent = element.parentElement; rect && parent; parent = parent.parentElement) {
-      const style = getComputedStyle(parent);
-      if (style.opacity === "0" || (instagram && (parent.hidden || parent.getAttribute("aria-hidden") === "true"))) return null;
-      const clipX = ["hidden", "clip", "auto", "scroll"].includes(style.overflowX);
-      const clipY = ["hidden", "clip", "auto", "scroll"].includes(style.overflowY);
-      // Root overflow clips to the viewport, already applied above, not its scrolled DOM box.
-      if ((clipX || clipY) && parent !== document.documentElement && style.display !== "contents") {
-        rect = Core.intersectRect(rect, parent.getBoundingClientRect(), clipX, clipY);
-      }
+      const info = ancestorInfo(parent, memo);
+      if (info.hidden) return null;
+      if (info.box) rect = Core.intersectRect(rect, info.box, info.clipX, info.clipY);
       if (!instagram && parent === activePost) break;
     }
     return rect && rect.width >= minIntersection && rect.height >= minIntersection ? rect : null;
@@ -448,44 +494,97 @@
     return `${item.source.tagName}:${item.source.currentSrc || item.source.src || ""}:${Math.round(item.rect.width)}x${Math.round(item.rect.height)}:${Math.round(item.rect.left - item.fullRect.left)},${Math.round(item.rect.top - item.fullRect.top)}`;
   }
 
+  // 影を落とす先（メディア）を避けるためのマスク。X ではこの光はページの背後にあって、メディアは不透明に
+  // 上へ重なるので、避ける必要がない。マスクをやめると、コンポジタの 1 パスと、画面内の画像・動画をすべて
+  // 調べる走査（スクロールのたびに走っていた）がなくなる。ほかのサイトは光がページの上に重なるので必要。
+  function protectMedia(view) {
+    if (platform === "x") {
+      if (protectionKey !== "behind") {
+        light.style.maskImage = "none";
+        protectionKey = "behind";
+      }
+      return;
+    }
+    if (streaming) {
+      // 動画プレーヤーは動かない。チャット欄の絵文字がずれるたびに調べ直さず、間引く（動画やビューが変われば即座に調べる）。
+      const key = `${view.width}x${view.height}:${[bounds.left, bounds.top, bounds.width, bounds.height].map(Math.round).join(",")}`;
+      const now = performance.now();
+      if (key === protectScanKey && now - protectScanAt < 600) return;
+      protectScanKey = key;
+      protectScanAt = now;
+    }
+    const memo = new Map();
+    const protectedRects = [];
+    for (const element of document.querySelectorAll("img, video, canvas")) {
+      // Instagram's decorative Reel backdrop must remain part of the lit background.
+      if (instagram && element.tagName === "IMG" && element.getAttribute("aria-hidden") === "true") continue;
+      const presenter = element.tagName === "IMG" ? imagePresenter(element) : element;
+      const box = presenter.getBoundingClientRect();
+      if (box.width < 8 || box.height < 8) continue;
+      const picture = imageDescriptor(element, presenter, box, box)?.fullRect || box;
+      const rect = visibleRect(presenter, picture, 8, 8, memo);
+      if (!rect) continue;
+      const rounded = presenter.closest('[data-testid="tweetPhoto"], [data-testid^="UserAvatar"], [data-testid="videoPlayer"]') || presenter;
+      const radiusValue = getComputedStyle(rounded).borderTopLeftRadius;
+      const radius = radiusValue.endsWith("%") ? Math.min(rect.width, rect.height) * parseFloat(radiusValue) / 100 : parseFloat(radiusValue) || 0;
+      const letterboxed = Math.abs(picture.width - box.width) > 2 || Math.abs(picture.height - box.height) > 2;
+      protectedRects.push({ ...rect, radius: letterboxed ? 0 : Math.min(radius, rect.width / 2, rect.height / 2) });
+    }
+    const nextKey = `${view.width}:${view.height}:${protectedRects.map((rect) => [rect.left, rect.top, rect.width, rect.height, rect.radius].map(Math.round).join(",")).join(";")}`;
+    if (nextKey !== protectionKey) {
+      light.style.maskImage = Core.buildMediaMask(protectedRects, view);
+      protectionKey = nextKey;
+    }
+  }
+
+  // 投稿の周りだけに光を出すとき、領域の端で光が急に途切れないよう、端をなだらかに消す下絵を作る。
+  // （以前は CSS の blur が領域の端も一緒にぼかしていた）
+  function edgeFade(size, feather) {
+    const key = `${size.width}x${size.height}:${Math.round(feather)}`;
+    if (fade.key === key) return fade.canvas;
+    fade.canvas.width = size.width;
+    fade.canvas.height = size.height;
+    const context = fade.canvas.getContext("2d", SCRATCH);
+    context.fillStyle = "#000";
+    context.fillRect(0, 0, size.width, size.height);
+    context.globalCompositeOperation = "destination-in";
+    for (const [x0, y0, x1, y1] of [[0, 0, feather, 0], [size.width, 0, size.width - feather, 0], [0, 0, 0, feather], [0, size.height, 0, size.height - feather]]) {
+      const gradient = context.createLinearGradient(x0, y0, x1, y1);
+      // smoothstep: 端で 0、feather の半分で 0.5、内側で 1（CSS blur が領域の端に作っていた S 字の落ち方に合わせる）
+      for (const step of [0, 0.25, 0.5, 0.75, 1]) gradient.addColorStop(step, `rgba(0,0,0,${3 * step * step - 2 * step ** 3})`);
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, size.width, size.height);
+    }
+    fade.key = key;
+    return fade.canvas;
+  }
+
   function updateLayout() {
     if (!activePost || !bounds) return;
     const view = viewport();
     const scope = settings.scope;
+    const tier = Core.QUALITY_TIERS[governor.tier];
+    projectionTier = governor.tier;
     host.dataset.scope = scope;
     host.dataset.projection = "rays";
     let region;
     if (scope === "page") {
-      const protectedRects = [];
-      for (const element of document.querySelectorAll("img, video, canvas")) {
-        // Instagram's decorative Reel backdrop must remain part of the lit background.
-        if (instagram && element.tagName === "IMG" && element.getAttribute("aria-hidden") === "true") continue;
-        const presenter = element.tagName === "IMG" ? imagePresenter(element) : element;
-        const box = presenter.getBoundingClientRect();
-        const picture = imageDescriptor(element, presenter, box, box)?.fullRect || box;
-        const rect = visibleRect(presenter, picture, 8, 8);
-        if (!rect) continue;
-        const rounded = presenter.closest('[data-testid="tweetPhoto"], [data-testid^="UserAvatar"], [data-testid="videoPlayer"]') || presenter;
-        const radiusValue = getComputedStyle(rounded).borderTopLeftRadius;
-        const radius = radiusValue.endsWith("%") ? Math.min(rect.width, rect.height) * parseFloat(radiusValue) / 100 : parseFloat(radiusValue) || 0;
-        const letterboxed = Math.abs(picture.width - box.width) > 2 || Math.abs(picture.height - box.height) > 2;
-        protectedRects.push({ ...rect, radius: letterboxed ? 0 : Math.min(radius, rect.width / 2, rect.height / 2) });
-      }
-      const nextKey = `${view.width}:${view.height}:${protectedRects.map((rect) => [rect.left, rect.top, rect.width, rect.height, rect.radius].map(Math.round).join(",")).join(";")}`;
-      if (nextKey !== protectionKey) {
-        light.style.maskImage = Core.buildMediaMask(protectedRects, view);
-        protectionKey = nextKey;
-      }
-      const padding = touchMode ? 24 : settings.blur * 2; // モバイルは blur を使わないので端の余白は小さくてよい
-      region = { left: -padding, top: -padding, width: view.width + padding * 2, height: view.height + padding * 2 };
+      protectMedia(view);
+      // 光は画面の外まで要らない（端の色は引き伸ばされる）。余白は少しだけにして、下絵の解像度を画面に使う。
+      region = { left: -EDGE_MARGIN, top: -EDGE_MARGIN, width: view.width + EDGE_MARGIN * 2, height: view.height + EDGE_MARGIN * 2 };
     } else {
       protectionKey = "";
       light.style.maskImage = Core.buildPostMask(activePost.getBoundingClientRect(), view);
-      const padding = 60 + settings.spread * 3.4;
+      // 以前は CSS の blur が領域の外へ約 1.5σ 滲んでいた。今は端をなだらかに消す（下の edgeFade）ので、その分だけ領域を広げて見える範囲を揃える。
+      const padding = 60 + settings.spread * 3.4 + settings.blur * 1.5;
       region = { left: bounds.left - padding, top: bounds.top - padding, width: bounds.width + padding * 2, height: bounds.height + padding * 2 };
     }
-    field.style.cssText = `position:absolute;left:${region.left}px;top:${region.top}px;width:${region.width}px;height:${region.height}px;`;
-    const scale = (touchMode ? LITE_SIZE : 256) / Math.max(region.width, region.height);
+    const nextFieldCss = `position:absolute;left:${region.left}px;top:${region.top}px;width:${region.width}px;height:${region.height}px;`;
+    if (nextFieldCss !== fieldCss) {
+      field.style.cssText = nextFieldCss;
+      fieldCss = nextFieldCss;
+    }
+    const scale = tier.size / Math.max(region.width, region.height);
     const size = { width: Math.round(region.width * scale), height: Math.round(region.height * scale) };
     const target = {
       left: (bounds.left - region.left) / region.width * size.width,
@@ -493,22 +592,31 @@
       width: bounds.width / region.width * size.width,
       height: bounds.height / region.height * size.height,
     };
-    const source = { width: mosaic.width, height: Math.max(48, Math.min(144, Math.round(144 * bounds.height / bounds.width))) };
-    // モバイルは画面が小さく、PC と同じ減衰だと画面全体が一様に色づいてしまう。画面の高さに合わせて減衰させ、
-    // メディアの近くが明るく、離れるほど薄くなるようにする。
-    const reach = (touchMode ? view.height * (0.2 + settings.spread / 100 * 0.5) : 120 + settings.spread * 12) * scale;
-    const depth = touchMode ? Math.max(2, Math.min(6, Math.round(Math.log2(Math.max(2, settings.blur * scale * LITE_DEPTH_FACTOR))))) : 0;
-    // 本家 0.3.0 の edgeStrength（X の端の色を下限として保つ）は PC のみ。モバイルは上の減衰を優先し、
-    // 0.2.2.4 と同じく「メディアの近くが明るく、離れるほど薄い」見た目を保つ。
-    const edgeStrength = platform === "x" && !touchMode ? settings.intensity / 100 : 0;
-    projection = { size, source, target, depth, strips: Core.buildRayProjection(source, target, size, reach, edgeStrength, touchMode ? 24 : 96) };
+    const source = {
+      width: tier.mosaic,
+      height: Math.max(Math.round(tier.mosaic / 3), Math.min(tier.mosaic, Math.round(tier.mosaic * bounds.height / bounds.width))),
+    };
+    // 画面が小さい端末（モバイルモード、またはタッチ端末で自動追従するサイト）は、PC と同じ減衰だと画面全体が
+    // 一様に色づいてしまう。画面の高さに合わせて減衰させ、メディアの近くが明るく、離れるほど薄くなるようにする。
+    const compact = touchMode || (automatic && touchDevice);
+    const reach = (compact ? view.height * (0.2 + settings.spread / 100 * 0.5) : 120 + settings.spread * 12) * scale;
+    // X は端の色を下限として保つ（本家 0.3.0 の見た目）。モバイルでも同じにする。
+    const edgeStrength = platform === "x" ? settings.intensity / 100 : 0;
+    // 見えないほど薄い帯は描かない。
+    const strips = Core.buildRayProjection(source, target, size, reach, edgeStrength, tier.steps).filter((strip) => strip.alpha >= 0.012);
+    const deepest = Math.max(1, Math.floor(Math.log2(Math.min(size.width, size.height))) - 1);
+    const depth = Core.blurDepth(settings.blur * scale, deepest);
+    const feather = scope === "post" ? Math.max(2, Math.min(3 * settings.blur * scale, Math.min(size.width, size.height) / 2.5)) : 0;
+    const key = [region.left, region.top, region.width, region.height, bounds.left, bounds.top, bounds.width, bounds.height].map(Math.round).join(",") + `|${governor.tier}|${settings.blur}|${settings.spread}|${settings.intensity}`;
+    projection = { size, source, target, depth, strips, feather, key };
     updateTheme();
   }
 
   function paint(index) {
     if (!bounds || !media.length || !projection) return false;
-    const canvas = touchMode ? raw : canvases[index];
-    const context = touchMode ? rawContext : contexts[index];
+    const canvas = canvases[index];
+    const context = contexts[index];
+    if (mosaic.width !== projection.source.width) mosaic.width = projection.source.width;
     if (mosaic.height !== projection.source.height) mosaic.height = projection.source.height;
     mosaicContext.clearRect(0, 0, mosaic.width, mosaic.height);
     let drawn = false;
@@ -533,57 +641,111 @@
         mosaicContext.drawImage(source, crop.sx, crop.sy, crop.sw, crop.sh, crop.dx, crop.dy, crop.dw, crop.dh);
         drawn = true;
       } catch {
-        // The site may replace a video source while React reuses its element.
-        scheduleReconcile();
+        // The site may replace a video source while React reuses its element. Retry once in a while, not every frame.
+        const now = performance.now();
+        if (now - lastRecover > 500) {
+          lastRecover = now;
+          scheduleReconcile();
+        }
       } finally {
         mosaicContext.restore();
       }
     }
-    if (canvas.width !== projection.size.width) canvas.width = projection.size.width;
-    if (canvas.height !== projection.size.height) canvas.height = projection.size.height;
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    if (raw.width !== projection.size.width) raw.width = projection.size.width;
+    if (raw.height !== projection.size.height) raw.height = projection.size.height;
+    rawContext.clearRect(0, 0, raw.width, raw.height);
     if (drawn) {
       const target = projection.target;
-      context.drawImage(mosaic, target.left, target.top, target.width, target.height);
+      rawContext.drawImage(mosaic, target.left, target.top, target.width, target.height);
       for (const strip of projection.strips) {
-        context.globalAlpha = strip.alpha;
-        context.drawImage(mosaic, strip.sx, strip.sy, strip.sw, strip.sh, strip.dx, strip.dy, strip.dw, strip.dh);
+        rawContext.globalAlpha = strip.alpha;
+        rawContext.drawImage(mosaic, strip.sx, strip.sy, strip.sw, strip.sh, strip.dx, strip.dy, strip.dw, strip.dh);
       }
-      context.globalAlpha = 1;
+      rawContext.globalAlpha = 1;
     }
-    if (touchMode) softBlur(raw, canvases[index], contexts[index], drawn ? projection.depth : 0);
+    softBlur(raw, canvas, context, drawn ? projection.depth : 0);
+    paintedKey = projection.key;
+    if (drawn && projection.feather > 0) {
+      // ぼかした後の出力に掛ける。先に掛けると、ぼかしで端の透明が内側へ滲み、端が 0 まで消えず段差になる。
+      context.globalCompositeOperation = "destination-in";
+      context.drawImage(edgeFade({ width: canvas.width, height: canvas.height }, projection.feather * canvas.width / raw.width), 0, 0);
+      context.globalCompositeOperation = "source-over";
+    }
     return drawn;
   }
 
   function startFrames() {
-    stopFrames();
-    if (!eligible() || !settings.animateVideo || reducedMotion.matches) return;
+    if (!eligible() || !settings.animateVideo || reducedMotion.matches) {
+      stopFrames();
+      return;
+    }
     const video = media.find((item) => item.source.tagName === "VIDEO" && !item.source.paused && !item.source.ended)?.source;
-    if (!video) return;
+    if (!video) {
+      stopFrames();
+      return;
+    }
+    if (frameHandle?.video === video) return; // すでにこの動画を追っている。間隔の学習を捨てないよう作り直さない
+    stopFrames();
     const type = typeof video.requestVideoFrameCallback === "function" ? "video" : "raf";
     let lastFrame = 0;
+    let framesSince = 0;
+    let pressure = false;
+    let strikes = 0;
+    let qualityAt = 0;
+    let qualityTotal = 0;
+    let qualityDropped = 0;
+    let paints = 0;
+    let statsAt = 0;
+    // 動画のフレームが落ちている割合。描画が重すぎてページ全体が追いつかないと、ここに出る。
+    // 起動直後の数コマ落ちや一瞬の引っかかりで画質を下げないよう、落ちが続く（2 回連続の窓）ときだけ負荷とみなす。
+    const samplePressure = (time) => {
+      if (time - qualityAt < PRESSURE_WINDOW_MS) return pressure;
+      const quality = video.getVideoPlaybackQuality?.();
+      const first = qualityAt === 0;
+      qualityAt = time;
+      if (!quality) return false;
+      const total = quality.totalVideoFrames - qualityTotal;
+      const dropped = quality.droppedVideoFrames - qualityDropped;
+      qualityTotal = quality.totalVideoFrames;
+      qualityDropped = quality.droppedVideoFrames;
+      const heavy = !first && total >= 12 && dropped >= PRESSURE_MIN_DROPS && dropped / total > PRESSURE_DROP_RATIO;
+      strikes = heavy ? strikes + 1 : 0;
+      return strikes >= 2;
+    };
     const next = (time) => {
       frameHandle = null;
       if (!eligible() || !activePost?.isConnected || video.paused || video.ended) return;
-      const period = Math.min(time - lastFrame, 200); // 直近の動画フレームの間隔
+      if (lastFrame) governor.observePeriod(time - lastFrame);
       lastFrame = time;
-      const elapsed = time - lastPaint;
-      // モバイルは、次のフレームを待つと間隔が上限を超えるなら今描く（12fps の動画などでも 7fps を下回らない）。
-      if (elapsed >= frameInterval() || (touchMode && elapsed + period > MOBILE_MAX_GAP)) {
+      framesSince++;
+      // stride フレームに 1 回描く。ただし、次を待つと間隔が下限（10fps）を超えるなら今描く。
+      if (framesSince >= governor.stride || time - lastPaint + governor.period * 0.5 >= FLOOR_GAP_MS) {
+        framesSince = 0;
+        if (projectionTier !== governor.tier) updateLayout();
         const started = performance.now();
         paint(front);
+        const cost = performance.now() - started;
         lastPaint = time;
-        if (touchMode) {
-          const cost = performance.now() - started;
-          paintCost = paintCost ? paintCost * 0.8 + cost * 0.2 : cost;
+        pressure = samplePressure(time);
+        governor.sample({ cost, now: time, pressure });
+        paints++;
+        if (globalThis.__xAmbientDebug) {
+          globalThis.__xAmbientStats = { tier: governor.tier, stride: governor.stride, period: governor.period, cost: governor.cost, pressure, interaction: host.dataset.interaction, platform };
         }
+      }
+      // 実機で確かめられるよう、1 秒ごとの実測の描画 fps と現在の画質を data 属性に出す（DevTools で #x-ambient-light を見る）。
+      if (!statsAt) statsAt = time;
+      else if (time - statsAt >= 1000) {
+        host.dataset.fps = (paints * 1000 / (time - statsAt)).toFixed(1);
+        host.dataset.tier = String(governor.tier);
+        host.dataset.stride = String(governor.stride);
+        paints = 0;
+        statsAt = time;
       }
       queue();
     };
     const queue = () => {
-      frameHandle = type === "video"
-        ? { type, video, id: video.requestVideoFrameCallback(next) }
-        : { type, id: requestAnimationFrame(next) };
+      frameHandle = { type, video, id: type === "video" ? video.requestVideoFrameCallback(next) : requestAnimationFrame(next) };
     };
     queue();
   }
@@ -614,20 +776,31 @@
         front = back;
         light.classList.add("visible");
       }
-    } else if (paint(front)) {
-      syncBackgrounds();
-      light.classList.add("visible");
+      lastPaint = performance.now();
+    } else {
+      // 動画のフレームが今描いたばかりで、配置も変わっていないなら、同じ絵をもう一度描かない
+      // （チャットの更新などで reconcile だけが走る場合）。スクロールやリサイズで配置が変われば、すぐ描き直す。
+      const fresh = frameHandle !== null && performance.now() - lastPaint < FLOOR_GAP_MS && projection.key === paintedKey;
+      if (fresh || paint(front)) {
+        syncBackgrounds();
+        light.classList.add("visible");
+      }
+      if (!fresh) lastPaint = performance.now(); // この描画も間引きの勘定に入れる
     }
     startFrames();
   }
 
   function activate(post) {
+    // 先に保留を外す。外さないと、ここで中断したときに pendingPost が残り、reconcile が「もう予約済み」と
+    // 見なして同じ投稿をずっと点灯させなくなる（スクロール開始の直前に予約された場合など）。
+    pendingPost = null;
     if (disposed || !eligible() || !post.isConnected || (touchMode && scrolling)) return;
     clearTimeout(hoverTimer);
     hoverTimer = 0;
-    if (activePost !== post) backgroundDirty = true;
+    // 「投稿の周りだけ」のときだけ、アクティブな投稿が変わると透明にする面が変わる。ページ全体なら変わらないので
+    // 走査し直さない（走査はページ全体の div を調べるので重い）。
+    if (activePost !== post && settings.scope === "post") backgroundDirty = true;
     activePost = post;
-    pendingPost = null;
     activeObserver.disconnect();
     activeObserver.observe(post, { childList: true, subtree: true, attributes: true, attributeFilter: ["src", "poster"] });
     activeResizeObserver?.disconnect();
@@ -717,6 +890,7 @@
     }
   });
   const activeResizeObserver = automatic ? new ResizeObserver(scheduleReconcile) : null;
+  const watchedMedia = streaming ? "video" : "article, img, video";
   const pageObserver = new MutationObserver((records) => {
     if (pathname !== location.pathname) scheduleReconcile();
     if ((!automatic && !pointer && !Posts.statusId(location.pathname)) || !eligible()) return;
@@ -727,14 +901,16 @@
       && (record.target.matches("video") || record.target.querySelector("video")))) scheduleReconcile();
     if (activePost && !activePost.isConnected) scheduleReconcile();
     else if (records.some((record) => [...record.addedNodes, ...record.removedNodes].some((node) =>
-      node.nodeType === Node.ELEMENT_NODE && (node.matches("article, img, video") || node.querySelector("article, img, video"))))) scheduleReconcile();
+      // Twitch・Kick は動画の出入りだけが関係する。チャットの絵文字（img）は毎秒何度も増減するので、拾うと
+      // そのたびにページ全体の走査が走ってしまう。
+      node.nodeType === Node.ELEMENT_NODE && (node.matches(watchedMedia) || node.querySelector(watchedMedia))))) scheduleReconcile();
   });
   pageObserver.observe(document.body, {
     childList: true, subtree: true,
     attributes: true,
     attributeFilter: automatic ? ["style", "class", "hidden", "aria-hidden", "src", "srcset", "poster"] : ["href"],
   });
-  const themeObserver = new MutationObserver(scheduleReconcile);
+  const themeObserver = new MutationObserver(() => { themeDirty = true; scheduleReconcile(); });
   themeObserver.observe(document.body, { attributes: true, attributeFilter: ["style", "class"] });
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["style", "class"] });
 
@@ -746,8 +922,8 @@
   function setTouchMode(next) {
     if (touchMode === next) return;
     touchMode = next;
-    light.classList.toggle("lite", touchMode);
-    paintCost = 0;
+    host.dataset.interaction = touchMode ? "center" : "hover";
+    governor.reset({ startTier: startTier() });
     scrolling = false;
     clearTimeout(scrollTimer);
     scrollTimer = 0;
@@ -793,6 +969,9 @@
     // スマホ: スクロール中は光を消し、止まってから画面中央の投稿に当て直す。
     // 動いている最中に追従させるとマスクがずれ、負荷も高くなるため。
     scrolling = true;
+    pendingPost = null; // スクロール中に予約済みの投稿を点灯させない（止まってから当て直す）
+    clearTimeout(hoverTimer);
+    hoverTimer = 0;
     light.classList.remove("visible");
     stopFrames();
     clearTimeout(scrollTimer);
@@ -823,7 +1002,7 @@
     }, true);
   }
   listen(reducedMotion, "change", scheduleReconcile);
-  listen(colorScheme, "change", () => { backgroundDirty = true; scheduleReconcile(); });
+  listen(colorScheme, "change", () => { backgroundDirty = true; themeDirty = true; scheduleReconcile(); });
 
   if (hasStorage) {
     chrome.storage.local.get(Settings.STORAGE_KEY).then((result) => {

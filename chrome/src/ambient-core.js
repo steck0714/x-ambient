@@ -138,7 +138,134 @@
     return `rgb(${rgb.map(channel => Math.round(channel * 255)).join(", ")})`;
   }
 
-  const api = Object.freeze({ unionRects, isVisibleRect, overlapFraction, intersectRect, fitImage, contentRect, buildPostMask, buildMediaMask, buildRayProjection, isDarkColor, resolveBackgroundColor });
+  // ---- rendering quality and frame pacing ----------------------------------------------------
+  // Each tier trades resolution and ray count for cost. The governor below walks these tiers, and the
+  // paint stride, so the frame rate stays high without ever dropping under the floor.
+  const QUALITY_TIERS = Object.freeze([
+    Object.freeze({ size: 256, steps: 64, mosaic: 144 }),
+    Object.freeze({ size: 192, steps: 48, mosaic: 128 }),
+    Object.freeze({ size: 144, steps: 36, mosaic: 112 }),
+    Object.freeze({ size: 112, steps: 28, mosaic: 96 }),
+    Object.freeze({ size: 80, steps: 24, mosaic: 80 }),
+  ]);
+
+  // The canvas blur is a pyramid: halve the picture `depth` times, then double it back. Each halve/double
+  // pair adds a fixed amount of variance, so depth = log2(sigma) + 0.8 matches a CSS Gaussian blur
+  // (fitted against Chromium's filter: blur(), RMSE about 2-3%). `sigma` is in canvas pixels.
+  function blurDepth(sigma, maxDepth = 6) {
+    if (!(sigma > 0)) return 1;
+    return Math.max(1, Math.min(maxDepth, Math.log2(sigma) + 0.8));
+  }
+
+  // Painting happens on video frames, so a paint interval is a whole number of frames (the stride).
+  //   min  - fastest allowed (topFps cap)      max  - slowest allowed (a gap of at most floorGap ms)
+  //   good - the stride closest to goodFps without going below it
+  function paintStrideBounds(period, { topFps = 30, goodFps = 15, floorGap = 100 } = {}) {
+    const p = Math.max(4, Math.min(200, Number(period) || 1000 / 30));
+    const min = Math.max(1, Math.ceil(1000 / (topFps * p) - 0.1));
+    const max = Math.max(min, Math.floor(floorGap / p + 0.05));
+    const good = Math.max(min, Math.min(max, Math.floor(1000 / (goodFps * p) + 0.1)));
+    return { min, max, good };
+  }
+
+  // Chooses the quality tier and paint stride from measured paint cost (and dropped-frame pressure).
+  // Order of preference: keep at least `goodFps`, spend spare time on frame rate first and then on
+  // quality, give up quality before frame rate, and only go below `goodFps` at the lowest tier.
+  function createGovernor(options = {}) {
+    const lastTier = QUALITY_TIERS.length - 1;
+    const config = {
+      goodFps: 15, topFps: 30, floorGap: 100,
+      overload: 0.3, calm: 0.12, promote: 0.2,
+      cooldown: 1500, calmHold: 3000, pressureHold: 20000,
+      ...options,
+    };
+    const clampTier = (value) => Math.max(0, Math.min(lastTier, Math.round(Number(value) || 0)));
+    let tier = clampTier(options.startTier);
+    let bestTier = clampTier(options.bestTier);
+    let stride = 0; // 0: not chosen yet
+    let period = 1000 / 30;
+    let periodSamples = 0;
+    let cost = 0;
+    let costSamples = 0;
+    let lastChange = -Infinity;
+    let calmSince = -1;
+    let holdUntil = 0;
+
+    function settle() {
+      const range = paintStrideBounds(period, config);
+      stride = stride ? Math.max(range.min, Math.min(range.max, stride)) : range.good;
+      return range;
+    }
+
+    function observePeriod(ms) {
+      if (!(ms > 3 && ms < 250)) return;
+      period = periodSamples++ ? period * 0.9 + ms * 0.1 : ms;
+    }
+
+    function sample({ cost: spent, now, pressure = false }) {
+      cost = costSamples++ ? cost * 0.75 + spent * 0.25 : spent;
+      if (pressure) holdUntil = now + config.pressureHold; // promotion waits until pressure has been gone for a while
+      const range = settle();
+      const interval = stride * period;
+      const load = cost / interval;
+      const cooled = now - lastChange >= config.cooldown;
+      let moved = false;
+      if (cooled && (load > config.overload || pressure)) {
+        if (tier < lastTier) {
+          tier++;
+          cost *= 0.7;
+          moved = true;
+        } else if (load > config.overload && stride < range.max) {
+          stride++; // dropped frames alone are not evidence that fewer paints would help
+          moved = true;
+        }
+        if (moved) {
+          lastChange = now;
+          calmSince = -1;
+        }
+      } else if (load < config.calm && !pressure) {
+        if (calmSince < 0) calmSince = now;
+        if (cooled && now - calmSince >= config.calmHold && now >= holdUntil) {
+          if (stride > range.min && cost / ((stride - 1) * period) < config.promote) {
+            stride--;
+            moved = true;
+          } else if (tier > bestTier && cost * 1.5 / interval < config.promote) {
+            tier--;
+            cost *= 1.5;
+            moved = true;
+          }
+          if (moved) {
+            lastChange = now;
+            calmSince = now;
+          }
+        }
+      } else {
+        calmSince = -1;
+      }
+      return { tier, stride, moved };
+    }
+
+    function reset(next = {}) {
+      tier = clampTier(next.startTier ?? tier);
+      bestTier = clampTier(next.bestTier ?? bestTier);
+      stride = 0;
+      cost = 0;
+      costSamples = 0;
+      lastChange = -Infinity;
+      calmSince = -1;
+      holdUntil = 0;
+    }
+
+    return {
+      observePeriod, sample, reset,
+      get tier() { return tier; },
+      get stride() { settle(); return stride; },
+      get period() { return period; },
+      get cost() { return cost; },
+    };
+  }
+
+  const api = Object.freeze({ unionRects, isVisibleRect, overlapFraction, intersectRect, fitImage, contentRect, buildPostMask, buildMediaMask, buildRayProjection, isDarkColor, resolveBackgroundColor, QUALITY_TIERS, blurDepth, paintStrideBounds, createGovernor });
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else globalThis.XAmbientCore = api;
 })();
