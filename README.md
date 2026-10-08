@@ -35,4 +35,4 @@ This project is distributed under the **MIT License**, matching the original rep
 * **Original Creator:** mmnga
 * **Original Repository:** [mmnga/x-ambient](https://github.com/mmnga/x-ambient)
 
-The original `LICENSE` file containing the copyright notice `Copyright (c) 2024 mmnga` is preserved and packaged inside both files.
+The original `LICENSE` file containing the copyright notice `Copyright (c) 2026 mmnga` is preserved and packaged inside both files.
