@@ -142,11 +142,14 @@
   // Each tier trades resolution and ray count for cost. The governor below walks these tiers, and the
   // paint stride, so the frame rate stays high without ever dropping under the floor.
   const QUALITY_TIERS = Object.freeze([
-    Object.freeze({ size: 256, steps: 64, mosaic: 144 }),
-    Object.freeze({ size: 192, steps: 48, mosaic: 128 }),
-    Object.freeze({ size: 144, steps: 36, mosaic: 112 }),
-    Object.freeze({ size: 112, steps: 28, mosaic: 96 }),
-    Object.freeze({ size: 80, steps: 24, mosaic: 80 }),
+    Object.freeze({ size: 224, steps: 48, mosaic: 128 }),
+    Object.freeze({ size: 176, steps: 36, mosaic: 112 }),
+    Object.freeze({ size: 128, steps: 28, mosaic: 96 }),
+    Object.freeze({ size: 96, steps: 20, mosaic: 80 }),
+    Object.freeze({ size: 72, steps: 16, mosaic: 64 }),
+    Object.freeze({ size: 56, steps: 12, mosaic: 48 }),
+    Object.freeze({ size: 44, steps: 9, mosaic: 40 }),
+    Object.freeze({ size: 36, steps: 7, mosaic: 32 }),
   ]);
 
   // The canvas blur is a pyramid: halve the picture `depth` times, then double it back. Each halve/double
@@ -160,7 +163,7 @@
   // Painting happens on video frames, so a paint interval is a whole number of frames (the stride).
   //   min  - fastest allowed (topFps cap)      max  - slowest allowed (a gap of at most floorGap ms)
   //   good - the stride closest to goodFps without going below it
-  function paintStrideBounds(period, { topFps = 30, goodFps = 15, floorGap = 100 } = {}) {
+  function paintStrideBounds(period, { topFps = 60, goodFps = 30, floorGap = 50 } = {}) {
     const p = Math.max(4, Math.min(200, Number(period) || 1000 / 30));
     const min = Math.max(1, Math.ceil(1000 / (topFps * p) - 0.1));
     const max = Math.max(min, Math.floor(floorGap / p + 0.05));
@@ -174,7 +177,7 @@
   function createGovernor(options = {}) {
     const lastTier = QUALITY_TIERS.length - 1;
     const config = {
-      goodFps: 15, topFps: 30, floorGap: 100,
+      goodFps: 30, topFps: 60, floorGap: 50,
       overload: 0.3, calm: 0.12, promote: 0.2,
       cooldown: 1500, calmHold: 3000, pressureHold: 20000,
       ...options,

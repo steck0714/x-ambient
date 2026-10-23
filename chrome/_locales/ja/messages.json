@@ -3,10 +3,10 @@
     "message": "X Ambient"
   },
   "extensionDescription": {
-    "message": "XとInstagramの画像・動画、TwitchとKickの配信から広がるアンビエントライト。Xは、PCではホバー、スマホ・タブレットでは画面の中央の投稿に反応します。"
+    "message": "X、Instagram、Twitch、Kick、TikTokのおすすめ、ニコニコの動画から広がるアンビエントライト。Xは、PCではホバー、スマホ・タブレットでは画面の中央の投稿に反応します。"
   },
   "popupSubtitle": {
-    "message": "X、Instagram、Twitch、Kickに、やわらかな光。"
+    "message": "X、Instagram、Twitch、Kick、TikTok、ニコニコに、やわらかな光。"
   },
   "languageLabel": {
     "message": "言語"
@@ -63,13 +63,13 @@
     "message": "モバイル（中央）"
   },
   "hoverHint": {
-    "message": "X・Instagramの画像・動画とTwitch・Kickの配信"
+    "message": "X・Instagram、Twitch・Kick、TikTokのおすすめ、ニコニコの動画"
   },
   "statusLoading": {
     "message": "設定を読み込み中…"
   },
   "statusReady": {
-    "message": "Xの詳細は自動、タイムライン・返信はホバーで点灯します。Instagramはアクティブな投稿・リール、Twitch・Kickは動画に追従します。"
+    "message": "Xの詳細は自動、タイムライン・返信はホバーで点灯。Instagramはアクティブな投稿・リール、Twitch・Kickは動画、TikTokはおすすめ、ニコニコは動画詳細に追従します。"
   },
   "statusReadyMobile": {
     "message": "Xは画面の中央に来た投稿が点灯します。Instagramはアクティブな投稿・リール、Twitch・Kickは動画に追従します。"

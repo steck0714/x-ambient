@@ -3,10 +3,10 @@
     "message": "X Ambient"
   },
   "extensionDescription": {
-    "message": "Cahaya ambien untuk foto dan video X dan Instagram, serta siaran Twitch dan Kick."
+    "message": "Cahaya ambien untuk X, Instagram, Twitch, Kick, feed Untuk Anda TikTok, dan video Niconico."
   },
   "popupSubtitle": {
-    "message": "Cahaya ambien untuk X, Instagram, Twitch, dan Kick."
+    "message": "Cahaya ambien untuk X, Instagram, Twitch, Kick, TikTok, dan Niconico."
   },
   "languageLabel": {
     "message": "Bahasa"
@@ -63,13 +63,13 @@
     "message": "Ponsel (tengah)"
   },
   "hoverHint": {
-    "message": "Foto dan video X dan Instagram. Siaran Twitch dan Kick."
+    "message": "X, Instagram, Twitch, Kick, Untuk Anda TikTok, dan video Niconico."
   },
   "statusLoading": {
     "message": "Memuat pengaturan…"
   },
   "statusReady": {
-    "message": "Detail postingan X menyala otomatis; arahkan kursor ke postingan linimasa atau balasan. Instagram mengikuti postingan atau Reel yang aktif. Twitch dan Kick mengikuti video."
+    "message": "Detail X menyala otomatis; arahkan kursor ke postingan atau balasan. Instagram mengikuti media aktif; Twitch/Kick mengikuti video, TikTok feed Untuk Anda, dan Niconico halaman video."
   },
   "statusReadyMobile": {
     "message": "X menyalakan postingan yang berada di tengah layar. Instagram mengikuti postingan atau Reel yang aktif. Twitch dan Kick mengikuti video."

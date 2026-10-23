@@ -3,10 +3,10 @@
     "message": "X Ambient"
   },
   "extensionDescription": {
-    "message": "Ánh sáng nền cho ảnh và video trên X, Instagram và các buổi phát trực tiếp trên Twitch, Kick."
+    "message": "Ánh sáng nền cho X, Instagram, Twitch, Kick, bảng tin Dành cho bạn của TikTok và video Niconico."
   },
   "popupSubtitle": {
-    "message": "Ánh sáng nền cho X, Instagram, Twitch và Kick."
+    "message": "Ánh sáng nền cho X, Instagram, Twitch, Kick, TikTok và Niconico."
   },
   "languageLabel": {
     "message": "Ngôn ngữ"
@@ -63,13 +63,13 @@
     "message": "Di động (ở giữa)"
   },
   "hoverHint": {
-    "message": "Ảnh, video trên X và Instagram. Phát trực tiếp trên Twitch và Kick."
+    "message": "X, Instagram, Twitch, Kick, Dành cho bạn của TikTok và video Niconico."
   },
   "statusLoading": {
     "message": "Đang tải cài đặt…"
   },
   "statusReady": {
-    "message": "Trang chi tiết bài đăng X tự bật ánh sáng; hãy di chuột lên bài đăng hoặc phản hồi trên dòng thời gian. Instagram theo bài đăng hoặc Reel đang xem. Twitch và Kick theo video."
+    "message": "Chi tiết bài đăng X tự bật sáng; di chuột lên bài đăng hoặc phản hồi. Instagram theo nội dung đang xem; Twitch/Kick theo video, TikTok theo Dành cho bạn và Niconico theo trang video."
   },
   "statusReadyMobile": {
     "message": "X bật ánh sáng cho bài đăng ở giữa màn hình. Instagram theo bài đăng hoặc Reel đang xem. Twitch và Kick theo video."

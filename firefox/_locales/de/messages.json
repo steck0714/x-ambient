@@ -3,10 +3,10 @@
     "message": "X Ambient"
   },
   "extensionDescription": {
-    "message": "Umgebungslicht für Fotos und Videos auf X und Instagram sowie Streams auf Twitch und Kick."
+    "message": "Umgebungslicht für X, Instagram, Twitch, Kick, den Für-dich-Feed von TikTok und Niconico-Videos."
   },
   "popupSubtitle": {
-    "message": "Umgebungslicht für X, Instagram, Twitch und Kick."
+    "message": "Umgebungslicht für X, Instagram, Twitch, Kick, TikTok und Niconico."
   },
   "languageLabel": {
     "message": "Sprache"
@@ -63,13 +63,13 @@
     "message": "Mobil (Mitte)"
   },
   "hoverHint": {
-    "message": "Fotos und Videos auf X und Instagram. Streams auf Twitch und Kick."
+    "message": "X, Instagram, Twitch, Kick, TikTok Für dich und Niconico-Videos."
   },
   "statusLoading": {
     "message": "Einstellungen werden geladen…"
   },
   "statusReady": {
-    "message": "Die Detailansicht eines X-Beitrags wird automatisch beleuchtet; bewege den Mauszeiger über Beiträge in der Timeline oder Antworten. Instagram folgt dem aktiven Beitrag oder Reel. Twitch und Kick folgen dem Video."
+    "message": "X-Details leuchten automatisch; bewege den Mauszeiger über Beiträge oder Antworten. Instagram folgt aktiven Medien; Twitch/Kick den Videos, TikTok dem Für-dich-Feed und Niconico den Videoseiten."
   },
   "statusReadyMobile": {
     "message": "X beleuchtet den Beitrag in der Bildschirmmitte. Instagram folgt dem aktiven Beitrag oder Reel. Twitch und Kick folgen dem Video."

@@ -3,10 +3,10 @@
     "message": "X Ambient"
   },
   "extensionDescription": {
-    "message": "让 X 和 Instagram 的照片、视频，以及 Twitch 和 Kick 的直播色彩化为环境光。"
+    "message": "让 X、Instagram、Twitch、Kick、TikTok 推荐和 Niconico 视频的色彩化为环境光。"
   },
   "popupSubtitle": {
-    "message": "为 X、Instagram、Twitch 和 Kick 带来柔和光线。"
+    "message": "为 X、Instagram、Twitch、Kick、TikTok 和 Niconico 带来柔和光线。"
   },
   "languageLabel": {
     "message": "语言"
@@ -63,13 +63,13 @@
     "message": "手机（居中）"
   },
   "hoverHint": {
-    "message": "X、Instagram 的照片和视频，Twitch、Kick 的直播"
+    "message": "X、Instagram、Twitch、Kick、TikTok 推荐和 Niconico 视频"
   },
   "statusLoading": {
     "message": "正在加载设置…"
   },
   "statusReady": {
-    "message": "X 的帖子详情会自动点亮；时间线帖子和回复需悬停。Instagram 跟随当前帖子或 Reels，Twitch 和 Kick 跟随视频。"
+    "message": "X 详情自动点亮；时间线和回复需悬停。Instagram 跟随当前帖子或 Reels，Twitch、Kick 跟随视频，TikTok 跟随推荐，Niconico 跟随视频详情。"
   },
   "statusReadyMobile": {
     "message": "X 会点亮位于屏幕中央的帖子。Instagram 跟随当前帖子或 Reels，Twitch 和 Kick 跟随视频。"

@@ -36,7 +36,8 @@
   globalThis.__xAmbientDispose?.();
   const platform = Streaming?.platformForHostname(location.hostname) || "x";
   const instagram = platform === "instagram";
-  const streaming = platform === "twitch" || platform === "kick";
+  const tiktok = platform === "tiktok";
+  const streaming = ["twitch", "kick", "tiktok", "niconico"].includes(platform);
   const automatic = streaming || instagram;
   const cards = platform === "x" ? globalThis.XAmbientCardLayout?.create() : null;
 
@@ -47,16 +48,25 @@
     'img[src*="pbs.twimg.com/ext_tw_video_thumb/"]',
     'img[src*="pbs.twimg.com/amplify_video_thumb/"]',
   ].join(",");
-  // 描画は動画のフレーム単位で間引く（stride）。目標は 15fps 以上で、余裕があれば 30fps まで上げ、
-  // どんなに重くても 10fps（間隔 100ms）を下回らない。重いときは先に画質（tier）を落とす。
-  const FLOOR_GAP_MS = 100;
+  // 描画は動画のフレーム単位で間引く（stride）。目標は 30fps 以上で、余裕があれば 60fps まで上げ、
+  // どんなに重くても 20fps（間隔 50ms）を下回らない。重いときは先に画質（tier）を落とす。
+  const FLOOR_GAP_MS = 50;
   const PRESSURE_WINDOW_MS = 1000; // 落ちた動画フレームの割合を見る間隔
   const PRESSURE_DROP_RATIO = 0.1; // この割合を超えて落ちていたら、負荷が高いとみなす
   const PRESSURE_MIN_DROPS = 4; // ...ただし窓の中で最低でもこの数のフレームが落ちていること
   const SATURATION = "saturate(1.65)"; // X 以外（ページの上に重ねるサイト）は彩度を上げる
   // 彩度の強調は、画面いっぱいの CSS レイヤーに毎フレーム掛けると重く、ページ全体（動画やスクロールまで）が遅くなる。
   // 線形変換なので、小さな canvas に描くときに掛けても結果はほぼ同じ。canvas の filter が使えないブラウザだけ CSS に戻す。
-  const bakeSaturation = platform !== "x" && typeof CanvasRenderingContext2D !== "undefined" && "filter" in CanvasRenderingContext2D.prototype;
+  const canvasFilterWorks = () => {
+    // プロパティがあるだけでなく、値が実際に保持される（=効く）ことを確かめる。WebKit は無いか、あっても無視することがある。
+    try {
+      if (typeof CanvasRenderingContext2D === "undefined" || !("filter" in CanvasRenderingContext2D.prototype)) return false;
+      const context = document.createElement("canvas").getContext("2d");
+      context.filter = SATURATION;
+      return context.filter === SATURATION;
+    } catch { return false; }
+  };
+  const bakeSaturation = platform !== "x" && canvasFilterWorks();
   const EDGE_MARGIN = 16; // ページ全体に光を広げるときの、画面の外側の余白(px)
   const SETTLE_MS = 140; // スクロールが止まったとみなすまでの時間
   const hasStorage = typeof chrome !== "undefined" && Boolean(chrome.storage?.local);
@@ -100,9 +110,13 @@
   let scrollTimer = 0;
   // 画質と描画間隔は、実測した描画コストで自動調整する。タッチ端末は軽い段から始め、余裕があれば上げる。
   const touchDevice = navigator.maxTouchPoints > 0 && coarsePointer.matches;
-  const weakCpu = (navigator.hardwareConcurrency || 4) <= 2;
-  const startTier = () => Math.min(Core.QUALITY_TIERS.length - 1, (touchMode || touchDevice ? 3 : 1) + (weakCpu ? 1 : 0));
-  const governor = Core.createGovernor({ startTier: startTier(), bestTier: 0, goodFps: 15, topFps: 30, floorGap: FLOOR_GAP_MS });
+  // iPhone の WebKit（Orion など）は hardwareConcurrency が実際より小さく出るうえ、A シリーズは速いので、コア数では弱い端末とみなさない。
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const weakCpu = !isIOS && (navigator.hardwareConcurrency || 4) <= 2;
+  // スマホは 60fps を最優先にする（重ければ先に画質を落とす）。軽い段から始め、画質の上限も控えめにして余力と電池を残す。
+  const startTier = () => Math.min(Core.QUALITY_TIERS.length - 1, (touchMode || touchDevice ? (isIOS ? 4 : 5) : 1) + (weakCpu ? 1 : 0));
+  const bestTier = () => (touchMode || touchDevice ? (isIOS ? 2 : 3) : 0); // iPhone SE2・Pixel 6a 級でも 60fps を保てるよう、スマホでは重い段まで上げない
+  const governor = Core.createGovernor({ startTier: startTier(), bestTier: bestTier(), goodFps: touchDevice ? 60 : 30, topFps: 60, floorGap: FLOOR_GAP_MS });
   let projectionTier = -1;
   let fieldCss = "";
   let themeDirty = true;
@@ -160,6 +174,7 @@
   const rawContext = raw.getContext("2d", SCRATCH);
   const pyramid = new Map();
   const fade = { key: "", canvas: document.createElement("canvas") };
+  const stripCache = { key: "", strips: [] };
   if (!mosaicContext || !rawContext || contexts.some((context) => !context)) {
     host.remove();
     return;
@@ -362,7 +377,7 @@
     const clipX = ["hidden", "clip", "auto", "scroll"].includes(style.overflowX);
     const clipY = ["hidden", "clip", "auto", "scroll"].includes(style.overflowY);
     info = {
-      hidden: style.opacity === "0" || (instagram && (parent.hidden || parent.getAttribute("aria-hidden") === "true")),
+      hidden: style.opacity === "0" || (automatic && (parent.hidden || parent.getAttribute("aria-hidden") === "true")),
       clipX,
       clipY,
       // Root overflow clips to the viewport, already applied by the caller, not its scrolled DOM box.
@@ -389,7 +404,7 @@
 
   function imageDescriptor(source, owner, rect, fullRect) {
     const computed = getComputedStyle(owner);
-    const backgroundImage = owner !== source && owner.tagName !== "VIDEO";
+    const backgroundImage = owner !== source && !["VIDEO", "CANVAS"].includes(owner.tagName);
     const values = (backgroundImage ? computed.backgroundPosition : computed.objectPosition).split(" ");
     const position = values.map((value) => value.endsWith("%") ? Math.max(0, Math.min(1, parseFloat(value) / 100)) : 0.5);
     const fit = backgroundImage ? (computed.backgroundSize === "contain" ? "contain" : "cover") : computed.objectFit;
@@ -407,6 +422,16 @@
       && getComputedStyle(element).backgroundImage !== "none") || image;
   }
 
+  function videoPresenter(video) {
+    if (!tiktok || getComputedStyle(video).opacity !== "0") return video;
+    // TikTok の高画質プレイヤーは video を隠して、隣の canvas に表示する。
+    // 色は元の video から取り、位置と見えている範囲は表示中の canvas に合わせる。
+    const canvas = video.parentElement?.querySelector("tt-vod-sr-wrap canvas");
+    if (canvas && visibleRect(canvas, canvas.getBoundingClientRect())) return canvas;
+    const poster = siblingPoster(video);
+    return poster && visibleRect(poster, poster.getBoundingClientRect()) ? poster : video;
+  }
+
   function posterFor(video) {
     if (!video.poster) return null;
     let entry = posterCache.get(video);
@@ -422,7 +447,7 @@
     return entry.image.complete && entry.image.naturalWidth ? entry.image : null;
   }
 
-  function instagramPoster(video) {
+  function siblingPoster(video) {
     const box = video.getBoundingClientRect();
     for (let parent = video.parentElement; parent && !parent.matches('main, [role="main"]'); parent = parent.parentElement) {
       if (parent.querySelectorAll("video").length > 1) break;
@@ -456,18 +481,23 @@
   function findMedia(post) {
     const videos = [];
     for (const video of post.matches("video") ? [post] : post.querySelectorAll("video")) {
-      const fullRect = video.getBoundingClientRect();
-      const rect = visibleRect(video, fullRect);
+      const presenter = videoPresenter(video);
+      const fullRect = presenter.getBoundingClientRect();
+      const rect = visibleRect(presenter, fullRect);
       if (!rect) continue;
-      if (video.readyState >= 2 && video.videoWidth > 0) {
-        const descriptor = imageDescriptor(video, video, rect, fullRect);
+      if (presenter.tagName === "IMG") {
+        const descriptor = imageDescriptor(presenter, presenter, rect, fullRect);
+        if (descriptor) videos.push(descriptor);
+      } else if (video.readyState >= 2 && video.videoWidth > 0) {
+        const descriptor = imageDescriptor(video, presenter, rect, fullRect);
         if (descriptor) videos.push(descriptor);
       }
       else {
         const poster = posterFor(video);
-        const sibling = !poster && instagram && instagramPoster(video);
-        const descriptor = poster ? imageDescriptor(poster, video, rect, fullRect)
-          : sibling && imageDescriptor(sibling, sibling, rect, sibling.getBoundingClientRect());
+        const sibling = !poster && (instagram || tiktok) && siblingPoster(video);
+        const siblingRect = sibling && visibleRect(sibling, sibling.getBoundingClientRect());
+        const descriptor = poster ? imageDescriptor(poster, presenter, rect, fullRect)
+          : siblingRect && imageDescriptor(sibling, sibling, siblingRect, sibling.getBoundingClientRect());
         if (descriptor) videos.push(descriptor);
       }
     }
@@ -603,9 +633,18 @@
     // X は端の色を下限として保つ（本家 0.3.0 の見た目）。モバイルでも同じにする。
     const edgeStrength = platform === "x" ? settings.intensity / 100 : 0;
     // 見えないほど薄い帯は描かない。
-    const strips = Core.buildRayProjection(source, target, size, reach, edgeStrength, tier.steps).filter((strip) => strip.alpha >= 0.012);
+    // 配置が前回と同じなら、光線の帯を作り直さず使い回す（スクロール・チャット更新・リサイズ中の reconcile の連発を軽くする）。
+    const stripKey = [source.width, source.height, target.left, target.top, target.width, target.height, size.width, size.height, reach, edgeStrength, tier.steps].join(",");
+    let strips;
+    if (stripCache.key === stripKey) strips = stripCache.strips;
+    else {
+      strips = Core.buildRayProjection(source, target, size, reach, edgeStrength, tier.steps).filter((strip) => strip.alpha >= 0.012);
+      stripCache.key = stripKey;
+      stripCache.strips = strips;
+    }
     const deepest = Math.max(1, Math.floor(Math.log2(Math.min(size.width, size.height))) - 1);
-    const depth = Core.blurDepth(settings.blur * scale, deepest);
+    const rawDepth = Core.blurDepth(settings.blur * scale, deepest);
+    const depth = (touchMode || touchDevice) && governor.tier >= 3 ? Math.max(1, Math.round(rawDepth)) : rawDepth; // 小数の段数は 2 回ぶん描くので、軽い段では整数にする
     const feather = scope === "post" ? Math.max(2, Math.min(3 * settings.blur * scale, Math.min(size.width, size.height) / 2.5)) : 0;
     const key = [region.left, region.top, region.width, region.height, bounds.left, bounds.top, bounds.width, bounds.height].map(Math.round).join(",") + `|${governor.tier}|${settings.blur}|${settings.spread}|${settings.intensity}`;
     projection = { size, source, target, depth, strips, feather, key };
@@ -832,10 +871,12 @@
       return;
     }
     if (streaming) {
-      const candidates = [...document.querySelectorAll("video")].map(video => ({
-        video, rect: visibleRect(video, video.getBoundingClientRect(), 160, 48),
-      }));
-      const video = Streaming.pickVideo(candidates);
+      const candidates = Streaming.findVideos(document, platform, pathname).map(video => {
+        const presenter = videoPresenter(video);
+        const fullRect = presenter.getBoundingClientRect();
+        return { video, fullRect, rect: visibleRect(presenter, fullRect, 160, 48) };
+      });
+      const video = Streaming.pickVideo(candidates, { platform, viewport: viewport(), previous: activePost });
       if (!video) deactivate();
       else if (video === activePost) refreshMedia();
       else activate(video);
@@ -890,7 +931,7 @@
     }
   });
   const activeResizeObserver = automatic ? new ResizeObserver(scheduleReconcile) : null;
-  const watchedMedia = streaming ? "video" : "article, img, video";
+  const watchedMedia = streaming ? (tiktok ? "video, canvas, tt-vod-sr-wrap" : "video") : "article, img, video";
   const pageObserver = new MutationObserver((records) => {
     if (pathname !== location.pathname) scheduleReconcile();
     if ((!automatic && !pointer && !Posts.statusId(location.pathname)) || !eligible()) return;
@@ -898,17 +939,17 @@
     if (instagram && records.some(record => record.type === "attributes"
       && (record.target.matches('article, img, video, [role="dialog"]') || record.target.querySelector("article, img, video")))) scheduleReconcile();
     if (streaming && records.some(record => record.type === "attributes"
-      && (record.target.matches("video") || record.target.querySelector("video")))) scheduleReconcile();
+      && (record.target.matches(tiktok ? "video, canvas, tt-vod-sr-wrap" : "video") || record.target.querySelector("video")))) scheduleReconcile();
     if (activePost && !activePost.isConnected) scheduleReconcile();
     else if (records.some((record) => [...record.addedNodes, ...record.removedNodes].some((node) =>
       // Twitch・Kick は動画の出入りだけが関係する。チャットの絵文字（img）は毎秒何度も増減するので、拾うと
       // そのたびにページ全体の走査が走ってしまう。
-      node.nodeType === Node.ELEMENT_NODE && (node.matches(watchedMedia) || node.querySelector(watchedMedia))))) scheduleReconcile();
+      node.nodeType === Node.ELEMENT_NODE && (node.matches(watchedMedia) || node.querySelector(tiktok ? "video, tt-vod-sr-wrap canvas" : watchedMedia))))) scheduleReconcile();
   });
   pageObserver.observe(document.body, {
     childList: true, subtree: true,
     attributes: true,
-    attributeFilter: automatic ? ["style", "class", "hidden", "aria-hidden", "src", "srcset", "poster"] : ["href"],
+    attributeFilter: automatic ? ["style", "class", "hidden", "aria-hidden", "src", "srcset", "poster", "data-e2e", "data-name", "data-styling-name"] : ["href"],
   });
   const themeObserver = new MutationObserver(() => { themeDirty = true; scheduleReconcile(); });
   themeObserver.observe(document.body, { attributes: true, attributeFilter: ["style", "class"] });
@@ -923,7 +964,7 @@
     if (touchMode === next) return;
     touchMode = next;
     host.dataset.interaction = touchMode ? "center" : "hover";
-    governor.reset({ startTier: startTier() });
+    governor.reset({ startTier: startTier(), bestTier: bestTier() });
     scrolling = false;
     clearTimeout(scrollTimer);
     scrollTimer = 0;
@@ -983,7 +1024,7 @@
   }, { passive: true, capture: true });
   for (const type of ["transitionend", "transitioncancel", "animationend"]) {
     listen(document, type, event => {
-      if (instagram && event.target instanceof Element
+      if ((instagram || tiktok) && event.target instanceof Element
         && (event.target.matches("img, video") || event.target.querySelector("img, video"))) scheduleReconcile();
     }, true);
   }
@@ -1030,8 +1071,13 @@
     deactivate();
     cancelAnimationFrame(reconcileFrame);
     activeObserver.disconnect();
+    activeResizeObserver?.disconnect();
+    backgroundObserver.disconnect();
     pageObserver.disconnect();
     themeObserver.disconnect();
+    stopFrames();
+    clearTimeout(hoverTimer);
+    clearTimeout(backgroundRestoreTimer);
     cards?.dispose();
     restoreBackgrounds();
     backgroundStyle.remove();

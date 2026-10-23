@@ -3,10 +3,10 @@
     "message": "X Ambient"
   },
   "extensionDescription": {
-    "message": "X और Instagram की तस्वीरों और वीडियो तथा Twitch और Kick की स्ट्रीम के लिए परिवेशी रोशनी।"
+    "message": "X, Instagram, Twitch, Kick, TikTok के आपके लिए फ़ीड और Niconico वीडियो के लिए परिवेशी रोशनी।"
   },
   "popupSubtitle": {
-    "message": "X, Instagram, Twitch और Kick के लिए परिवेशी रोशनी।"
+    "message": "X, Instagram, Twitch, Kick, TikTok और Niconico के लिए परिवेशी रोशनी।"
   },
   "languageLabel": {
     "message": "भाषा"
@@ -63,13 +63,13 @@
     "message": "मोबाइल (बीच में)"
   },
   "hoverHint": {
-    "message": "X और Instagram की तस्वीरें और वीडियो। Twitch और Kick की स्ट्रीम।"
+    "message": "X, Instagram, Twitch, Kick, TikTok आपके लिए और Niconico वीडियो।"
   },
   "statusLoading": {
     "message": "सेटिंग लोड हो रही हैं…"
   },
   "statusReady": {
-    "message": "X पर पोस्ट का विवरण खोलने पर रोशनी अपने आप चालू होती है; टाइमलाइन के पोस्ट या जवाब पर कर्सर रखें। Instagram सक्रिय पोस्ट या रील का अनुसरण करता है। Twitch और Kick वीडियो का अनुसरण करते हैं।"
+    "message": "X विवरण अपने आप रोशन होते हैं; पोस्ट या जवाब पर कर्सर रखें। Instagram सक्रिय सामग्री, Twitch/Kick वीडियो, TikTok आपके लिए फ़ीड और Niconico वीडियो पृष्ठ का अनुसरण करते हैं।"
   },
   "statusReadyMobile": {
     "message": "X स्क्रीन के बीच वाले पोस्ट पर रोशनी चालू करता है। Instagram सक्रिय पोस्ट या रील का अनुसरण करता है। Twitch और Kick वीडियो का अनुसरण करते हैं।"

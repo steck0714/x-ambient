@@ -3,10 +3,10 @@
     "message": "X Ambient"
   },
   "extensionDescription": {
-    "message": "X와 Instagram의 사진·동영상, Twitch와 Kick 방송의 색으로 펼쳐지는 앰비언트 조명."
+    "message": "X, Instagram, Twitch, Kick, TikTok 추천 피드와 Niconico 동영상의 색으로 펼쳐지는 앰비언트 조명."
   },
   "popupSubtitle": {
-    "message": "X, Instagram, Twitch, Kick을 위한 부드러운 조명."
+    "message": "X, Instagram, Twitch, Kick, TikTok, Niconico를 위한 부드러운 조명."
   },
   "languageLabel": {
     "message": "언어"
@@ -63,13 +63,13 @@
     "message": "모바일(중앙)"
   },
   "hoverHint": {
-    "message": "X·Instagram의 사진·동영상, Twitch·Kick 방송"
+    "message": "X, Instagram, Twitch, Kick, TikTok 추천 피드와 Niconico 동영상"
   },
   "statusLoading": {
     "message": "설정을 불러오는 중…"
   },
   "statusReady": {
-    "message": "X 게시물 상세 화면은 자동으로, 타임라인과 답글은 커서를 올리면 켜집니다. Instagram은 현재 게시물·릴스, Twitch와 Kick은 동영상을 따라갑니다."
+    "message": "X 상세는 자동, 타임라인과 답글은 커서를 올리면 켜집니다. Instagram은 현재 게시물·릴스, Twitch·Kick은 동영상, TikTok은 추천 피드, Niconico는 동영상 상세를 따라갑니다."
   },
   "statusReadyMobile": {
     "message": "X는 화면 중앙에 온 게시물이 켜집니다. Instagram은 현재 게시물·릴스, Twitch와 Kick은 동영상을 따라갑니다."

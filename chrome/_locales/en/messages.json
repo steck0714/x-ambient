@@ -3,10 +3,10 @@
     "message": "X Ambient"
   },
   "extensionDescription": {
-    "message": "Ambient light for X and Instagram photos and videos, and Twitch and Kick streams. On phones, X follows the post at screen center."
+    "message": "Ambient light for X, Instagram, Twitch, Kick, TikTok For You and Niconico videos. On phones, X follows the post at screen center."
   },
   "popupSubtitle": {
-    "message": "Ambient light for X, Instagram, Twitch and Kick."
+    "message": "Ambient light for X, Instagram, Twitch, Kick, TikTok and Niconico."
   },
   "languageLabel": {
     "message": "Language"
@@ -63,13 +63,13 @@
     "message": "Mobile (center)"
   },
   "hoverHint": {
-    "message": "X and Instagram media. Twitch and Kick streams."
+    "message": "X, Instagram, Twitch, Kick, TikTok For You and Niconico videos."
   },
   "statusLoading": {
     "message": "Loading settings…"
   },
   "statusReady": {
-    "message": "X details light up automatically; hover over timeline posts or replies. Instagram follows the active post or reel. Twitch and Kick follow the video."
+    "message": "X details are automatic; hover over timeline posts or replies. Instagram follows active posts; Twitch/Kick follow videos, TikTok follows For You, and Niconico follows watch pages."
   },
   "statusReadyMobile": {
     "message": "X lights up the post at the center of the screen. Instagram follows the active post or reel. Twitch and Kick follow the video."

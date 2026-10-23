@@ -3,10 +3,10 @@
     "message": "X Ambient"
   },
   "extensionDescription": {
-    "message": "แสงบรรยากาศจากภาพและวิดีโอบน X และ Instagram รวมถึงสตรีมบน Twitch และ Kick"
+    "message": "แสงบรรยากาศสำหรับ X, Instagram, Twitch, Kick, ฟีดสำหรับคุณของ TikTok และวิดีโอ Niconico"
   },
   "popupSubtitle": {
-    "message": "แสงบรรยากาศสำหรับ X, Instagram, Twitch และ Kick"
+    "message": "แสงบรรยากาศสำหรับ X, Instagram, Twitch, Kick, TikTok และ Niconico"
   },
   "languageLabel": {
     "message": "ภาษา"
@@ -63,13 +63,13 @@
     "message": "มือถือ (กลางจอ)"
   },
   "hoverHint": {
-    "message": "ภาพและวิดีโอบน X และ Instagram สตรีมบน Twitch และ Kick"
+    "message": "X, Instagram, Twitch, Kick, ฟีดสำหรับคุณของ TikTok และวิดีโอ Niconico"
   },
   "statusLoading": {
     "message": "กำลังโหลดการตั้งค่า…"
   },
   "statusReady": {
-    "message": "หน้ารายละเอียดโพสต์ X เปิดแสงอัตโนมัติ ส่วนไทม์ไลน์และการตอบกลับให้วางเมาส์เหนือโพสต์ Instagram ติดตามโพสต์หรือรีลที่กำลังดู Twitch และ Kick ติดตามวิดีโอ"
+    "message": "รายละเอียดโพสต์ X เปิดแสงอัตโนมัติ ส่วนไทม์ไลน์และการตอบกลับให้วางเมาส์เหนือโพสต์ Instagram ติดตามเนื้อหาที่กำลังดู Twitch/Kick ติดตามวิดีโอ TikTok ติดตามฟีดสำหรับคุณ และ Niconico ติดตามหน้าวิดีโอ"
   },
   "statusReadyMobile": {
     "message": "X จะเปิดแสงที่โพสต์ซึ่งอยู่กลางหน้าจอ Instagram ติดตามโพสต์หรือรีลที่กำลังดู Twitch และ Kick ติดตามวิดีโอ"

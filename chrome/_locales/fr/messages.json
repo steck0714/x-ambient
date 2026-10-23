@@ -3,10 +3,10 @@
     "message": "X Ambient"
   },
   "extensionDescription": {
-    "message": "Éclairage d'ambiance pour les photos et vidéos de X et Instagram, et les directs de Twitch et Kick."
+    "message": "Éclairage d'ambiance pour X, Instagram, Twitch, Kick, le fil Pour toi de TikTok et les vidéos Niconico."
   },
   "popupSubtitle": {
-    "message": "Éclairage d'ambiance pour X, Instagram, Twitch et Kick."
+    "message": "Éclairage d'ambiance pour X, Instagram, Twitch, Kick, TikTok et Niconico."
   },
   "languageLabel": {
     "message": "Langue"
@@ -63,13 +63,13 @@
     "message": "Mobile (centre)"
   },
   "hoverHint": {
-    "message": "Photos et vidéos de X et Instagram. Directs de Twitch et Kick."
+    "message": "X, Instagram, Twitch, Kick, Pour toi de TikTok et vidéos Niconico."
   },
   "statusLoading": {
     "message": "Chargement des réglages…"
   },
   "statusReady": {
-    "message": "Les détails d'une publication X s'éclairent automatiquement ; survolez les publications du fil ou les réponses. Instagram suit la publication ou le Reel actif. Twitch et Kick suivent la vidéo."
+    "message": "Les détails X s'éclairent automatiquement ; survolez le fil ou les réponses. Instagram suit le contenu actif ; Twitch/Kick les vidéos, TikTok le fil Pour toi et Niconico les pages vidéo."
   },
   "statusReadyMobile": {
     "message": "X éclaire la publication au centre de l'écran. Instagram suit la publication ou le Reel actif. Twitch et Kick suivent la vidéo."

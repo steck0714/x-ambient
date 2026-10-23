@@ -3,10 +3,10 @@
     "message": "X Ambient"
   },
   "extensionDescription": {
-    "message": "Luce ambientale per foto e video di X e Instagram e dirette di Twitch e Kick."
+    "message": "Luce ambientale per X, Instagram, Twitch, Kick, il feed Per te di TikTok e i video Niconico."
   },
   "popupSubtitle": {
-    "message": "Luce ambientale per X, Instagram, Twitch e Kick."
+    "message": "Luce ambientale per X, Instagram, Twitch, Kick, TikTok e Niconico."
   },
   "languageLabel": {
     "message": "Lingua"
@@ -63,13 +63,13 @@
     "message": "Mobile (centro)"
   },
   "hoverHint": {
-    "message": "Foto e video di X e Instagram. Dirette di Twitch e Kick."
+    "message": "X, Instagram, Twitch, Kick, Per te di TikTok e video Niconico."
   },
   "statusLoading": {
     "message": "Caricamento delle impostazioni…"
   },
   "statusReady": {
-    "message": "I dettagli di un post X si illuminano automaticamente; passa il cursore sui post della cronologia o sulle risposte. Instagram segue il post o il Reel attivo. Twitch e Kick seguono il video."
+    "message": "I dettagli X si illuminano automaticamente; passa il cursore sui post o sulle risposte. Instagram segue i contenuti attivi; Twitch/Kick i video, TikTok il feed Per te e Niconico le pagine video."
   },
   "statusReadyMobile": {
     "message": "X illumina il post al centro dello schermo. Instagram segue il post o il Reel attivo. Twitch e Kick seguono il video."
