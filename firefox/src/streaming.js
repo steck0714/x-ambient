@@ -9,7 +9,7 @@
     if (["tiktok.com", "www.tiktok.com"].includes(host)) return "tiktok";
     if (["nicovideo.jp", "www.nicovideo.jp", "sp.nicovideo.jp"].includes(host)) return "niconico";
     if (host === "live.nicovideo.jp") return "niconicolive";
-    if (host === "seiga.nicovideo.jp") return "seiga";
+    if (["seiga.nicovideo.jp", "sp.seiga.nicovideo.jp"].includes(host)) return "seiga";
     return "x";
   }
 
