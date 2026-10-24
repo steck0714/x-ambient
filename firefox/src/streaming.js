@@ -7,9 +7,14 @@
     if (["kick.com", "www.kick.com"].includes(host)) return "kick";
     if (["instagram.com", "www.instagram.com"].includes(host)) return "instagram";
     if (["tiktok.com", "www.tiktok.com"].includes(host)) return "tiktok";
-    if (["nicovideo.jp", "www.nicovideo.jp"].includes(host)) return "niconico";
+    if (["nicovideo.jp", "www.nicovideo.jp", "sp.nicovideo.jp"].includes(host)) return "niconico";
+    if (host === "live.nicovideo.jp") return "niconicolive";
+    if (host === "seiga.nicovideo.jp") return "seiga";
     return "x";
   }
+
+  const isNiconicoLive = (pathname) => /^\/watch\/(?:[a-z]+\/)?[a-z]*\d+\/?$/.test(pathname);
+  const isSeigaPage = (pathname) => /^\/(?:seiga\/im\d+|watch\/mg\d+)(?:\/.*)?$/.test(pathname);
 
   function findVideos(root, platform, pathname) {
     if (platform === "tiktok") {
@@ -20,8 +25,20 @@
       if (!/^\/watch\/(?:[a-z]{2})?\d+\/?$/.test(pathname)) return [];
       const videos = [...root.querySelectorAll('video[data-name="video-content"]')];
       if (videos.length) return videos;
-      return [...root.querySelectorAll('[data-styling-name="fullscreen-target"] video')]
-        .filter(video => !video.closest("#nv_watch_VideoAdContainer"));
+      const notAd = video => !video.closest("#nv_watch_VideoAdContainer");
+      const fullscreen = [...root.querySelectorAll('[data-styling-name="fullscreen-target"] video')].filter(notAd);
+      if (fullscreen.length) return fullscreen;
+      // スマホ版（sp.nicovideo.jp）などで上の属性が無い場合は、広告以外の video から表示中の最大のものを選ぶ。
+      return [...root.querySelectorAll("video")].filter(notAd);
+    }
+    if (platform === "niconicolive") {
+      if (!isNiconicoLive(pathname)) return [];
+      return [...root.querySelectorAll("video")].filter(video => !video.closest('[class*="Ad" i], [id*="Ad" i]'));
+    }
+    if (platform === "seiga") {
+      // 静画は動画ではなく画像（イラスト・マンガのページ）に光を当てる。サムネイルや小さな画像は除く。
+      if (!isSeigaPage(pathname)) return [];
+      return [...root.querySelectorAll("img")].filter(image => !image.complete || image.naturalWidth >= 400);
     }
     return [...root.querySelectorAll("video")];
   }

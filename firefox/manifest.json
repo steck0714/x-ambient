@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "__MSG_extensionDescription__",
   "permissions": [
     "storage"
@@ -37,7 +37,10 @@
         "https://tiktok.com/*",
         "https://www.tiktok.com/*",
         "https://nicovideo.jp/*",
-        "https://www.nicovideo.jp/*"
+        "https://www.nicovideo.jp/*",
+        "https://sp.nicovideo.jp/*",
+        "https://live.nicovideo.jp/*",
+        "https://seiga.nicovideo.jp/*"
       ],
       "js": [
         "src/firefox-compat.js",
@@ -81,6 +84,9 @@
     "https://tiktok.com/*",
     "https://www.tiktok.com/*",
     "https://nicovideo.jp/*",
-    "https://www.nicovideo.jp/*"
+    "https://www.nicovideo.jp/*",
+    "https://sp.nicovideo.jp/*",
+    "https://live.nicovideo.jp/*",
+    "https://seiga.nicovideo.jp/*"
   ]
 }

@@ -37,7 +37,9 @@
   const platform = Streaming?.platformForHostname(location.hostname) || "x";
   const instagram = platform === "instagram";
   const tiktok = platform === "tiktok";
-  const streaming = ["twitch", "kick", "tiktok", "niconico"].includes(platform);
+  const seiga = platform === "seiga";
+  const streaming = ["twitch", "kick", "tiktok", "niconico", "niconicolive", "seiga"].includes(platform);
+  const streamSelector = tiktok ? "video, canvas, tt-vod-sr-wrap" : seiga ? "img" : "video";
   const automatic = streaming || instagram;
   const cards = platform === "x" ? globalThis.XAmbientCardLayout?.create() : null;
 
@@ -502,7 +504,7 @@
       }
     }
     const images = [];
-    for (const image of post.querySelectorAll(IMAGE_SELECTOR)) {
+    for (const image of seiga ? (post.matches("img") ? [post] : post.querySelectorAll("img")) : post.querySelectorAll(IMAGE_SELECTOR)) {
       if (image.closest('[data-testid^="UserAvatar"]') || !image.complete || !image.naturalWidth) continue;
       if (instagram && !Instagram.isPostImage(image)) continue;
       const presenter = imagePresenter(image);
@@ -931,7 +933,7 @@
     }
   });
   const activeResizeObserver = automatic ? new ResizeObserver(scheduleReconcile) : null;
-  const watchedMedia = streaming ? (tiktok ? "video, canvas, tt-vod-sr-wrap" : "video") : "article, img, video";
+  const watchedMedia = streaming ? streamSelector : "article, img, video";
   const pageObserver = new MutationObserver((records) => {
     if (pathname !== location.pathname) scheduleReconcile();
     if ((!automatic && !pointer && !Posts.statusId(location.pathname)) || !eligible()) return;
@@ -939,7 +941,7 @@
     if (instagram && records.some(record => record.type === "attributes"
       && (record.target.matches('article, img, video, [role="dialog"]') || record.target.querySelector("article, img, video")))) scheduleReconcile();
     if (streaming && records.some(record => record.type === "attributes"
-      && (record.target.matches(tiktok ? "video, canvas, tt-vod-sr-wrap" : "video") || record.target.querySelector("video")))) scheduleReconcile();
+      && (record.target.matches(streamSelector) || record.target.querySelector(streamSelector)))) scheduleReconcile();
     if (activePost && !activePost.isConnected) scheduleReconcile();
     else if (records.some((record) => [...record.addedNodes, ...record.removedNodes].some((node) =>
       // Twitch・Kick は動画の出入りだけが関係する。チャットの絵文字（img）は毎秒何度も増減するので、拾うと
